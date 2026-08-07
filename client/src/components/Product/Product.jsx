@@ -1,28 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import style from "./Product.module.css";
 
 const Product = ({ product }) => {
-  const user = localStorage.getItem("userEmail");
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
   const { handleAddToCart } = useProductHandlers();
-  
-  const navigate = useNavigate();
 
     const incrementQuantity = () => setQuantity((prev) => prev + 1);
     const decrementQuantity = () =>
       setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  
+
     const addToCart = () => {
-      if (!user) {
-        navigate("/login");
-      } else {
-        handleAddToCart(product, quantity);
-        setQuantity(1); // Resetea la cantidad a 1 después de agregar
-      }
+      handleAddToCart(product, quantity);
+      setQuantity(1); // Resetea la cantidad a 1 después de agregar
     };
   
   return (

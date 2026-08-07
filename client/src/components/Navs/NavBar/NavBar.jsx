@@ -6,7 +6,6 @@ import style from "./NavBar.module.css";
 import Cart from "../../../views/Cart/Cart";
 
 const NavBar = () => {
-  const user = localStorage.getItem("userEmail");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,16 +40,6 @@ const NavBar = () => {
           <Link to="/nosotros" className={style.navLink}>
             <div className={style.btn}> NOSOTROS </div>
           </Link>
-
-          {user ? (
-            <Link to="/profile" className={style.navLink}>
-              <div className={style.btn}> PERFIL </div>
-            </Link>
-          ) : (
-            <Link to="/login" className={style.navLink}>
-              <div className={style.btn}> LOG IN </div>
-            </Link>
-          )}
         </div>
       </div>
 

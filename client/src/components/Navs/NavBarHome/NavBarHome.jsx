@@ -12,7 +12,6 @@ gsap.registerPlugin( ScrollTrigger);
 
 
 const NavBarHome = () => {
-  const user = localStorage.getItem("userEmail");
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -42,16 +41,6 @@ const NavBarHome = () => {
           <Link to="/nosotros" className={style.navLink}>
             <div className={style.btn}> NOSOTROS </div>
           </Link>
-
-          {user ? (
-            <Link to="/profile" className={style.navLink}>
-              <div className={style.btn}> PERFIL </div>
-            </Link>
-          ) : (
-            <Link to="/login" className={style.navLink}>
-              <div className={style.btn}> LOG IN </div>
-            </Link>
-          )}
         </div>
       </div>
     </nav>
