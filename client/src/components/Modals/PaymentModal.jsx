@@ -7,19 +7,24 @@ import { validations } from "../../validations/validations";
 Modal.setAppElement("#root");
 
 const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
-  const [clientInstagramUsername, setClientInstagramUsername] = useState("");
-  const [touched, setTouchedLocal] = useState(false);
-  const [error, setErrorLocal] = useState("");
+  const [contactMethod, setContactMethod] = useState("instagram");
+  const [contactValue, setContactValue] = useState("");
+  const [touched, setTouched] = useState(false);
 
-  // console.log("soy el username de Ig", clientInstagramUsername);
+  const { handleSubmitModal, isSubmitting, submitError } = useCartHandlers();
 
-  const { handleSubmitModal, handleInputChange } = useCartHandlers(
-    setClientInstagramUsername,
-    setTouchedLocal,
-    setErrorLocal
-  );
+  const { isValidInstagramUsername, isValidWhatsAppNumber } = validations();
 
-  const { isValidInstagramUsername} = validations();
+  const isValid =
+    contactMethod === "instagram"
+      ? isValidInstagramUsername(contactValue)
+      : isValidWhatsAppNumber(contactValue);
+
+  const handleMethodChange = (method) => {
+    setContactMethod(method);
+    setContactValue("");
+    setTouched(false);
+  };
 
   return (
     <Modal
@@ -27,30 +32,71 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
       onRequestClose={onClose}
       contentLabel="Ingresar información"
       className={style.modal}
+      overlayClassName={style.overlay}
     >
       <div className={style.modalContent}>
         <h2 className={style.modalHeader}>Ingresa tu información</h2>
-        <label className={style.modalLabel}>Usuario de Instagram:</label>
+        <p className={style.modalText}>
+          ¿Cómo preferís que te contactemos para coordinar tu pedido?
+        </p>
+
+        <div className={style.modalContactMethods}>
+          <button
+            type="button"
+            onClick={() => handleMethodChange("instagram")}
+            className={`${style.modalMethodBtn} ${
+              contactMethod === "instagram" ? style.modalMethodBtnActive : ""
+            }`}
+          >
+            Instagram
+          </button>
+          <button
+            type="button"
+            onClick={() => handleMethodChange("whatsapp")}
+            className={`${style.modalMethodBtn} ${
+              contactMethod === "whatsapp" ? style.modalMethodBtnActive : ""
+            }`}
+          >
+            WhatsApp
+          </button>
+        </div>
+
+        <label className={style.modalLabel}>
+          {contactMethod === "instagram" ? "Usuario de Instagram:" : "Número de WhatsApp:"}
+        </label>
         <input
           type="text"
-          value={clientInstagramUsername}
-          onChange={handleInputChange}
+          value={contactValue}
+          onChange={(e) => {
+            setContactValue(e.target.value);
+            setTouched(true);
+          }}
+          placeholder={contactMethod === "instagram" ? "@tu_usuario" : "+54 9 11 1234-5678"}
           className={style.modalInput}
         />
-        {touched && error && <span className={style.modalError}>{error}</span>}
+        <span className={style.modalHint}>
+          {contactMethod === "instagram"
+            ? "Tiene que empezar con @, por ejemplo: @juanperez"
+            : "Incluí el código de país, ej: +5491112345678"}
+        </span>
+
+        {touched && !isValid && (
+          <span className={style.modalError}>
+            {contactMethod === "instagram"
+              ? "Usuario de Instagram no válido"
+              : "Número de WhatsApp no válido"}
+          </span>
+        )}
+        {submitError && <span className={style.modalError}>{submitError}</span>}
         <br />
         <button
           onClick={() =>
-            handleSubmitModal(cartList, clientInstagramUsername, totalPrice)
+            handleSubmitModal(cartList, contactValue, contactMethod, totalPrice)
           }
-          disabled={
-            !!error ||
-            !isValidInstagramUsername(clientInstagramUsername) ||
-            clientInstagramUsername === ""
-          }
+          disabled={!isValid || contactValue === "" || isSubmitting}
           className={style.modalBtn}
         >
-          Continuar al pago
+          {isSubmitting ? "Procesando..." : "Continuar al pago"}
         </button>
       </div>
     </Modal>

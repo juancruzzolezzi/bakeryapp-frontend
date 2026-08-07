@@ -8,7 +8,8 @@
     border-radius: 8px;
     max-width: 400px;
     width: 100%;
-    height: auto;
+    max-height: 85vh;
+    overflow-y: auto;
     text-align: center;
     z-index: 99;
 }
@@ -60,6 +61,36 @@
     margin-top: 10px;
 }
 
+.modalHint {
+    display: block;
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: -14px;
+    margin-bottom: 10px;
+}
+
+.modalContactMethods {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 15px;
+}
+
+.modalMethodBtn {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.modalMethodBtnActive {
+    background-color: #e44d26;
+    color: #fff;
+    border-color: #e44d26;
+}
+
 .modalBtn {
     padding: 10px 20px;
     background-color: #e44d26;
@@ -78,12 +109,13 @@
 
 @media screen and (max-width: 760px) {
     .modal{
-        margin-top: 15rem;
-        border: 3px solid red;
+        width: 92%;
+        max-height: 80vh;
+        padding: 16px;
         z-index: 99 !important;
     }
 
     .overlay {
         z-index: 9998 !important;
-    }  
+    }
 }

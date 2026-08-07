@@ -9,19 +9,20 @@ const EmptyCartModal = ({ isOpen, onCancel, onConfirm }) => {
         <Modal
             isOpen={isOpen}
             onRequestClose={onCancel}
-            contentLabel="Empty Cart"
+            contentLabel="Vaciar carrito"
             className={style.modal}
+            overlayClassName={style.overlay}
         >
             <div className={style.modalContent}>
-                <h2 className={style.modalHeader}>Empty Cart</h2>
+                <h2 className={style.modalHeader}>Vaciar carrito</h2>
                 <p className={style.modalText}>
-                    Are you sure you want to empty your cart?
+                    ¿Estás seguro que querés vaciar el carrito?
                 </p>
                 <button onClick={onCancel} className={style.modalBtn}>
-                    Cancel
+                    Cancelar
                 </button>
                 <button onClick={onConfirm} className={style.modalBtn}>
-                    Yes
+                    Sí
                 </button>
             </div>
         </Modal>

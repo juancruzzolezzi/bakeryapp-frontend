@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
     z-index: 99;;
     margin: 0;
     padding-right: 1rem;
@@ -78,7 +80,7 @@
 .btnMenu{
     color: #d9b767;
     font-weight: bold;
-    font-size: 3rem;
+    font-size: clamp(1.8rem, 6vw, 3rem);
     display: flex;
     justify-content: flex-end;
     transition: 0.5s;
@@ -202,7 +204,7 @@
     .btnMenu{
         color: #d9b767;
         font-weight: bold;
-        font-size: 3rem;
+        font-size: clamp(1.6rem, 8vw, 2.5rem);
         display: flex;
         justify-content: flex-end;
         transition: 0.5s;

@@ -14,15 +14,9 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isModalPaymentOpen, setModalPaymentOpen] = useState(false);
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
-  const [setInstagramUsername] = useState("");
-  const [setTouched] = useState(false);
-  const [setError] = useState("");
 
   // Destructuring de funciones dentro de useCartHandlers
   const { handleModalYes, handleModalCancel } = useCartHandlers(
-    setInstagramUsername,
-    setTouched,
-    setError,
     setModalEmptyOpen,
     setIsCartOpen
   );
@@ -94,13 +88,6 @@ function Cart({ isCartOpen, setIsCartOpen }) {
         onClose={() => setModalPaymentOpen(false)}
         cartList={cartList}
         totalPrice={totalPrice}
-        setModalOpen={setModalPaymentOpen}
-        setInstagramUsername={setInstagramUsername}
-        setTouched={setTouched}
-        setError={setError}
-        setIsLoading={true}
-        setReloadComponent={true}
-        setModalEmptyOpen={setModalEmptyOpen}
       />
     </div>
   );

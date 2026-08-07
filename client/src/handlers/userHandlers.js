@@ -28,15 +28,15 @@ export const useUserHandlers = (
             if (!response.ok) {
                 switch (data.code) {
                     case "auth/wrong-password":
-                        setError("Incorrect password. Please try again.");
+                        setError("Contraseña incorrecta. Intentá de nuevo.");
                         break;
                     case "auth/user-not-found":
                         setError(
-                            "No user found with this email. Please check the email or register."
+                            "No existe un usuario con ese email o nombre de usuario. Verificalo o registrate."
                         );
                         break;
                     default:
-                        setError("An error occurred. Maybe the password or email is incorrect.");
+                        setError("Ocurrió un error. Revisá el email/usuario y la contraseña.");
                         break;
                 }
                 return;
@@ -45,11 +45,11 @@ export const useUserHandlers = (
             dispatch(setUser(data.email));
             dispatch(setUserName(data.username));
             dispatch(setIdToken(data.token));
-            localStorage.setItem("userEmail", email);
+            localStorage.setItem("userEmail", data.email);
             navigate("/");
         } catch (error) {
             console.log("Error al iniciar sesión: ", error);
-            setError("An error occurred. Please try again.");
+            setError("Ocurrió un error. Intentá de nuevo.");
         }
     };
 
@@ -97,9 +97,9 @@ export const useUserHandlers = (
 
             if (!response.ok) {
                 if (data.code === "auth/email-already-in-use") {
-                    setRegistrationError("This email is already in use.");
+                    setRegistrationError("Ese email ya está en uso.");
                 } else {
-                    setRegistrationError("An error occurred. Please try again.");
+                    setRegistrationError("Ocurrió un error. Intentá de nuevo.");
                 }
                 return;
             }
@@ -107,11 +107,11 @@ export const useUserHandlers = (
             dispatch(setUser(data.email));
             dispatch(setUserName(data.username));
             dispatch(setIdToken(data.token));
-            localStorage.setItem("userEmail", email);
+            localStorage.setItem("userEmail", data.email);
             navigate("/");
         } catch (error) {
             console.log("Error al registrar: ", error);
-            setRegistrationError("An error occurred. Please try again.");
+            setRegistrationError("Ocurrió un error. Intentá de nuevo.");
         }
     };
 

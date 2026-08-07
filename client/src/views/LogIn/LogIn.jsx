@@ -25,7 +25,7 @@ const LogIn = () => {
         </div>
         <div className={styles.inputContainer}>
           <input
-            placeholder="Email"
+            placeholder="Email o nombre de usuario"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles.input}

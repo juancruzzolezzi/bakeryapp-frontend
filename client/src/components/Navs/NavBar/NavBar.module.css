@@ -7,6 +7,8 @@
     align-items: center;
     justify-content: center;
     padding-right: 1rem;
+    box-sizing: border-box;
+    overflow: hidden;
     z-index: 99;
     margin: 0;
 }
@@ -86,10 +88,9 @@
 
 .cart {
     border: 3px solid #d9b767;
-    height: 8vh;
-    width: 8vh;
-    min-width: 3rem;
-    min-height: 3rem;
+    height: clamp(3rem, 8vw, 4rem);
+    width: clamp(3rem, 8vw, 4rem);
+    flex-shrink: 0;
     border-radius: 50px;
     font-size: 1.6rem;
     display:flex;
@@ -109,7 +110,7 @@
 .btnMenu{
     color: #d9b767;
     font-weight: bold;
-    font-size: 3rem;
+    font-size: clamp(1.8rem, 6vw, 3rem);
     display: flex;
     justify-content: flex-end;
     transition: 0.5s;
@@ -227,7 +228,7 @@
     .btnMenu {
         color: #d9b767;
         font-weight: bold;
-        font-size: 3rem;
+        font-size: clamp(1.6rem, 8vw, 2.5rem);
         display: flex;
         justify-content: flex-end;
         transition: 0.5s;
@@ -249,8 +250,9 @@
 
     .cart {
         border: 3px solid #d9b767;
-        height: 3rem;
-        width: 3rem;
+        height: 2.75rem;
+        width: 2.75rem;
+        flex-shrink: 0;
         border-radius: 50px;
         font-size: 1.2rem;
         display: flex;

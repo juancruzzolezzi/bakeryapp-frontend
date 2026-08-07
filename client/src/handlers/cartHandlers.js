@@ -1,18 +1,20 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { emptyCart } from "../redux/slice/homeSlice";
 import axios from "axios";
-import { validations } from "../validations/validations";
 
 export const useCartHandlers = (
 
-  //Recibe 5 parametros
-  setInstagramUsername,
-  setTouched,
-  setError,
+  //setModalEmptyOpen y setIsCartOpen solo los usa Cart.jsx (modal de vaciar carrito).
+  //PaymentModal usa este hook sin argumentos, ya que maneja su propio estado.
   setModalEmptyOpen,
   setIsCartOpen
 
 ) => {
+
+  //Estado de carga y error de la petición de pago (feedback visual en el modal)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   //URL de la API: toma REACT_APP_API_URL (Vercel) o cae a localhost en desarrollo
   const apiURL = process.env.REACT_APP_API_URL || "http://localhost:3000";
@@ -20,8 +22,6 @@ export const useCartHandlers = (
 
   //Se declara la constante "dispatch" la cual ejecuta el Hook de React "useDispatch()"
   const dispatch = useDispatch();
-  //Trae la funcion "isValidInstagramUsername" del componente "validations"
-  const { isValidInstagramUsername } = validations();
 
 
 
@@ -29,20 +29,26 @@ export const useCartHandlers = (
   //Submit Carrito
   const handleSubmitModal = async (
 
-    //Recibe 3 parametros:
+    //Recibe 4 parametros:
     cartList, //Productos en el carrito
-    clientInstagramUsername, //Usuario de instagram del cliente
+    clientContact, //Instagram o WhatsApp del cliente, según contactMethod
+    contactMethod, //"instagram" o "whatsapp"
     totalPrice // Precio total del carrito
 
   ) => {
+    setIsSubmitting(true);
+    setSubmitError("");
+
     try {
 
-      //Envia a la API (/createorder) los 3 parametros que recibe
+      //Envia a la API (/createorder) los datos del pedido
+      //El backend gratuito puede tardar hasta ~50s si estaba "dormido" por inactividad
       const response = await axios.post(`${apiURL}/create-order`, {
         cartList,
-        clientInstagramUsername,
+        clientContact,
+        contactMethod,
         totalPrice,
-      });
+      }, { timeout: 60000 });
 
       //Recibe la respuesta de la API y redirecciona al usuario
       const initPoint = response.data.init_point;
@@ -51,31 +57,14 @@ export const useCartHandlers = (
 
     } catch (error) {
 
-      //Se manejan eventuales errores
+      //Se manejan eventuales errores y se muestran al usuario
       console.log("soy el error", error); //jajaja "Hola! Soy el error y vengo a cagarte la vida :)"
+      setSubmitError(
+        "No se pudo iniciar el pago. Probá de nuevo en unos segundos."
+      );
+      setIsSubmitting(false);
 
     }
-  };
-
-
-
-
-  //Confirmacion de Instagram
-  const handleInputChange = (e) => {
-
-    //Guarda en una constante el @usuario de instagram
-    const inputValue = e.target.value;
-
-    //Guarda en un estado local el @usuario de instagram
-    setInstagramUsername(inputValue);
-
-    setTouched(true);
-
-    //Guarda el @usuario de instagram en una constante la cual indica que es valido
-    const isUsernameValid = isValidInstagramUsername(inputValue);
-
-    //Si el usaurio es incorrecto, devuelve un mensaje avisando ésto
-    setError(isUsernameValid ? "" : "Usuario de Instagram no válido");
   };
 
 
@@ -106,8 +95,9 @@ export const useCartHandlers = (
   //Devuelve todos los handlers para poder utilizarlos en componentes React
   return {
     handleSubmitModal,
-    handleInputChange,
     handleModalCancel,
     handleModalYes,
+    isSubmitting,
+    submitError,
   };
 };

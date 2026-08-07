@@ -22,11 +22,19 @@ export const validations = () => {
         return password.length >= 6;
     };
 
+    //Valida que el numero de WhatsApp tenga entre 8 y 15 digitos (con o sin +/espacios)
+    const isValidWhatsAppNumber = (number) => {
+        const cleaned = number.replace(/[\s-]/g, "");
+        const whatsappRegex = /^\+?[0-9]{8,15}$/;
+        return whatsappRegex.test(cleaned);
+    };
+
     //Devuelve todos los handlers para poder utilizarlos en componentes React
     return {
         isEmailValid,
         isPasswordValid,
         isUsernameValid,
         isValidInstagramUsername,
+        isValidWhatsAppNumber,
     };
 };
