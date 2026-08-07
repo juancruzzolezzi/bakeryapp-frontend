@@ -19,16 +19,10 @@ const Profile = () => {
         <h2>User Profile</h2>
         <div className={styles.profileInfo}>
           <div>
-            <strong>Name:</strong>
-          </div>
-          <div>
             <strong>Email:</strong> {user}
           </div>
           <div>
             <strong>Username:</strong> {userName}
-          </div>
-          <div>
-            <strong>Location:</strong>
           </div>
         </div>
         <button onClick={handleLogOut} className={styles.logoutButton}>
