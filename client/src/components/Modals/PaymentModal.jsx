@@ -26,6 +26,21 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
     setTouched(false);
   };
 
+  const canSubmit = isValid && contactValue !== "" && !isSubmitting;
+
+  const submitPayment = () => {
+    if (canSubmit) {
+      handleSubmitModal(cartList, contactValue, contactMethod, totalPrice);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitPayment();
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -75,6 +90,7 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
             setContactValue(e.target.value);
             setTouched(true);
           }}
+          onKeyDown={handleKeyDown}
           placeholder={contactMethod === "instagram" ? "@tu_usuario" : "+54 9 11 1234-5678"}
           className={style.modalInput}
         />
@@ -94,10 +110,8 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
         {submitError && <span className={style.modalError}>{submitError}</span>}
         <br />
         <button
-          onClick={() =>
-            handleSubmitModal(cartList, contactValue, contactMethod, totalPrice)
-          }
-          disabled={!isValid || contactValue === "" || isSubmitting}
+          onClick={submitPayment}
+          disabled={!canSubmit}
           className={style.modalBtn}
         >
           {isSubmitting ? "Procesando..." : "Continuar al pago"}
