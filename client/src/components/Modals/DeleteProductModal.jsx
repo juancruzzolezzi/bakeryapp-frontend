@@ -9,21 +9,26 @@ const DeleteProductModal = ({ isOpen, onCancel, onConfirm }) => {
       <Modal
         isOpen={isOpen}
         onRequestClose={onCancel}
-        contentLabel="Delete Product"
+        contentLabel="Eliminar producto"
         className={style.modal}
+        overlayClassName={style.overlay}
+        style={{
+          overlay: { zIndex: 999999 },
+          content: { zIndex: 999999 },
+        }}
       >
         <div className={style.modalContent}>
           <h5 className={style.modalHeader}>
-            You are about to delete the product from your Cart.
+            Vas a eliminar el producto de tu carrito.
           </h5>
           <p className={style.modalText}>
-            Are you sure?
+            ¿Estás seguro?
           </p>
-          <button onClick={onCancel} className={style.modalBtn}>
-            Cancel
+          <button onClick={onCancel} className={style.modalBtnNeutral}>
+            Cancelar
           </button>
-          <button onClick={onConfirm} className={style.modalBtn}>
-            Yes
+          <button onClick={onConfirm} className={style.modalBtnDanger}>
+            Sí
           </button>
         </div>
       </Modal>

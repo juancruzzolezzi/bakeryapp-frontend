@@ -22,10 +22,10 @@ const EmptyCartModal = ({ isOpen, onCancel, onConfirm }) => {
                 <p className={style.modalText}>
                     ¿Estás seguro que querés vaciar el carrito?
                 </p>
-                <button onClick={onCancel} className={style.modalBtn}>
+                <button onClick={onCancel} className={style.modalBtnNeutral}>
                     Cancelar
                 </button>
-                <button onClick={onConfirm} className={style.modalBtn}>
+                <button onClick={onConfirm} className={style.modalBtnDanger}>
                     Sí
                 </button>
             </div>
