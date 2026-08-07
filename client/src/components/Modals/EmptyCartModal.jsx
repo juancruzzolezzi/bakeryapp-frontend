@@ -12,6 +12,10 @@ const EmptyCartModal = ({ isOpen, onCancel, onConfirm }) => {
             contentLabel="Vaciar carrito"
             className={style.modal}
             overlayClassName={style.overlay}
+            style={{
+                overlay: { zIndex: 999999 },
+                content: { zIndex: 999999 },
+            }}
         >
             <div className={style.modalContent}>
                 <h2 className={style.modalHeader}>Vaciar carrito</h2>

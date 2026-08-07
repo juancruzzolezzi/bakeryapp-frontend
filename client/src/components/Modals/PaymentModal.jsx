@@ -33,6 +33,10 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
       contentLabel="Ingresar información"
       className={style.modal}
       overlayClassName={style.overlay}
+      style={{
+        overlay: { zIndex: 999999 },
+        content: { zIndex: 999999 },
+      }}
     >
       <div className={style.modalContent}>
         <h2 className={style.modalHeader}>Ingresa tu información</h2>
