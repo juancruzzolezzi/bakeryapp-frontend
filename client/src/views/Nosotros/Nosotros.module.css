@@ -1,6 +1,7 @@
 .container {
-    height: 100vh;
+    min-height: 100vh;
     min-width: 100vw;
+    padding-bottom: 5rem;
 }
 
 .sectionContainer{
