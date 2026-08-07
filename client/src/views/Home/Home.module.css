@@ -1,0 +1,71 @@
+.mainContainer {
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-image: url("../../../public/Portada.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.design {
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.presentacion {
+    width: 60vw;
+    max-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.presentacion h1 {
+    color: #d9b767;
+    text-shadow: none;
+    font-size: 5rem;
+    margin: 0;
+    text-shadow: 2px 1px 20px black;
+}
+
+.presentacion h2 {
+    margin: 0;
+    color: #d9b767;
+    font-weight: 500;
+    font-size: 1.5rem;
+    text-shadow: 3px 1px 20px black;
+}
+
+@media screen and (max-width: 860px) {
+
+    .presentacion h1 {
+        font-size: 3rem;
+    }
+
+    .presentacion h2 {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .presentacion {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .presentacion h1 {
+        font-size: 2rem;
+    }
+
+    .presentacion h2 {
+        font-size: 0.5rem;
+    }
+}

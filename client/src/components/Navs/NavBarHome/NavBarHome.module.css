@@ -1,0 +1,221 @@
+.navbar {
+    position: fixed;
+    width: 100%;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 99;;
+    margin: 0;
+    padding-right: 1rem;
+}
+
+.navOpen {
+    display: none;
+}
+
+.nav {
+    height: 15vh;
+    width: 100%;
+}
+
+.contenido {
+    display: none;
+}
+
+.contenidoOpen {
+    height: 40vh;
+    width: clamp(220px, 22vw, 320px);
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.buttonCont {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cerrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 25px;
+    width: 3vw;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 2rem;
+    font-weight: bolder;
+    color: rgba(255, 255, 255, 0.734);
+}
+
+.cerrar:hover {
+    transition: 0.5s;
+    transform: translateX(-25px);
+}
+
+.linksCont {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.navLink {
+    text-decoration: none;
+}
+
+.btnMenu{
+    color: #d9b767;
+    font-weight: bold;
+    font-size: 3rem;
+    display: flex;
+    justify-content: flex-end;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.btnMenu:hover {
+    transition: 0.5s;
+    transform: translateX(-25px);
+}
+
+.btn {
+    color: #d9b767;
+    font-weight: bold;
+    font-size: clamp(1.3rem, 2.4vw, 2.2rem);
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+    max-width: 100%;
+    transition: 0.5s;
+}
+
+.btn:hover {
+    transition: 0.5s;
+    transform: translateX(-25px);
+}
+
+.navLink {
+    color: #f5f5f5;
+    text-decoration: none;
+    transition: .5s;
+}
+
+
+@media screen and (max-width: 760px) {
+    .navbar {
+        position: fixed;
+        width: 100%;
+        height: 20vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 99;
+        margin: 0;
+    }
+
+    .navOpen {
+        display: none;
+    }
+
+    .nav {
+        height: 15vh;
+        max-width: 100vw;
+    }
+
+    .contenido {
+        display: none;
+    }
+
+    .contenidoOpen {
+        height: auto;
+        min-height: 32vh;
+        width: 60vw;
+        max-width: 280px;
+        padding-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .buttonCont {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .cerrar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        border-radius: 25px;
+        width: 6vw;
+        background-color: rgba(0, 0, 0, 0);
+        font-size: 1.5rem;
+        font-weight: bolder;
+        color: rgba(255, 255, 255, 0.734);
+    }
+
+    .cerrar:hover {
+        transition: 0.5s;
+        transform: translateX(-25px);
+    }
+
+    .linksCont {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .navLink {
+        text-decoration: none;
+    }
+
+    .btn {
+        color: #d9b767;
+        font-weight: bold;
+        font-size: 2rem;
+        display: flex;
+        justify-content: flex-end;
+        transition: 0.5s;
+    }
+
+    .btnMenu{
+        color: #d9b767;
+        font-weight: bold;
+        font-size: 3rem;
+        display: flex;
+        justify-content: flex-end;
+        transition: 0.5s;
+    }
+
+    .btn:hover {
+        transition: 0.5s;
+        transform: translateX(-25px);
+    }
+
+    .navLink {
+        color: #f5f5f5;
+        text-decoration: none;
+        transition: .5s;
+    }
+}

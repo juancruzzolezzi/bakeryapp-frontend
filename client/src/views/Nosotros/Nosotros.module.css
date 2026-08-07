@@ -1,0 +1,76 @@
+.container {
+    height: 100vh;
+    min-width: 100vw;
+}
+
+.sectionContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+    margin-top: 10rem;
+    min-height: auto;
+    font-family: "Lexend", sans-serif;
+}
+
+.textContainer{
+    width: 50vw;
+}
+
+.section1 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 5rem;
+}
+
+.section1 h1 {
+    font-size: 2em;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.section1 p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: white;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: white;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: white;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 760px) {
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    .textContainer{
+        padding: 0.5rem;
+        width: 100%;
+    }
+
+    .sectionContainer {
+        margin-top: 11rem;
+        font-size: 1rem;
+    }
+}

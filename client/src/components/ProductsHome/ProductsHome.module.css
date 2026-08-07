@@ -1,0 +1,165 @@
+.MainConteiner {
+    height: 100vh;
+    width: 100%;
+    background-color: #010101;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid {
+    width: 95vw;
+    height: 75vh;
+    margin-top: 15vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 50% 50%;
+}
+
+.destacado1 {
+    background-color: #b69443;
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+}
+
+.productImg1 {
+    display: block;
+    width: 16vw;
+    border-radius: 40px;
+    z-index: 2;
+    object-fit: cover;
+    object-position: center -125px;
+}
+
+.productDetail1{
+    width: 12vw;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nombre {
+    padding-top: 8vh;
+    font-size:1.2rem;
+}
+
+.buttonCont {
+    width: 11.8vw;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.productDetail1 button {
+    border-radius: 30px;
+    border: none;
+    width: 2vw;
+    height: 4vh;
+    margin: 2vh;
+}
+
+.destacado2 {
+    background-color: #b69443;
+
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+    border: 2px solid;
+}
+
+.productImg2 {
+    display: block;
+    width: 16vw;
+    border-radius: 40px;
+    z-index: 2;
+    object-fit: cover;
+}
+
+
+.destacado3 {
+    background-color: #b69443;
+
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+}
+
+.destacado4 {
+    background-color: #b69443;
+
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+}
+
+.destacado5 {
+    background-color: #b69443;
+
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+}
+
+.destacado6 {
+    background-color: #b69443;
+
+    margin: 1vw;
+    border-radius: 40px;
+    display: flex;
+}
+
+
+
+@media screen and (max-width: 860px) {
+
+}
+
+
+
+@media screen and (max-width: 760px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 33.33% 33.33% 33.33%;
+    }
+
+    .productImg1 {
+        width: 100%;
+        object-position: center;
+    }
+
+    .productImg2 {
+        width: 100%;
+        object-position: center;
+    }
+
+    .productDetail1{
+        position: fixed
+    } 
+}
+
+
+
+@media screen and (max-width: 375px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 33.33% 33.33% 33.33%;
+    }
+
+    .productImg1 {
+        width: 100%;
+        object-position: center;
+    }
+
+    .productImg2 {
+        width: 100%;
+        object-position: center;
+    }
+
+    .productDetail1{
+        position: fixed
+    } 
+}

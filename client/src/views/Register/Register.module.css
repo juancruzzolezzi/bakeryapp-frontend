@@ -1,0 +1,154 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    color: white;
+}
+
+.title{
+    margin-top: 8vh;
+    font-size: 3rem;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    width: auto;
+    padding: 0.5rem;
+}
+
+.field{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+    width: 40vw;
+}
+
+.field label {
+    color: #e8821c;
+}
+
+.input{
+    width: 50%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #d9d9d9;
+}
+
+.button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    width: 10vw;
+    cursor: pointer;
+    align-self: center;
+    margin-top: 1rem;
+    background-color: #e8821c;
+    color: white;
+}
+
+.button:hover{
+    background-color: #c96f16;
+    cursor: pointer;
+}
+
+.link{
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.link:hover{
+    color: gray;
+}
+
+.error {
+    color: red;
+    font-size: 1.6rem;
+}
+
+@media screen and (max-width: 760px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        width: 100%;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
+        color: white;
+    }
+
+    .title {
+        margin-top: 6vh;
+        font-size: 2.5rem;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        font-size: 1.3rem;
+        width: auto;
+        padding: 0.5rem;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 95vw;
+    }
+
+    .input {
+        width: 90vw;
+        border: none;
+        border-radius: 0.5rem;
+        background-color: #d9d9d9;
+    }
+
+    .button {
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        width: 40vw;
+        cursor: pointer;
+        align-self: center;
+        margin-top: 1rem;
+        background-color: #e8821c;
+        color: white;
+    }
+
+    .button:hover {
+        background-color: #c96f16;
+        cursor: pointer;
+    }
+
+    .link {
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .link:hover {
+        color: gray;
+    }
+
+    .error {
+        color: red;
+        font-size: 1.6rem;
+    }
+}

@@ -1,0 +1,180 @@
+.main {
+    height: 16vh;
+    max-width: 40vw;
+    border-radius: 2rem;
+    margin-bottom: 2vh;
+    display: flex;
+    align-items: center;
+    background-color: #101010;
+    padding: 0.2rem;
+}
+
+.imgConteiner {
+    height: 12vh;
+    width: fit-content;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen {
+    object-position: center;
+    object-fit: cover;
+    border-radius: 1rem;
+    height: 12vh;
+    width: 6vw;
+}
+
+.description {
+    max-height: 12vh;
+    width: 10vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantity {
+    color: aliceblue;
+    margin: 0.5vw;
+}
+
+.buttonsConteiner {
+    height: 6vh;
+    width: 7vw;
+    gap: 0.5rem;
+    padding: 0.2rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.quantityButton {
+    border: none;
+    height: 3vh;
+    width: 3vw;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.quantityButton:hover {
+    cursor: pointer;
+}
+
+.deleteButton {
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    max-width: 4vw;
+    background-color: transparent;
+}
+
+.trash {
+    height: 3vh;
+    max-width: 5vw;
+    font-size: 1rem;
+    color: white;
+}
+
+.trash:hover {
+    color: red;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 760px) {
+    .main {
+        height: 16vh;
+        min-width: 46vw;
+        border-radius: 2rem;
+        margin-bottom: 2vh;
+        display: flex;
+        align-items: center;
+        background-color: #101010;
+        padding: 0.2rem;
+    }
+
+    .imgConteiner {
+        height: 13vh;
+        min-width: 22vw;
+        border-radius: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .imagen {
+        object-position: center;
+        object-fit: cover;
+        border-radius: 1rem;
+        height: 12vh;
+        min-width: 22vw;
+    }
+
+    .description {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .quantity {
+        color: aliceblue;
+        margin: 0.5vw;
+    }
+
+    .buttonsConteiner {
+        height: 6vh;
+        min-width: 18vw;
+        gap: 0.5rem;
+        padding: 0.2rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .quantityButton {
+        border: none;
+        height: 3vh;
+        width: 8vw;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    .quantityButton:hover {
+        cursor: pointer;
+    }
+
+    .deleteButton {
+        border: none;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        background-color: transparent;
+    }
+
+    .trash {
+        height: 3vh;
+        width: 8vw;
+        font-size: 1.3rem;
+        color: white;
+    }
+
+    .trash:hover {
+        color: red;
+        cursor: pointer;
+    }
+}

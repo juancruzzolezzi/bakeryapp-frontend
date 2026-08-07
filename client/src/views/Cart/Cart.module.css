@@ -1,0 +1,197 @@
+.mainContainer {
+    position: fixed;
+    top: 1vh;
+    right: 0.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90vh;
+    width: 320px;
+    padding: 20px;
+    background-color: #d9b767;
+    border-radius: 65px;
+    z-index: 10;
+}
+
+.buttonConteiner {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.closeCart {
+    border-radius: 25px;
+    border: none;
+    width: 3vw;
+    height: 1.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5vh;
+    background-color: #e14d28;
+    color: #fff;
+    cursor: pointer;
+}
+
+.miOrden {
+    margin: 0;
+    margin-bottom: 2vh;
+}
+
+.productList {
+    width: 16vw;
+    height: 520px;
+    display: flexbox;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-top: 2vh;
+    bottom: 2vh;
+    padding: 0.2rem;
+}
+
+.totalPrice {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 2vh;
+}
+
+.cartButtons {
+    margin: 0;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+
+    }
+
+    .emptyCartBtn {
+        background-color: #e9451c;
+        color: #fff;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+
+    .payNowBtn {
+        background-color: #101010;
+        color: #fff;
+        margin-bottom: 1vh;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+}
+
+@media screen and (max-width: 860px) {
+    
+}
+
+@media screen and (max-width: 760px) {
+    .mainContainer {
+        position: fixed;
+        top: 1vh;
+        width: 60%;
+        right: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 60vh;
+        padding: 10px;
+        background-color: #d9b767;
+        border-radius: 2rem;
+        z-index: 10;
+    }
+    
+    .buttonConteiner {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    
+    .closeCart {
+        border-radius: 25px;
+        border: none;
+        width: 8vw;
+        height: 6vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        padding-bottom: 0.5vh;
+        background-color: #e14d28;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .miOrden {
+        margin: 0;
+    }
+
+    .productList {
+        width: 50vw;
+        min-height: 30vh;
+        display: flexbox;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        bottom: 2vh;
+        padding: 0.2rem;
+    }
+
+    .totalPrice {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 1vh;
+    }
+
+    .cartButtons {
+        margin: 0;
+        margin-top: 1vh;
+        display: flex;
+        flex-direction: column;
+
+        button {
+            padding: 0.2rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+
+        }
+
+        .emptyCartBtn {
+            background-color: #e9451c;
+            color: #fff;
+
+            &:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+        }
+
+        .payNowBtn {
+            background-color: #101010;
+            color: #fff;
+            margin-bottom: 1vh;
+
+            &:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+        }
+    }
+}

@@ -1,0 +1,201 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    max-width: 100%;
+}
+
+.productContainer{
+    display: flex;
+    align-items: center;
+    width: 48vw;
+    max-width: 100%;
+    height: 100%;
+    border-radius: 80px;
+    background-color: #b69443;
+}
+
+.imageConteiner {
+    height: 45vh;
+    width: 44.9vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image {
+    height: 45vh;
+    width: 45vh;
+    border-radius: 80px;
+    object-position: center;
+    object-fit: cover;
+}
+
+.dataConteiner{
+    height: 100%;
+    width: 50vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 80px;
+}
+
+.productDescription {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 17vw;
+    height: 20vh;
+    font-size: 1.3rem;
+    margin-top: 0;
+}
+
+.secondaryContainer {
+    height: 25vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.quantityContainer {
+    display: flex;
+    align-items: center;
+}
+
+.quantityButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    width: 8vh;
+    border: none;
+    border-radius: 20px;
+    margin: 0 1.5vw;
+    font-size: 1.5rem;
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+.quantityButton:hover {
+    background-color: #dddddd;
+}
+
+.addToCartButton {
+    background-color: #101010;
+    color: #ffffff;
+    height: 9vh;
+    width: 12vw;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+.addToCartButton:hover {
+    transition: 0.2s ease-in-out;
+    background-color: #477d4a;
+}
+
+@media screen and (max-width: 1170px) {
+    .mainContainer {
+        height: auto;
+    }
+
+    .productContainer{
+        width: 98%;
+        max-width: 100%;
+        height: auto;
+        padding: 0.8rem;
+        gap: 1rem;
+        justify-content: center;
+        border-radius: 35px;
+        margin-bottom: 1vh;
+    }
+
+    .imageConteiner {
+        flex-shrink: 0;
+        height: clamp(140px, 40vw, 240px);
+        width: clamp(140px, 40vw, 240px);
+        border-radius: 35px;
+    }
+
+    .image {
+        height: clamp(140px, 40vw, 240px);
+        width: clamp(140px, 40vw, 240px);
+        border-radius: 35px;
+    }
+
+    .dataConteiner{
+        height: auto;
+        width: auto;
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 35px;
+        gap: 0.9rem;
+    }
+
+    .productDescription {
+        width: 100%;
+        max-height: none;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 0 0.5rem;
+    }
+
+    .secondaryContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 0;
+        width: 100%;
+        max-height: none;
+        gap: 0.8rem;
+    }
+
+    .quantityContainer {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    .quantityButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 2.2rem;
+        width: 2.2rem;
+        flex-shrink: 0;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.2rem;
+        background-color: #eeeeee;
+        cursor: pointer;
+    }
+
+    .quantityButton:hover {
+        background-color: #dddddd;
+    }
+
+    .addToCartButton {
+        height: auto;
+        width: 100%;
+        max-width: 220px;
+        padding: 0.6rem 0.5rem;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: 0.2s ease-in-out;
+        text-decoration: none;
+    }
+}
