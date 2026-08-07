@@ -50,8 +50,10 @@ export const useCartHandlers = (
         totalPrice,
       }, { timeout: 60000 });
 
-      //Recibe la respuesta de la API y redirecciona al usuario
-      const initPoint = response.data.init_point;
+      //Recibe la respuesta de la API y redirecciona al usuario.
+      //Con credenciales de prueba de MercadoPago, solo el link de sandbox
+      //acepta el login de usuarios de prueba (el de producción los rechaza).
+      const initPoint = response.data.sandbox_init_point || response.data.init_point;
       console.log("esta es la response.data", response.data);
       window.location.href = initPoint;
 
