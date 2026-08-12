@@ -39,25 +39,6 @@ const Nosotros = () => {
                             creaciones por muchos años más.
                         </p>
                     </section>
-                    <section className={styles.section2}>
-                        <h2>Contactanos</h2>
-                        <p>
-                            <strong>Email:</strong> contacto@bakery.com
-                        </p>
-                        <p>
-                            <strong>Teléfono:</strong> +123 456 7890
-                        </p>
-                        <p>
-                            <strong>Instagram:</strong>{" "}
-                            <a
-                                href="https://www.instagram.com/bakery"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                @bakery
-                            </a>
-                        </p>
-                    </section>
                 </div>
             </div>
         </div>

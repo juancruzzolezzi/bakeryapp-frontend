@@ -38,6 +38,10 @@ const NavBarHome = () => {
             <div className={style.btn}> COCINA </div>
           </Link>
 
+          <Link to="/contactanos" className={style.navLink}>
+            <div className={style.btn}> CONTACTANOS </div>
+          </Link>
+
           <Link to="/nosotros" className={style.navLink}>
             <div className={style.btn}> NOSOTROS </div>
           </Link>
