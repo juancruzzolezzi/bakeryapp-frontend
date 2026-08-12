@@ -29,11 +29,13 @@ export const useCartHandlers = (
   //Submit Carrito
   const handleSubmitModal = async (
 
-    //Recibe 4 parametros:
+    //Recibe 6 parametros:
     cartList, //Productos en el carrito
     clientContact, //Instagram o WhatsApp del cliente, según contactMethod
     contactMethod, //"instagram" o "whatsapp"
-    totalPrice // Precio total del carrito
+    totalPrice, // Precio total del carrito
+    deliveryType, //"delivery" o "takeaway"
+    address // Dirección de entrega (solo si deliveryType es "delivery")
 
   ) => {
     setIsSubmitting(true);
@@ -48,6 +50,8 @@ export const useCartHandlers = (
         clientContact,
         contactMethod,
         totalPrice,
+        deliveryType,
+        address,
       }, { timeout: 60000 });
 
       //Recibe la respuesta de la API y redirecciona al usuario al checkout real de Mercado Pago

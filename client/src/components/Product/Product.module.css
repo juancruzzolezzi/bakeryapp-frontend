@@ -22,12 +22,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #b69443;
+    border-radius: 80px;
+    overflow: hidden;
 }
 
 .image {
-    height: 45vh;
-    width: 45vh;
-    border-radius: 80px;
+    height: 100%;
+    width: 100%;
     object-position: center;
     object-fit: cover;
 }
@@ -127,12 +129,13 @@
         max-width: 240px;
         margin: 0 auto;
         border-radius: 22px;
+        background-color: #b69443;
+        overflow: hidden;
     }
 
     .image {
         height: 100%;
         width: 100%;
-        border-radius: 22px;
     }
 
     .dataConteiner{

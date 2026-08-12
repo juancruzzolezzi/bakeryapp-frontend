@@ -29,6 +29,15 @@ export const validations = () => {
         return whatsappRegex.test(cleaned);
     };
 
+    //Valida que la dirección de entrega tenga al menos una calle (letras) y una
+    //altura (número), sin importar el orden. Piso/depto/barrio quedan libres,
+    //solo exige que en algún lado de la dirección haya nombre de calle + número.
+    const isValidAddress = (address) => {
+        const hasStreetName = /[A-Za-zÀ-ÿ]{2,}/.test(address);
+        const hasStreetNumber = /\d+/.test(address);
+        return hasStreetName && hasStreetNumber;
+    };
+
     //Devuelve todos los handlers para poder utilizarlos en componentes React
     return {
         isEmailValid,
@@ -36,5 +45,6 @@ export const validations = () => {
         isUsernameValid,
         isValidInstagramUsername,
         isValidWhatsAppNumber,
+        isValidAddress,
     };
 };
