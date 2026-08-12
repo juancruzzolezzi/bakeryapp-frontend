@@ -69,6 +69,16 @@
     margin-bottom: 10px;
 }
 
+/* Igual que .modalHint pero sin el margin-top negativo: para usar cuando no
+   está pegado justo debajo de un input (ej: después de un mensaje de error). */
+.modalHintSpaced {
+    display: block;
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
 .modalContactMethods {
     display: flex;
     justify-content: center;

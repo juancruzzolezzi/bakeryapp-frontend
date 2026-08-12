@@ -6,19 +6,32 @@ import { validations } from "../../validations/validations";
 
 Modal.setAppElement("#root");
 
+// Costo fijo de envío a domicilio. Tiene que coincidir con DELIVERY_FEE en
+// api/mercadoPago/src/controllers/payment.controller.js (ahí es donde se
+// cobra de verdad; acá solo se usa para mostrarle el total al usuario antes de pagar).
+const DELIVERY_FEE = 2000;
+
 const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const [contactMethod, setContactMethod] = useState("instagram");
   const [contactValue, setContactValue] = useState("");
   const [touched, setTouched] = useState(false);
+  const [deliveryType, setDeliveryType] = useState("delivery");
+  const [address, setAddress] = useState("");
+  const [addressTouched, setAddressTouched] = useState(false);
 
   const { handleSubmitModal, isSubmitting, submitError } = useCartHandlers();
 
-  const { isValidInstagramUsername, isValidWhatsAppNumber } = validations();
+  const { isValidInstagramUsername, isValidWhatsAppNumber, isValidAddress } = validations();
 
   const isValid =
     contactMethod === "instagram"
       ? isValidInstagramUsername(contactValue)
       : isValidWhatsAppNumber(contactValue);
+
+  const isAddressValid = deliveryType !== "delivery" || isValidAddress(address.trim());
+
+  const finalTotal =
+    totalPrice + (deliveryType === "delivery" ? DELIVERY_FEE : 0);
 
   const handleMethodChange = (method) => {
     setContactMethod(method);
@@ -26,11 +39,24 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
     setTouched(false);
   };
 
-  const canSubmit = isValid && contactValue !== "" && !isSubmitting;
+  const handleDeliveryTypeChange = (type) => {
+    setDeliveryType(type);
+    setAddress("");
+    setAddressTouched(false);
+  };
+
+  const canSubmit = isValid && contactValue !== "" && isAddressValid && !isSubmitting;
 
   const submitPayment = () => {
     if (canSubmit) {
-      handleSubmitModal(cartList, contactValue, contactMethod, totalPrice);
+      handleSubmitModal(
+        cartList,
+        contactValue,
+        contactMethod,
+        totalPrice,
+        deliveryType,
+        deliveryType === "delivery" ? address.trim() : ""
+      );
     }
   };
 
@@ -107,6 +133,61 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
               : "Número de WhatsApp no válido"}
           </span>
         )}
+
+        <p className={style.modalText}>¿Cómo querés recibir tu pedido?</p>
+        <div className={style.modalContactMethods}>
+          <button
+            type="button"
+            onClick={() => handleDeliveryTypeChange("delivery")}
+            className={`${style.modalMethodBtn} ${
+              deliveryType === "delivery" ? style.modalMethodBtnActive : ""
+            }`}
+          >
+            Delivery
+          </button>
+          <button
+            type="button"
+            onClick={() => handleDeliveryTypeChange("takeaway")}
+            className={`${style.modalMethodBtn} ${
+              deliveryType === "takeaway" ? style.modalMethodBtnActive : ""
+            }`}
+          >
+            Take Away
+          </button>
+        </div>
+
+        {deliveryType === "delivery" && (
+          <>
+            <label className={style.modalLabel}>Dirección de entrega:</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => {
+                setAddress(e.target.value);
+                setAddressTouched(true);
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="Calle y número (piso/depto y barrio opcional)"
+              className={style.modalInput}
+            />
+            <span className={style.modalHint}>
+              Tiene que incluir calle y altura, ej: Zavalía 2026
+            </span>
+            {addressTouched && !isAddressValid && (
+              <span className={style.modalError}>
+                Ingresá una dirección válida con calle y número
+              </span>
+            )}
+            <span className={style.modalHintSpaced}>
+              El delivery tiene un costo adicional de ${DELIVERY_FEE}
+            </span>
+          </>
+        )}
+
+        <p className={style.modalText}>
+          <strong>Total a pagar: ${finalTotal}</strong>
+        </p>
+
         {submitError && <span className={style.modalError}>{submitError}</span>}
         <br />
         <button
