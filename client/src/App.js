@@ -6,6 +6,7 @@ import Home from "./views/Home/Home";
 import Products from "./views/Products/Products";
 import Loading from "./components/Loading/Loading";
 import Nosotros from "./views/Nosotros/Nosotros";
+import Contactanos from "./views/Contactanos/Contactanos";
 //Estilos
 import "./App.css";
 
@@ -42,6 +43,7 @@ function App() {
         <Route path="/" exact element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/contactanos" element={<Contactanos />} />
       </Routes>
     </div>
   );
