@@ -3,14 +3,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
+    background: #251b13;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    padding: 1.6rem;
+    border-radius: 20px;
     max-width: 400px;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
     text-align: center;
+    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
     z-index: 99;
 }
 
@@ -21,7 +24,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.65);
     z-index: 9998;
 }
 
@@ -31,20 +34,34 @@
 }
 
 .modalHeader {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 20px;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #f6ecdb;
+    margin-bottom: 1.2rem;
+}
+
+.modalTotal {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f6ecdb;
+    margin: 1rem 0;
+}
+
+.modalTotal span {
+    font-variant-numeric: tabular-nums;
 }
 
 .modalText {
-    font-size: 0, 5rem;
-    color: black;
-    font-family: 'Arial', sans-serif;
+    font-size: 0.95rem;
+    color: #c9bda9;
 }
 
 .modalLabel {
     display: block;
+    color: #c9bda9;
+    font-size: 0.88rem;
     margin-bottom: 10px;
 }
 
@@ -52,18 +69,27 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: #2f2318;
+    border: 1px solid rgba(230, 201, 138, 0.25);
+    border-radius: 10px;
+    color: #f6ecdb;
+    box-sizing: border-box;
+}
+
+.modalInput::placeholder {
+    color: #8a7f6d;
 }
 
 .modalError {
-    color: #e44d26;
+    color: #d97b64;
     margin-top: 10px;
+    display: block;
+    font-size: 0.85rem;
 }
 
 .modalHint {
     display: block;
-    color: #777;
+    color: #8a7f6d;
     font-size: 0.8rem;
     margin-top: -14px;
     margin-bottom: 10px;
@@ -73,7 +99,7 @@
    está pegado justo debajo de un input (ej: después de un mensaje de error). */
 .modalHintSpaced {
     display: block;
-    color: #777;
+    color: #8a7f6d;
     font-size: 0.8rem;
     margin-top: 6px;
     margin-bottom: 10px;
@@ -88,61 +114,80 @@
 
 .modalMethodBtn {
     padding: 8px 16px;
-    background-color: #f0f0f0;
-    color: #333;
-    border: 1px solid #ddd;
-    border-radius: 20px;
+    background: transparent;
+    color: #e7c98a;
+    border: 1px solid rgba(230, 201, 138, 0.35);
+    border-radius: 999px;
     cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modalMethodBtn:hover {
+    background: #2f2318;
 }
 
 .modalMethodBtnActive {
-    background-color: #e44d26;
-    color: #fff;
-    border-color: #e44d26;
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+    border-color: transparent;
+    font-weight: 700;
 }
 
 .modalBtn {
-    padding: 10px 20px;
-    background-color: #e44d26;
-    color: #fff;
+    padding: 0.75rem 1.3rem;
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+    font-weight: 700;
     border: none;
-    border-radius: 4px;
+    border-radius: 999px;
     cursor: pointer;
     margin-right: 1rem;
     margin-top: 1rem;
 
     &:disabled {
-        background-color: #ccc;
+        background: #4a3f30;
+        color: #8a7f6d;
         cursor: not-allowed;
     }
 }
 
 .modalBtnNeutral {
-    padding: 10px 20px;
-    background-color: #101010;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+    padding: 0.75rem 1.3rem;
+    background: transparent;
+    color: #c9bda9;
+    border: 1px solid rgba(230, 201, 138, 0.25);
+    border-radius: 999px;
     cursor: pointer;
     margin-right: 1rem;
     margin-top: 1rem;
+    transition: background 0.15s ease;
+}
+
+.modalBtnNeutral:hover {
+    background: #2f2318;
 }
 
 .modalBtnDanger {
-    padding: 10px 20px;
-    background-color: #e44d26;
+    padding: 0.75rem 1.3rem;
+    background: #a9744a;
     color: #fff;
+    font-weight: 700;
     border: none;
-    border-radius: 4px;
+    border-radius: 999px;
     cursor: pointer;
     margin-top: 1rem;
+    transition: background 0.15s ease;
+}
+
+.modalBtnDanger:hover {
+    background: #c08a5c;
 }
 
 @media screen and (max-width: 760px) {
     .modal{
         width: 92%;
         max-height: 80vh;
-        padding: 16px;
+        padding: 1.2rem;
         z-index: 99 !important;
     }
 

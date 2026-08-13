@@ -7,23 +7,22 @@ const Product = ({ product }) => {
   const totalPrice = product.price * quantity;
   const { handleAddToCart } = useProductHandlers();
 
-    const incrementQuantity = () => setQuantity((prev) => prev + 1);
-    const decrementQuantity = () =>
-      setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () =>
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
+  const addToCart = () => {
+    handleAddToCart(product, quantity);
+    setQuantity(1); // Resetea la cantidad a 1 después de agregar
+  };
 
-    const addToCart = () => {
-      handleAddToCart(product, quantity);
-      setQuantity(1); // Resetea la cantidad a 1 después de agregar
-    };
-  
   return (
     <div
       className={style.productContainer}
       data-category={product.category}
       data-product-card="true"
     >
-      <div className={style.imageConteiner}>
+      <div className={style.photo}>
         {product.images && product.images.length > 0 && (
           <img
             src={product.images[0]}
@@ -31,31 +30,21 @@ const Product = ({ product }) => {
             className={style.image}
           />
         )}
+        <span className={style.pricePill}>${totalPrice}</span>
       </div>
 
-      <div className={style.dataConteiner}>
-        <div className={style.descriptionContainer}>
-          <p className={style.productDescription}>{product.description}</p>
-        </div>
+      <div className={style.body}>
+        <p className={style.name}>{product.title}</p>
+        <p className={style.desc}>{product.description}</p>
 
-        <div className={style.secondaryContainer}>
-          <div className={style.quantityContainer}>
-            <button
-              onClick={decrementQuantity}
-              className={style.quantityButton}
-            >
-              {" "}
-              -{" "}
+        <div className={style.footerRow}>
+          <div className={style.stepper}>
+            <button onClick={decrementQuantity} aria-label="Restar cantidad">
+              –
             </button>
-
-            <span className={style.quantity}>{quantity}</span>
-
-            <button
-              onClick={incrementQuantity}
-              className={style.quantityButton}
-            >
-              {" "}
-              +{" "}
+            <span className={style.qty}>{quantity}</span>
+            <button onClick={incrementQuantity} aria-label="Sumar cantidad">
+              +
             </button>
           </div>
 
@@ -64,7 +53,7 @@ const Product = ({ product }) => {
             className={style.addToCartButton}
             data-add-to-cart="true"
           >
-            Añadir al Carrito ${totalPrice}
+            Añadir
           </button>
         </div>
       </div>

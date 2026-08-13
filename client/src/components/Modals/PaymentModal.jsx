@@ -184,8 +184,8 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
           </>
         )}
 
-        <p className={style.modalText}>
-          <strong>Total a pagar: ${finalTotal}</strong>
+        <p className={style.modalTotal}>
+          Total a pagar: <span>${finalTotal}</span>
         </p>
 
         {submitError && <span className={style.modalError}>{submitError}</span>}

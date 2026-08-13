@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux';
 import { useProductHandlers } from "../../handlers/productHandlers";
 import DeleteProductModal from '../Modals/DeleteProductModal';
 import style from "./ProductCart.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const ProductCart = ({ product }) => {
   const cart = useSelector((state) => state.homeSlice.cartList);
@@ -20,67 +18,57 @@ const ProductCart = ({ product }) => {
     handleDelete,
   } = useProductHandlers(setModalEmptyOpen);
 
-    const handleIncrement = () => {
-      const newQuantity = quantity + 1;
-      handleIncrementCart(product, newQuantity);
-    };
+  const handleIncrement = () => {
+    handleIncrementCart(product, quantity + 1);
+  };
 
-    const handleDecrement = () => {
-      if (quantity > 1) {
-        const newQuantity = quantity - 1;
-        handleDecrementCart(product, newQuantity);
-      } else {
-        setModalEmptyOpen(true);
-      }
-    };
-
+  //Restar respeta la cantidad mínima de 1 (pedir confirmación en vez de
+  //restar a 0); "Quitar" de al lado siempre pide confirmar el borrado.
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      handleDecrementCart(product, quantity - 1);
+    } else {
+      setModalEmptyOpen(true);
+    }
+  };
 
   return (
-    <div className={style.main}>
-      <div className={style.imgConteiner}>
-        {product.images && product.images.length > 0 ? (
-          <img src={product.images[0]} alt="imagen" className={style.imagen} />
-        ) : (
-          ""
+    <div className={style.row}>
+      <div className={style.thumb}>
+        {product.images && product.images.length > 0 && (
+          <img src={product.images[0]} alt={product.title} />
         )}
       </div>
 
-      <div className={style.description}>
-        <span className={style.quantity}>{quantity}</span>
+      <div className={style.info}>
+        <p className={style.name}>{product.title}</p>
 
-        <div className={style.buttonsConteiner}>
-          {product.quantity > 1 ? (
-            <button
-              onClick={handleDecrement}
-              className={style.quantityButton}
-            >
-              {" "}
-              -{" "}
-            </button>
-          ) : (
-            <button
-              onClick={() => setModalEmptyOpen(true)}
-              className={style.deleteButton}
-            >
-              <FontAwesomeIcon icon={faTrashCan} className={style.trash} />
-            </button>
-          )}
-
-          <DeleteProductModal
-            isOpen={isModalEmptyOpen}
-            onCancel={handleModalCancel}
-            onConfirm={() => handleDelete(product.id)}
-          />
-
-          <button
-            onClick={handleIncrement}
-            className={style.quantityButton}
-          >
-            {" "}
-            +{" "}
+        <div className={style.stepper}>
+          <button onClick={handleDecrement} aria-label="Restar cantidad">
+            –
+          </button>
+          <span className={style.qty}>{quantity}</span>
+          <button onClick={handleIncrement} aria-label="Sumar cantidad">
+            +
           </button>
         </div>
       </div>
+
+      <div className={style.priceCol}>
+        <span className={style.amount}>${product.price * quantity}</span>
+        <button
+          onClick={() => setModalEmptyOpen(true)}
+          className={style.removeBtn}
+        >
+          Quitar
+        </button>
+      </div>
+
+      <DeleteProductModal
+        isOpen={isModalEmptyOpen}
+        onCancel={handleModalCancel}
+        onConfirm={() => handleDelete(product.id)}
+      />
     </div>
   );
 };

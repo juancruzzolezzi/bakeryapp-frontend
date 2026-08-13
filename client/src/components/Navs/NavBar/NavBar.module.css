@@ -1,22 +1,26 @@
 .navbar {
-    position: fixed;
+    /* "absolute" (no "fixed"): el menú scrollea con la página, así que
+       solo se ve arriba de todo y no se queda flotando encima de los
+       productos al bajar. El carrito, en cambio, sí es fixed (ver
+       .cartFixed) para seguir siendo accesible siempre. */
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 20vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-right: 1rem;
     box-sizing: border-box;
     overflow: hidden;
     z-index: 99;
     margin: 0;
-    /* El <nav> en sí mide 100% x 20vh (fixed), aunque sus hijos ("MENÚ", el
-       ícono del carrito) ya midan justo lo suyo: al no haber ningún hijo en
-       el resto de esa franja, el propio <nav> queda como blanco de click y
-       tapa lo que esté debajo (ej: los filtros de Products) sin importar
-       el scroll. Se desactiva acá y se reactiva puntualmente en cada parte
-       que sí debe responder a clicks. */
+    /* El <nav> en sí mide 100% x 20vh, aunque su hijo ("MENÚ") ya mida
+       justo lo suyo: al no haber ningún otro hijo en el resto de esa
+       franja, el propio <nav> queda como blanco de click y tapa lo que
+       esté debajo. Se desactiva acá y se reactiva puntualmente en la
+       parte que sí debe responder a clicks. */
     pointer-events: none;
 }
 
@@ -25,17 +29,11 @@
 }
 
 .nav {
-    height: 15vh;
     width: fit-content;
     display: flex;
     align-items: center;
-    /* Antes ocupaba el 100% del ancho para poder alinear "MENÚ" a la
-       derecha (con justify-content en el hijo), pero eso creaba una franja
-       invisible del ancho de toda la pantalla que tapaba lo que hubiera
-       debajo (ej: los filtros de Products), sin importar el scroll. Con
-       "fit-content" el div mide justo lo que ocupa el botón, y
-       align-self lo empuja al borde derecho del navbar. */
     align-self: flex-end;
+    padding-right: 1rem;
     pointer-events: auto;
 }
 
@@ -58,13 +56,13 @@
     flex-direction: column;
     align-items: flex-end;
     position: fixed;
+    /* Arranca arriba de todo (no debajo del navbar): el carrito, en
+       cambio, se corre hacia abajo mientras el menú está abierto (ver
+       .cartFixedMenuOpen) para no quedar tapado por esta caja. */
     top: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.85);
     pointer-events: auto;
-    /* Más alto que el ícono del carrito (z-index: 10 en Cart.module.css):
-       antes, con el menú abierto, el carrito quedaba visualmente metido
-       adentro del menú, confundiendo dónde caía el click de la "x". */
     z-index: 20;
 }
 
@@ -113,17 +111,32 @@
     text-decoration: none;
 }
 
+/* Envoltorio fijo, independiente del menú: el carrito tiene que seguir
+   accesible sin importar el scroll, a diferencia del menú (.navbar) que
+   ahora scrollea con la página. */
+.cartFixed {
+    position: fixed;
+    /* En "vh" (no "rem"): "MENÚ" se centra en una franja que también
+       escala con la altura de la pantalla (20vh), así que con un valor
+       fijo en rem quedaban pisándose en pantallas más bajas. Este valor
+       lo deja en el hueco entre "MENÚ" (centrado en esa franja de 20vh)
+       y los filtros de Products (que arrancan justo en 20vh). */
+    top: 15vh;
+    right: 1rem;
+    z-index: 99;
+}
+
+/* Mientras el menú desplegable está abierto (empieza en top: 0, ver
+   .contenidoOpen), el carrito se corre más abajo para no quedar tapado
+   por él, en vez de mantenerse en su posición habitual (15vh). */
+.cartFixedMenuOpen {
+    top: calc(40vh + 8rem);
+}
+
 .cartBox {
     width: fit-content;
-    height: 15vh;
     display: flex;
     align-items: center;
-    padding-right: 1rem;
-    /* Mismo motivo que .nav: antes ocupaba el 100% del ancho (con
-       margin-left: auto en .cart para empujar el ícono a la derecha), lo
-       que tapaba contenido debajo suyo en toda esa franja. */
-    align-self: flex-end;
-    pointer-events: auto;
 }
 
 .cartBox .cart {
@@ -131,9 +144,10 @@
 }
 
 .cart {
+    position: relative;
     border: 3px solid #d9b767;
-    height: clamp(3rem, 8vw, 4rem);
-    width: clamp(3rem, 8vw, 4rem);
+    height: clamp(2.4rem, 5vw, 3rem);
+    width: clamp(2.4rem, 5vw, 3rem);
     flex-shrink: 0;
     border-radius: 50px;
     font-size: 1.6rem;
@@ -144,6 +158,24 @@
     transition: 0.5s;
     box-shadow: 4px 4px 10px black;
     color: #f5f5f5;
+}
+
+.cartBadge {
+    position: absolute;
+    top: -0.3rem;
+    right: -0.3rem;
+    min-width: 1.3rem;
+    height: 1.3rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background-color: #6b3e1d;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.3rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
 }
 
 .cart:hover {
@@ -191,7 +223,9 @@
 
 @media screen and (max-width: 760px) {
     .navbar {
-        position: fixed;
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 18vh;
         display: flex;
@@ -199,6 +233,15 @@
         align-items: flex-end;
         z-index: 99;
         margin: 0;
+    }
+
+    .cartFixed {
+        top: 12.6vh;
+        right: 0.75rem;
+    }
+
+    .cartFixedMenuOpen {
+        top: calc(32vh + 9rem);
     }
 
     .navOpen {
@@ -224,6 +267,8 @@
         flex-direction: column;
         align-items: flex-end;
         position: fixed;
+        /* Arranca arriba de todo (no debajo del navbar): el carrito se
+           corre hacia abajo mientras está abierto (.cartFixedMenuOpen). */
         top: 0;
         right: 0;
         background-color: rgba(0, 0, 0, 0.85);
@@ -294,11 +339,9 @@
     }
 
     .cartBox {
-        width: 100%;
-        height: 10vh;
+        width: fit-content;
         display: flex;
         align-items: center;
-        padding-right: 1rem;
     }
 
     .cart {
