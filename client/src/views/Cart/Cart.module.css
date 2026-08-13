@@ -4,15 +4,15 @@
     right: 0.5vw;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    height: auto;
+    width: 340px;
     max-height: 90vh;
-    width: 320px;
-    padding: 20px;
+    padding: 0;
     box-sizing: border-box;
     overflow: hidden;
-    background-color: #d9b767;
-    border-radius: 65px;
+    background: #251b13;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
     z-index: 10;
     /* Se renderiza dentro del <nav>, que tiene pointer-events: none para no
        tapar contenido de la página debajo suyo. Se reactiva acá para que el
@@ -20,194 +20,149 @@
     pointer-events: auto;
 }
 
-.buttonConteiner {
-    width: 100%;
+.header {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem 1.3rem 1rem;
+    border-bottom: 1px solid rgba(230, 201, 138, 0.16);
+    flex-shrink: 0;
 }
 
-.closeCart {
-    border-radius: 25px;
-    border: none;
-    width: 3vw;
-    height: 1.5vw;
+.title {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.3rem;
+    margin: 0;
+    color: #f6ecdb;
+    font-weight: 500;
+}
+
+.count {
+    font-size: 0.76rem;
+    color: #c9bda9;
+}
+
+.closeBtn {
+    width: 1.9rem;
+    height: 1.9rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    background: transparent;
+    color: #c9bda9;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    margin-right: 1rem;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5vh;
-    background-color: #e14d28;
-    color: #fff;
-    cursor: pointer;
 }
 
-.miOrden {
-    margin: 0;
-    margin-bottom: 2vh;
+.closeBtn:hover {
+    border-color: #c9a15f;
+    color: #e7c98a;
 }
 
-.productList {
-    width: 16vw;
-    flex: 0 1 auto;
-    max-height: 45vh;
-    display: flexbox;
+.items {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    margin-top: 2vh;
-    padding: 0.2rem;
+    padding: 0.2rem 1.3rem;
 }
 
-.totalPrice {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 2vh;
+.summary {
     flex-shrink: 0;
+    padding: 1rem 1.3rem 1.3rem;
+    border-top: 1px solid rgba(230, 201, 138, 0.16);
+    background: #2f2318;
 }
 
-.cartButtons {
-    margin: 0;
-    margin-top: 2vh;
-    flex-shrink: 0;
+.totalRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: #f6ecdb;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.totalAmount {
+    font-family: inherit;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.actions {
     display: flex;
     flex-direction: column;
-
-    button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 15px;
-        cursor: pointer;
-
-    }
-
-    .emptyCartBtn {
-        background-color: #e9451c;
-        color: #fff;
-
-        &:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-    }
-
-    .payNowBtn {
-        background-color: #101010;
-        color: #fff;
-        margin-bottom: 1vh;
-
-        &:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-    }
+    gap: 0.55rem;
 }
 
-@media screen and (max-width: 860px) {
-    
+.actions button {
+    padding: 0.85rem 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.payBtn {
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+}
+
+.payBtn:disabled {
+    background: #4a3f30;
+    color: #8a7f6d;
+    cursor: not-allowed;
+}
+
+.clearBtn {
+    background: transparent;
+    color: #c9bda9;
+    font-weight: 500;
+    font-size: 0.82rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.clearBtn:hover {
+    color: #d97b64;
+}
+
+.clearBtn:disabled {
+    color: #6b5842;
+    cursor: not-allowed;
+    text-decoration: none;
 }
 
 @media screen and (max-width: 760px) {
     .mainContainer {
-        position: fixed;
         top: 1vh;
-        width: 60%;
         right: 0.5rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: auto;
-        max-height: 90vh;
-        padding: 10px;
-        box-sizing: border-box;
-        overflow: hidden;
-        background-color: #d9b767;
-        border-radius: 2rem;
-        z-index: 10;
+        width: 78vw;
+        max-width: 340px;
+        border-radius: 20px;
     }
 
-    .buttonConteiner {
-        width: 100%;
-        flex-shrink: 0;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+    .header {
+        padding: 1rem 1.1rem 0.85rem;
     }
 
-    .closeCart {
-        border-radius: 25px;
-        border: none;
-        width: 8vw;
-        height: 6vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        padding-bottom: 0.5vh;
-        background-color: #e14d28;
-        color: #fff;
-        cursor: pointer;
+    .title {
+        font-size: 1.15rem;
     }
 
-    .miOrden {
-        margin: 0;
-        flex-shrink: 0;
+    .items {
+        padding: 0.2rem 1.1rem;
     }
 
-    .productList {
-        width: 50vw;
-        flex: 0 1 auto;
-        max-height: 40vh;
-        display: flexbox;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 0.2rem;
-    }
-
-    .totalPrice {
-        margin: 0;
-        flex-shrink: 0;
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin-top: 1vh;
-    }
-
-    .cartButtons {
-        margin: 0;
-        margin-top: 1vh;
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-
-        button {
-            padding: 0.2rem;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-
-        }
-
-        .emptyCartBtn {
-            background-color: #e9451c;
-            color: #fff;
-
-            &:disabled {
-                background-color: #ccc;
-                cursor: not-allowed;
-            }
-        }
-
-        .payNowBtn {
-            background-color: #101010;
-            color: #fff;
-            margin-bottom: 1vh;
-
-            &:disabled {
-                background-color: #ccc;
-                cursor: not-allowed;
-            }
-        }
+    .summary {
+        padding: 0.85rem 1.1rem 1.1rem;
     }
 }

@@ -18,6 +18,17 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   //Referencia al panel del carrito, para detectar clicks afuera de él
   const cartRef = useRef(null);
 
+  //Guarda la cantidad TOTAL de unidades (sumando quantity de cada
+  //producto, no solo cuántas líneas distintas hay) del render anterior.
+  //Así se detecta tanto "se agregó un producto nuevo" como "se sumó una
+  //unidad más de uno que ya estaba" (mismo largo de lista, pero más
+  //unidades), sin confundirlo con "ya había productos cuando se montó
+  //este componente" (ej: volviste a /products después de haber estado
+  //en otra página con cosas en el carrito; no debería abrirse solo).
+  const totalQuantity = (list) =>
+    list.reduce((sum, product) => sum + product.quantity, 0);
+  const prevQuantityRef = useRef(totalQuantity(cartList));
+
   // Destructuring de funciones dentro de useCartHandlers
   const { handleModalYes, handleModalCancel } = useCartHandlers(
     setModalEmptyOpen,
@@ -35,12 +46,21 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   }, [cartList]);
 
   useEffect(() => {
-    if (cartList.length > 0) {
-      setIsCartOpen(true);
-    } else {
+    const prevQuantity = prevQuantityRef.current;
+    const currentQuantity = totalQuantity(cartList);
+
+    if (cartList.length === 0) {
       // Si se queda sin productos (ej: se borró el último), se cierra solo.
       setIsCartOpen(false);
+    } else if (currentQuantity > prevQuantity) {
+      // Se abre solo cuando suman más unidades (agregar un producto nuevo,
+      // o sumar una unidad más de uno que ya estaba), no simplemente
+      // porque ya tenía productos al montarse este componente (ej: volver
+      // a /products con cosas ya agregadas antes).
+      setIsCartOpen(true);
     }
+
+    prevQuantityRef.current = currentQuantity;
   }, [cartList, setIsCartOpen]);
 
   //Cierra el carrito al hacer click en cualquier lugar de la pantalla que no
@@ -78,41 +98,52 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   if (!isCartOpen) return null;
   return (
     <div className={style.mainContainer} ref={cartRef}>
-      <div className={style.buttonConteiner}>
+      <div className={style.header}>
+        <div>
+          <h3 className={style.title}>Tu pedido</h3>
+          <span className={style.count}>
+            {cartList.length} producto{cartList.length === 1 ? "" : "s"}
+          </span>
+        </div>
         <button
           onClick={() => setIsCartOpen(false)}
           onTouchStart={() => setIsCartOpen(false)}
-          className={style.closeCart}
+          className={style.closeBtn}
+          aria-label="Cerrar carrito"
         >
-          x
+          ✕
         </button>
       </div>
 
-      <h1 className={style.miOrden}>Mi orden</h1>
-      <div className={style.productList}>
+      <div className={style.items}>
         {cartList.map((product, index) => (
           <ProductCart product={product} key={index} />
         ))}
       </div>
 
-      <p className={style.totalPrice}>Total: ${totalPrice}</p>
+      <div className={style.summary}>
+        <div className={style.totalRow}>
+          <span>Total</span>
+          <span className={style.totalAmount}>${totalPrice}</span>
+        </div>
 
-      <div className={style.cartButtons}>
-        <button
-          onClick={() => setModalPaymentOpen(true)}
-          disabled={cartList.length === 0}
-          className={style.payNowBtn}
-        >
-          Pagar
-        </button>
+        <div className={style.actions}>
+          <button
+            onClick={() => setModalPaymentOpen(true)}
+            disabled={cartList.length === 0}
+            className={style.payBtn}
+          >
+            Pagar
+          </button>
 
-        <button
-          onClick={() => setModalEmptyOpen(true)}
-          disabled={cartList.length === 0}
-          className={style.emptyCartBtn}
-        >
-          Limpiar carrito
-        </button>
+          <button
+            onClick={() => setModalEmptyOpen(true)}
+            disabled={cartList.length === 0}
+            className={style.clearBtn}
+          >
+            Vaciar carrito
+          </button>
+        </div>
       </div>
 
       <EmptyCartModal
