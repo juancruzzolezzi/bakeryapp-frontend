@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useCartHandlers } from "../../handlers/cartHandlers";
 import PaymentModal from "../../components/Modals/PaymentModal";
@@ -14,6 +14,9 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isModalPaymentOpen, setModalPaymentOpen] = useState(false);
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
+
+  //Referencia al panel del carrito, para detectar clicks afuera de él
+  const cartRef = useRef(null);
 
   // Destructuring de funciones dentro de useCartHandlers
   const { handleModalYes, handleModalCancel } = useCartHandlers(
@@ -34,12 +37,47 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   useEffect(() => {
     if (cartList.length > 0) {
       setIsCartOpen(true);
+    } else {
+      // Si se queda sin productos (ej: se borró el último), se cierra solo.
+      setIsCartOpen(false);
     }
   }, [cartList, setIsCartOpen]);
 
+  //Cierra el carrito al hacer click en cualquier lugar de la pantalla que no
+  //sea el carrito en sí ni el botón "Añadir al Carrito" (ese lo mantiene
+  //abierto vía el useEffect de arriba). Se ignora mientras haya CUALQUIER
+  //modal abierto (Pagar, Limpiar carrito, Eliminar producto, etc.): todos
+  //se renderizan en un portal fuera del div del carrito, y react-modal
+  //marca esto agregando la clase "ReactModal__Body--open" al <body>
+  //mientras haya al menos un modal abierto, sin importar cuál.
+  useEffect(() => {
+    if (!isCartOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (document.body.classList.contains("ReactModal__Body--open")) return;
+      if (cartRef.current && cartRef.current.contains(event.target)) return;
+      // No cerrar si el click fue en una tarjeta de producto (agregar al
+      // carrito, sumar/restar cantidad, etc.) ni en el ícono que abre/cierra
+      // el carrito: ninguno de los dos cuenta como "afuera".
+      if (event.target.closest("[data-product-card]")) return;
+      if (event.target.closest("[data-cart-toggle]")) return;
+
+      setIsCartOpen(false);
+    };
+
+    // Se escucha en fase de CAPTURA (el 3er argumento "true"), o sea antes
+    // de que React llegue a procesar el click. Si escucháramos en fase de
+    // bubbling normal, para cuando nos toca mirar el estado (ej: si hay un
+    // modal abierto) React ya pudo haber cerrado ese modal y actualizado el
+    // carrito como reacción al mismo click (ej: confirmar "Eliminar
+    // producto"), dando un resultado desactualizado.
+    document.addEventListener("click", handleClickOutside, true);
+    return () => document.removeEventListener("click", handleClickOutside, true);
+  }, [isCartOpen, setIsCartOpen]);
+
   if (!isCartOpen) return null;
   return (
-    <div className={style.mainContainer}>
+    <div className={style.mainContainer} ref={cartRef}>
       <div className={style.buttonConteiner}>
         <button
           onClick={() => setIsCartOpen(false)}

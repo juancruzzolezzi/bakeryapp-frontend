@@ -11,6 +11,13 @@
     overflow: hidden;
     z-index: 99;
     margin: 0;
+    /* El <nav> en sí mide 100% x 20vh (fixed), aunque sus hijos ("MENÚ", el
+       ícono del carrito) ya midan justo lo suyo: al no haber ningún hijo en
+       el resto de esa franja, el propio <nav> queda como blanco de click y
+       tapa lo que esté debajo (ej: los filtros de Products) sin importar
+       el scroll. Se desactiva acá y se reactiva puntualmente en cada parte
+       que sí debe responder a clicks. */
+    pointer-events: none;
 }
 
 .navOpen {
@@ -19,7 +26,17 @@
 
 .nav {
     height: 15vh;
-    width: 100%;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    /* Antes ocupaba el 100% del ancho para poder alinear "MENÚ" a la
+       derecha (con justify-content en el hijo), pero eso creaba una franja
+       invisible del ancho de toda la pantalla que tapaba lo que hubiera
+       debajo (ej: los filtros de Products), sin importar el scroll. Con
+       "fit-content" el div mide justo lo que ocupa el botón, y
+       align-self lo empuja al borde derecho del navbar. */
+    align-self: flex-end;
+    pointer-events: auto;
 }
 
 .contenido {
@@ -27,7 +44,14 @@
 }
 
 .contenidoOpen {
-    height: 40vh;
+    /* "auto" en vez de una altura fija: con 4 links (HOME, COCINA,
+       CONTACTANOS, NOSOTROS) una altura fija como 40vh se quedaba corta
+       en pantallas no muy altas y el último link quedaba renderizado por
+       fuera del fondo oscuro de la caja. */
+    height: auto;
+    min-height: 40vh;
+    padding: 2rem 0;
+    box-sizing: border-box;
     width: clamp(220px, 22vw, 320px);
     max-width: 90vw;
     display: flex;
@@ -37,12 +61,19 @@
     top: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.85);
+    pointer-events: auto;
+    /* Más alto que el ícono del carrito (z-index: 10 en Cart.module.css):
+       antes, con el menú abierto, el carrito quedaba visualmente metido
+       adentro del menú, confundiendo dónde caía el click de la "x". */
+    z-index: 20;
 }
 
 .buttonCont {
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    padding: 0.5rem;
+    box-sizing: border-box;
 }
 
 .cerrar {
@@ -51,11 +82,15 @@
     align-items: center;
     border: none;
     border-radius: 25px;
-    width: 3vw;
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    flex-shrink: 0;
     background-color: rgba(0, 0, 0, 0);
     font-size: 2rem;
     font-weight: bolder;
     color: rgba(255, 255, 255, 0.734);
+    cursor: pointer;
 }
 
 .cerrar:hover {
@@ -79,11 +114,20 @@
 }
 
 .cartBox {
-    width: 100%;
+    width: fit-content;
     height: 15vh;
     display: flex;
     align-items: center;
     padding-right: 1rem;
+    /* Mismo motivo que .nav: antes ocupaba el 100% del ancho (con
+       margin-left: auto en .cart para empujar el ícono a la derecha), lo
+       que tapaba contenido debajo suyo en toda esa franja. */
+    align-self: flex-end;
+    pointer-events: auto;
+}
+
+.cartBox .cart {
+    pointer-events: auto;
 }
 
 .cart {
@@ -115,6 +159,7 @@
     justify-content: flex-end;
     transition: 0.5s;
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .btnMenu:hover {
@@ -182,12 +227,16 @@
         top: 0;
         right: 0;
         background-color: rgba(0, 0, 0, 0.85);
+        pointer-events: auto;
+        z-index: 20;
     }
 
     .buttonCont {
         width: 100%;
         display: flex;
         justify-content: flex-end;
+        padding: 0.4rem;
+        box-sizing: border-box;
     }
 
     .cerrar {
@@ -196,11 +245,15 @@
         align-items: center;
         border: none;
         border-radius: 25px;
-        width: 6vw;
+        width: 2.75rem;
+        height: 2.75rem;
+        min-width: 2.75rem;
+        flex-shrink: 0;
         background-color: rgba(0, 0, 0, 0);
         font-size: 1.5rem;
         font-weight: bolder;
         color: rgba(255, 255, 255, 0.734);
+        cursor: pointer;
     }
 
     .linksCont {
