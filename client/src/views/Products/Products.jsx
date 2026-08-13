@@ -25,11 +25,13 @@ const Products = () => {
         <Filtros setFiltroActivo={setFiltroActivo} />
       </div>
 
-      <div className={style.productList}>
-        {productosFiltrados &&
-          productosFiltrados.map((product) => (
-            <Product key={product.id} product={product} />
-          ))}
+      <div className={style.productListWrapper}>
+        <div className={style.productList}>
+          {productosFiltrados &&
+            productosFiltrados.map((product) => (
+              <Product key={product.id} product={product} />
+            ))}
+        </div>
       </div>
     </div>
   );

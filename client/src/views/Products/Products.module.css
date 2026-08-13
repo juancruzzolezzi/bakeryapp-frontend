@@ -1,42 +1,87 @@
 .mainContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;    
+    align-items: center;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    /* Todo el scroll de esta página pasa a la zona de productos (ver
+       .productListWrapper); acá arriba no hay scroll de por medio. */
+    overflow: hidden;
+}
+
+.productListWrapper {
+    width: 100%;
+    /* Arranca justo debajo del navbar + filtros y ocupa el resto de la
+       pantalla; scrollea puertas adentro, así los productos jamás llegan
+       a superponerse con los filtros de arriba (no hace falta darles
+       fondo para taparlos). El navbar mide 20vh y la franja de filtros
+       (.filtros en Filtros.module.css) otros 20vh más, así que hay que
+       bajar 40vh en total para recién ahí empezar (+ 3rem de aire extra). */
+    margin-top: calc(40vh + 1rem);
+    height: calc(100vh - 40vh - 1rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .productList {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    row-gap: 2rem;
+    column-gap: 0.8rem;
     justify-content: space-between;
+    padding: 0 3vw 3rem 8vw;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 .filters{
-    margin-top: 20vh;
     width: 95%;
     height: auto;
+    /* Fijo respecto a la ventana, siempre pegado debajo del navbar. Como
+       los productos ahora scrollean en su propio contenedor que arranca
+       más abajo (ver .productListWrapper), nunca se superponen con esto,
+       sin necesidad de darle un fondo. */
+    position: fixed;
+    top: 20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
 }
 
 @media screen and (max-width: 1170px) {
     .mainContainer {
-        padding-top: 0; 
-        min-height: 100vh; 
-        padding: 0.8rem;
+        padding-top: 0;
+        height: 100vh;
+    }
+
+    .productListWrapper {
+        margin-top: calc(40vh + 1rem);
+        height: calc(100vh - 40vh - 1rem);
+        padding: 0 0.8rem;
     }
 
     .productList {
         grid-template-columns: 1fr;
         grid-template-rows: none;
-        margin-top: 3rem;
+        gap: 1.5rem;
         align-items: center;
         justify-content: center;
         display: flex;
         flex-direction: column;
     }
+}
 
-    .filters{
-        margin-top: 13rem;
+/* El navbar achica su altura (de 20vh a 18vh) recién en este breakpoint
+   (ver NavBar.module.css), así que acá es donde el "top" del fixed y las
+   cuentas del contenedor scrolleable tienen que actualizarse. */
+@media screen and (max-width: 760px) {
+    .filters {
+        top: 18vh;
+    }
+
+    .productListWrapper {
+        margin-top: calc(18vh + 14rem);
+        height: calc(100vh - 18vh - 14rem);
     }
 }

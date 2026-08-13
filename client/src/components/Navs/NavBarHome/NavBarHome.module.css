@@ -10,6 +10,10 @@
     z-index: 99;;
     margin: 0;
     padding-right: 1rem;
+    /* El <nav> en sí mide 100% x 20vh (fixed): sin esto tapa contenido de
+       la página debajo suyo en toda esa franja, aunque sus hijos ya midan
+       justo lo suyo. Se reactiva puntualmente en cada parte clickeable. */
+    pointer-events: none;
 }
 
 .navOpen {
@@ -18,7 +22,16 @@
 
 .nav {
     height: 15vh;
-    width: 100%;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    /* Antes ocupaba el 100% del ancho para alinear "MENÚ" a la derecha, lo
+       que creaba una franja invisible del ancho de toda la pantalla que
+       tapaba contenido debajo, sin importar el scroll. Con "fit-content"
+       el div mide justo lo que ocupa el botón, y align-self lo empuja al
+       borde derecho del navbar. */
+    align-self: flex-end;
+    pointer-events: auto;
 }
 
 .contenido {
@@ -26,7 +39,14 @@
 }
 
 .contenidoOpen {
-    height: 40vh;
+    /* "auto" en vez de una altura fija: con 4 links (HOME, COCINA,
+       CONTACTANOS, NOSOTROS) una altura fija como 40vh se quedaba corta
+       en pantallas no muy altas y el último link (NOSOTROS) quedaba
+       renderizado por fuera del fondo oscuro de la caja. */
+    height: auto;
+    min-height: 40vh;
+    padding: 2rem 0;
+    box-sizing: border-box;
     width: clamp(220px, 22vw, 320px);
     max-width: 90vw;
     display: flex;
@@ -36,12 +56,15 @@
     top: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.85);
+    pointer-events: auto;
 }
 
 .buttonCont {
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    padding: 0.5rem;
+    box-sizing: border-box;
 }
 
 .cerrar {
@@ -50,11 +73,15 @@
     align-items: center;
     border: none;
     border-radius: 25px;
-    width: 3vw;
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    flex-shrink: 0;
     background-color: rgba(0, 0, 0, 0);
     font-size: 2rem;
     font-weight: bolder;
     color: rgba(255, 255, 255, 0.734);
+    cursor: pointer;
 }
 
 .cerrar:hover {
@@ -85,6 +112,7 @@
     justify-content: flex-end;
     transition: 0.5s;
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .btnMenu:hover {
@@ -153,12 +181,15 @@
         top: 0;
         right: 0;
         background-color: rgba(0, 0, 0, 0.85);
+        pointer-events: auto;
     }
 
     .buttonCont {
         width: 100%;
         display: flex;
         justify-content: flex-end;
+        padding: 0.4rem;
+        box-sizing: border-box;
     }
 
     .cerrar {
@@ -167,11 +198,15 @@
         align-items: center;
         border: none;
         border-radius: 25px;
-        width: 6vw;
+        width: 2.75rem;
+        height: 2.75rem;
+        min-width: 2.75rem;
+        flex-shrink: 0;
         background-color: rgba(0, 0, 0, 0);
         font-size: 1.5rem;
         font-weight: bolder;
         color: rgba(255, 255, 255, 0.734);
+        cursor: pointer;
     }
 
     .cerrar:hover {

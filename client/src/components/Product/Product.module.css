@@ -9,21 +9,21 @@
 .productContainer{
     display: flex;
     align-items: center;
-    width: 48vw;
+    width: 36vw;
     max-width: 100%;
     height: 100%;
-    border-radius: 80px;
+    border-radius: 60px;
     background-color: #b69443;
 }
 
 .imageConteiner {
-    height: 45vh;
-    width: 44.9vh;
+    height: 34vh;
+    width: 33.9vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #b69443;
-    border-radius: 80px;
+    border-radius: 60px;
     overflow: hidden;
 }
 
@@ -36,27 +36,27 @@
 
 .dataConteiner{
     height: 100%;
-    width: 50vh;
+    width: 38vh;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 80px;
+    border-radius: 60px;
 }
 
 .productDescription {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 17vw;
-    height: 20vh;
-    font-size: 1.3rem;
+    width: 13vw;
+    height: 15vh;
+    font-size: 1.05rem;
     margin-top: 0;
 }
 
 .secondaryContainer {
-    height: 25vh;
-    width: 20vw;
+    height: 19vh;
+    width: 15vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,12 +72,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 5vh;
-    width: 8vh;
+    height: 3.8vh;
+    width: 6vh;
     border: none;
     border-radius: 20px;
-    margin: 0 1.5vw;
-    font-size: 1.5rem;
+    margin: 0 1.2vw;
+    font-size: 1.2rem;
     background-color: #eeeeee;
     cursor: pointer;
 }
@@ -89,12 +89,12 @@
 .addToCartButton {
     background-color: #101010;
     color: #ffffff;
-    height: 9vh;
-    width: 12vw;
+    height: 7vh;
+    width: 11vw;
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: 0.2s ease-in-out;
     text-decoration: none;
 }

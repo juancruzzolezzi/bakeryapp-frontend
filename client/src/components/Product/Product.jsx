@@ -18,7 +18,11 @@ const Product = ({ product }) => {
     };
   
   return (
-    <div className={style.productContainer} data-category={product.category}>
+    <div
+      className={style.productContainer}
+      data-category={product.category}
+      data-product-card="true"
+    >
       <div className={style.imageConteiner}>
         {product.images && product.images.length > 0 && (
           <img
@@ -55,7 +59,11 @@ const Product = ({ product }) => {
             </button>
           </div>
 
-          <button onClick={addToCart} className={style.addToCartButton}>
+          <button
+            onClick={addToCart}
+            className={style.addToCartButton}
+            data-add-to-cart="true"
+          >
             Añadir al Carrito ${totalPrice}
           </button>
         </div>

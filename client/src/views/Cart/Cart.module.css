@@ -14,6 +14,10 @@
     background-color: #d9b767;
     border-radius: 65px;
     z-index: 10;
+    /* Se renderiza dentro del <nav>, que tiene pointer-events: none para no
+       tapar contenido de la página debajo suyo. Se reactiva acá para que el
+       carrito en sí siga siendo clickeable con normalidad. */
+    pointer-events: auto;
 }
 
 .buttonConteiner {
