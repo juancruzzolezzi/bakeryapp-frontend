@@ -6,10 +6,17 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import style from "./NavBar.module.css";
 import Cart from "../../../views/Cart/Cart";
 
-const NavBar = () => {
+const NavBar = ({ forceCartOpen }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+
+  //Si volvemos de Mercado Pago sin haber pagado (falló o quedó pendiente),
+  //abrimos el carrito solo, para que el comprador lo encuentre a la vista
+  //tal cual lo dejó (junto con el cartel de error que muestra Products).
+  useEffect(() => {
+    if (forceCartOpen) setIsCartOpen(true);
+  }, [forceCartOpen]);
 
   //Cantidad total de unidades en el carrito, para mostrar el "badge"
   //sobre el ícono (independiente de que el carrito esté abierto o no).

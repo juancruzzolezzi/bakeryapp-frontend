@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Product from "../../components/Product/Product";
 import Filtros from "../../components/Filtros/Filtros";
 import NavBar from "../../components/Navs/NavBar/NavBar";
@@ -16,6 +17,21 @@ let yaSeMontoProductsEnEstaSesion = false;
 const Products = () => {
   const { data } = useGetProductsQuery();
   const products = data;
+
+  //Si volvemos acá desde Mercado Pago sin haber pagado (falló o quedó
+  //pendiente), mostramos el cartel de error y le avisamos a NavBar que
+  //abra el carrito solo, para que el comprador lo encuentre tal cual lo
+  //dejó junto con el motivo por el que no se completó la compra.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [paymentStatus, setPaymentStatus] = useState(null);
+
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    if (payment === "failure" || payment === "pending") {
+      setPaymentStatus(payment);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   //Se guarda el filtro elegido en localStorage para que, si se refresca la
   //página, se mantenga seleccionado en vez de volver a "Todo". Pero si se
@@ -57,7 +73,25 @@ const Products = () => {
 
   return (
     <div className={style.mainContainer}>
-      <NavBar />
+      <NavBar forceCartOpen={paymentStatus === "failure" || paymentStatus === "pending"} />
+
+      {paymentStatus && (
+        <div className={`${style.paymentBanner} ${style.paymentBannerError}`}>
+          <button
+            onClick={() => setPaymentStatus(null)}
+            className={style.paymentBannerClose}
+            aria-label="Cerrar aviso"
+          >
+            ✕
+          </button>
+          <p className={style.paymentBannerTitle}>Algo salió mal</p>
+          <p className={style.paymentBannerText}>
+            No pudimos confirmar tu pago. Tu carrito sigue igual que lo
+            dejaste, podés intentar de nuevo cuando quieras.
+          </p>
+        </div>
+      )}
+
       <div className={style.filters}>
         <Filtros filtroActivo={filtroActivo} setFiltroActivo={setFiltroActivo} />
       </div>
