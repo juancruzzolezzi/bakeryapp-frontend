@@ -274,6 +274,9 @@
         background-color: rgba(0, 0, 0, 0.85);
         pointer-events: auto;
         z-index: 20;
+        /* Nunca dejar que ningún hijo (aunque su tamaño se calcule mal en
+           algún modelo de iPhone) se salga visualmente de la caja. */
+        overflow-x: hidden;
     }
 
     .buttonCont {
@@ -323,11 +326,14 @@
     .btn {
         color: #d9b767;
         font-weight: bold;
-        font-size: clamp(1.2rem, 6vw, 2rem);
+        font-size: clamp(1.1rem, 5.5vw, 2rem);
         display: flex;
         justify-content: flex-end;
         text-align: right;
+        width: 100%;
         max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: break-word;
         transition: 0.5s;
     }
 
