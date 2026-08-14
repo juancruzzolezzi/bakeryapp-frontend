@@ -182,6 +182,8 @@
         right: 0;
         background-color: rgba(0, 0, 0, 0.85);
         pointer-events: auto;
+        /* Nunca dejar que ningún hijo se salga visualmente de la caja. */
+        overflow-x: hidden;
     }
 
     .buttonCont {
@@ -216,23 +218,31 @@
 
     .linksCont {
         height: auto;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
         gap: 0.75rem;
         padding: 1rem;
+        box-sizing: border-box;
     }
 
     .navLink {
         text-decoration: none;
+        max-width: 100%;
     }
 
     .btn {
         color: #d9b767;
         font-weight: bold;
-        font-size: 2rem;
+        font-size: clamp(1.1rem, 5.5vw, 2rem);
         display: flex;
         justify-content: flex-end;
+        text-align: right;
+        width: 100%;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: break-word;
         transition: 0.5s;
     }
 
