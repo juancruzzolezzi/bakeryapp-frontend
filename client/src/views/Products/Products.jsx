@@ -76,7 +76,10 @@ const Products = () => {
       <NavBar forceCartOpen={paymentStatus === "failure" || paymentStatus === "pending"} />
 
       {paymentStatus && (
-        <div className={`${style.paymentBanner} ${style.paymentBannerError}`}>
+        <div
+          className={`${style.paymentBanner} ${style.paymentBannerError}`}
+          data-payment-banner="true"
+        >
           <button
             onClick={() => setPaymentStatus(null)}
             className={style.paymentBannerClose}

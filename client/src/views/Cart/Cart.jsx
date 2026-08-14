@@ -81,6 +81,10 @@ function Cart({ isCartOpen, setIsCartOpen }) {
       // el carrito: ninguno de los dos cuenta como "afuera".
       if (event.target.closest("[data-product-card]")) return;
       if (event.target.closest("[data-cart-toggle]")) return;
+      // Ni el cartel de "algo salió mal" (ni su botón de cerrar): cerrar
+      // ese aviso no debería cerrar también el carrito que se abrió junto
+      // con él.
+      if (event.target.closest("[data-payment-banner]")) return;
 
       setIsCartOpen(false);
     };
