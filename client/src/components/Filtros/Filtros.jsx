@@ -12,7 +12,7 @@ const Filtros = ({ filtroActivo, setFiltroActivo }) => {
 
   return (
     <div className={style.filtros}>
-      {["Todo", "Facturas", "Tortas", "Cookies", "Alfajor", "Sin TACC", "Vegano"].map((filtro) => (
+      {["Todo", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano"].map((filtro) => (
         <span
           key={filtro}
           className={obtenerClaseFiltro(filtro)}
