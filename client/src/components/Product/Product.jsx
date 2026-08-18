@@ -28,6 +28,8 @@ const Product = ({ product }) => {
             src={product.images[0]}
             alt={product.title}
             className={style.image}
+            loading="lazy"
+            decoding="async"
           />
         )}
         <span className={style.pricePill}>${totalPrice}</span>

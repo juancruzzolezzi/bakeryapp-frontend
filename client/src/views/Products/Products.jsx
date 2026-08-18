@@ -63,12 +63,22 @@ const Products = () => {
 
   console.log(products);
 
+  //Orden fijo de categorías para cuando se muestran todos los productos
+  //(filtro "Todo"): las que no estén en esta lista van al final, en el
+  //orden en que las devuelva la API.
+  const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajor", "Sin TACC", "Vegano"];
+
   //"products" puede ser undefined mientras todavía no responde la API
   //(ej: recién refrescada la página con un filtro distinto de "Todo" ya
   //guardado en localStorage).
   const productosFiltrados =
-    !products || filtroActivo === "Todo"
+    !products
       ? products
+      : filtroActivo === "Todo"
+      ? [...products].sort(
+          (a, b) =>
+            ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category)
+        )
       : products.filter((product) => product.category === filtroActivo);
 
   return (
