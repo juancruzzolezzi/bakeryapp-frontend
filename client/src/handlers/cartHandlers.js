@@ -57,6 +57,13 @@ export const useCartHandlers = (
       //Recibe la respuesta de la API y redirecciona al usuario al checkout real de Mercado Pago
       const initPoint = response.data.init_point;
       console.log("esta es la response.data", response.data);
+
+      //Marca que se fue a Mercado Pago: si vuelve sin que MP haya agregado
+      //?payment=success/failure/pending a la URL (ej: tocó "Volver al
+      //sitio" o el botón atrás sin llegar a pagar), Products.jsx usa esta
+      //marca para saber que el pago quedó sin completar y avisarle
+      //(ver "pagoAbandonado" en Products.jsx).
+      sessionStorage.setItem("mpCheckoutIniciado", "1");
       window.location.href = initPoint;
 
     } catch (error) {

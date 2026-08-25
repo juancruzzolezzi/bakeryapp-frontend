@@ -31,6 +31,14 @@ const Products = () => {
     if (payment === "failure" || payment === "pending") {
       setPaymentStatus(payment);
       setSearchParams({}, { replace: true });
+      sessionStorage.removeItem("mpCheckoutIniciado");
+    } else if (sessionStorage.getItem("mpCheckoutIniciado")) {
+      // Se fue a Mercado Pago (ver cartHandlers.js) pero volvió sin que MP
+      // agregara ?payment=... a la URL: no hubo un resultado definitivo
+      // (ej: tocó "Volver al sitio" o el botón atrás antes de pagar), así
+      // que avisamos con un tono neutro, no de error.
+      setPaymentStatus("abandoned");
+      sessionStorage.removeItem("mpCheckoutIniciado");
     }
   }, [searchParams, setSearchParams]);
 
@@ -106,7 +114,13 @@ const Products = () => {
           data-payment-banner="true"
           onClick={() => setPaymentStatus(null)}
         >
-          <div className={`${style.paymentBanner} ${style.paymentBannerError}`}>
+          <div
+            className={`${style.paymentBanner} ${
+              paymentStatus === "abandoned"
+                ? style.paymentBannerNeutral
+                : style.paymentBannerError
+            }`}
+          >
             <button
               onClick={() => setPaymentStatus(null)}
               className={style.paymentBannerClose}
@@ -114,11 +128,23 @@ const Products = () => {
             >
               ✕
             </button>
-            <p className={style.paymentBannerTitle}>Algo salió mal</p>
-            <p className={style.paymentBannerText}>
-              No pudimos confirmar tu pago. Tu carrito sigue igual que lo
-              dejaste, podés intentar de nuevo cuando quieras.
-            </p>
+            {paymentStatus === "abandoned" ? (
+              <>
+                <p className={style.paymentBannerTitle}>No completaste el pago</p>
+                <p className={style.paymentBannerText}>
+                  Tu carrito sigue igual que lo dejaste, podés retomarlo
+                  cuando quieras.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className={style.paymentBannerTitle}>Algo salió mal</p>
+                <p className={style.paymentBannerText}>
+                  No pudimos confirmar tu pago. Tu carrito sigue igual que lo
+                  dejaste, podés intentar de nuevo cuando quieras.
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

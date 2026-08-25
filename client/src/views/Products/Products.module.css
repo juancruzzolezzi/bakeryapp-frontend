@@ -37,6 +37,18 @@
     border-color: rgba(217, 123, 100, 0.5);
 }
 
+.paymentBannerError .paymentBannerTitle {
+    color: #d97b64;
+}
+
+.paymentBannerNeutral {
+    border-color: rgba(230, 201, 138, 0.4);
+}
+
+.paymentBannerNeutral .paymentBannerTitle {
+    color: #e7c98a;
+}
+
 .paymentBannerClose {
     position: absolute;
     top: 0.6rem;
@@ -62,7 +74,6 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.5rem;
-    color: #d97b64;
 }
 
 .paymentBannerText {
