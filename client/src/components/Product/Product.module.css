@@ -65,14 +65,6 @@
     z-index: 1;
 }
 
-/* La foto se apaga hacia el color del panel en vez de cortar de golpe. */
-.photoFade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 60%, #251b13 100%);
-    pointer-events: none;
-}
-
 .body {
     padding: 1.1rem 1.2rem 1.2rem;
     display: flex;
@@ -213,13 +205,6 @@
        de la imagen a ese ancho — gigante en pantallas anchas. */
     height: 260px;
     flex-shrink: 0;
-}
-
-/* En esta variante la foto está al costado del texto, no arriba: el
-   degradado hacia el color del panel (pensado para esa segunda
-   situación) acá solo se ve como una franja oscura de más. */
-.featured .photoFade {
-    display: none;
 }
 
 .featured .body {

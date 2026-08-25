@@ -48,7 +48,6 @@ const Product = ({ product, featured }) => {
         {featured && <span className={style.featuredTag}>Recomendado</span>}
         {agotado && <span className={style.agotadoTag}>Agotado</span>}
         <span className={style.pricePill}>${totalPriceFormateado}</span>
-        <div className={style.photoFade} />
       </div>
 
       <div className={style.body}>
