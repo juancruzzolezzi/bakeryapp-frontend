@@ -195,8 +195,7 @@
 .featured {
     grid-column: 1 / -1;
     flex-direction: row;
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 100%;
 }
 
 .featured .photo {
