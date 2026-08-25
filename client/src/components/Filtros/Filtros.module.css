@@ -13,6 +13,7 @@
 }
 
 .filtrosGrupo {
+    position: relative;
     display: inline-flex;
     max-width: 100%;
     gap: 3.2rem;
@@ -31,18 +32,6 @@
     white-space: nowrap;
 }
 
-.filtrosBtn::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 2px;
-    background-color: #b69443;
-    transform: scaleX(0);
-    transition: transform 0.2s ease;
-}
-
 .filtrosBtn:hover {
     color: white;
 }
@@ -52,8 +41,22 @@
     font-weight: 600;
 }
 
-.filtrosBtn.activo::after {
-    transform: scaleX(1);
+/* Rayita dorada compartida entre todos los botones (ver Filtros.jsx): se
+   desliza hasta el filtro activo en vez de aparecer/desaparecer de golpe
+   en cada uno. */
+.filtrosIndicador {
+    position: absolute;
+    height: 2px;
+    background-color: #b69443;
+    transform: translateY(-1px);
+    transition: left 0.25s ease, top 0.25s ease, width 0.25s ease;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .filtrosIndicador {
+        transition: none;
+    }
 }
 
 @media screen and (max-width: 760px) {

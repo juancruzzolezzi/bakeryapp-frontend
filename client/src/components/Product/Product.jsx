@@ -12,6 +12,10 @@ const Product = ({ product, featured }) => {
   const { handleAddToCart } = useProductHandlers();
   const photoRef = useRef(null);
 
+  //Confirmación local en el botón: dice "✓ Agregado" un instante antes de
+  //volver a "Añadir", como refuerzo extra además del vuelo hacia el carrito.
+  const [recienAgregado, setRecienAgregado] = useState(false);
+
   //"stock" todavía no lo devuelve la API (ver api/db/products.routes.js);
   //queda listo para cuando lo agreguen, sin inventar disponibilidad
   //mientras tanto (product.stock === undefined nunca marca "agotado").
@@ -25,6 +29,8 @@ const Product = ({ product, featured }) => {
     flyToCart(photoRef.current, product.images?.[0]);
     handleAddToCart(product, quantity);
     setQuantity(1); // Resetea la cantidad a 1 después de agregar
+    setRecienAgregado(true);
+    setTimeout(() => setRecienAgregado(false), 1200);
   };
 
   return (
@@ -67,11 +73,11 @@ const Product = ({ product, featured }) => {
 
           <button
             onClick={addToCart}
-            className={style.addToCartButton}
+            className={`${style.addToCartButton} ${recienAgregado ? style.recienAgregado : ""}`}
             data-add-to-cart="true"
             disabled={agotado}
           >
-            {agotado ? "Agotado" : "Añadir"}
+            {agotado ? "Agotado" : recienAgregado ? "✓ Agregado" : "Añadir"}
           </button>
         </div>
       </div>

@@ -126,6 +126,8 @@
 }
 
 .skeletonPhoto {
+    position: relative;
+    overflow: hidden;
     height: 190px;
     width: 100%;
     background: #2f2318;
@@ -139,24 +141,34 @@
 }
 
 .skeletonLine {
+    position: relative;
+    overflow: hidden;
     height: 0.9rem;
     border-radius: 6px;
     background: #2f2318;
 }
 
-.skeletonPhoto,
-.skeletonLine {
-    animation: skeletonPulse 1.4s ease-in-out infinite;
+/* Brillo recorriendo de izquierda a derecha (mismo lenguaje que el botón
+   "Pagar", ver Cart.module.css) en vez de un pulso de opacidad parejo. */
+.skeletonPhoto::after,
+.skeletonLine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(231, 201, 138, 0.14), transparent);
+    animation: skeletonSweep 1.6s ease-in-out infinite;
 }
 
-@keyframes skeletonPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.55; }
+@keyframes skeletonSweep {
+    to {
+        transform: translateX(100%);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .skeletonPhoto,
-    .skeletonLine {
+    .skeletonPhoto::after,
+    .skeletonLine::after {
         animation: none;
     }
 }

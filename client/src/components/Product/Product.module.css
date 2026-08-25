@@ -152,6 +152,25 @@
     border-color: #c9a15f;
 }
 
+/* Confirmación local: "✓ Agregado" un instante después de tocar el botón
+   (ver Product.jsx, "recienAgregado"), como refuerzo extra además del
+   vuelo hacia el carrito. */
+.recienAgregado {
+    animation: confirmPulse 0.3s ease;
+}
+
+@keyframes confirmPulse {
+    40% {
+        transform: scale(1.05);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .recienAgregado {
+        animation: none;
+    }
+}
+
 .addToCartButton:disabled {
     background: transparent;
     border-color: rgba(230, 201, 138, 0.25);

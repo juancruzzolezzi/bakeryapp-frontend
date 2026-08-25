@@ -10,8 +10,17 @@ const EmptyCartModal = ({ isOpen, onCancel, onConfirm }) => {
             isOpen={isOpen}
             onRequestClose={onCancel}
             contentLabel="Vaciar carrito"
-            className={style.modal}
-            overlayClassName={style.overlay}
+            closeTimeoutMS={200}
+            className={{
+                base: style.modal,
+                afterOpen: style.modalAfterOpen,
+                beforeClose: style.modalBeforeClose,
+            }}
+            overlayClassName={{
+                base: style.overlay,
+                afterOpen: style.overlayAfterOpen,
+                beforeClose: style.overlayBeforeClose,
+            }}
             style={{
                 overlay: { zIndex: 999999 },
                 content: { zIndex: 999999 },
