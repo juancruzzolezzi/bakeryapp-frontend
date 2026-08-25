@@ -3,20 +3,12 @@
     height: 100vh;
     width: 100%;
     overflow: hidden;
-}
-
-/* Capa propia (separada del contenedor) para poder moverla con el mouse
-   (parallax, ver Home.jsx) sin afectar el resto del layout. Un poco más
-   grande que el contenedor (inset negativo) para que nunca se vea el
-   borde al desplazarla. */
-.heroPhoto {
-    position: absolute;
-    inset: -20px;
     background-image: url("../../../public/Portada.jpg");
-    background-position: center;
+    /* "center 30%" en vez de "center": prioriza la parte de arriba de la
+       foto (donde está el pan) por sobre el centro exacto, que en
+       pantallas angostas/altas (celular) recortaba justo esa zona. */
+    background-position: center 30%;
     background-size: cover;
-    transition: transform 0.15s ease-out;
-    will-change: transform;
 }
 
 /* Funde la base del hero hacia el mismo tono oscuro que usa el resto de

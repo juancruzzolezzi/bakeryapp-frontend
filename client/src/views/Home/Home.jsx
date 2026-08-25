@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams, Link } from "react-router-dom";
 import style from "./Home.module.css";
@@ -29,31 +29,8 @@ function Home() {
     }
   }, [searchParams, dispatch, setSearchParams]);
 
-  //Parallax de la portada: la foto se desplaza levemente en sentido
-  //contrario al mouse, dando sensación de profundidad. Con un pequeño
-  //factor (12px máx) para que sea un detalle sutil, no un efecto mareador.
-  const heroPhotoRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    if (!heroPhotoRef.current) return;
-    const { innerWidth, innerHeight } = window;
-    const x = e.clientX / innerWidth - 0.5;
-    const y = e.clientY / innerHeight - 0.5;
-    heroPhotoRef.current.style.transform = `translate(${x * -12}px, ${y * -12}px)`;
-  };
-
-  const handleMouseLeave = () => {
-    if (!heroPhotoRef.current) return;
-    heroPhotoRef.current.style.transform = "translate(0, 0)";
-  };
-
   return (
-    <div
-      className={style.mainContainer}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className={style.heroPhoto} ref={heroPhotoRef} />
+    <div className={style.mainContainer}>
       <NavBarHome />
 
       {paymentStatus && (

@@ -195,12 +195,16 @@
 .featured {
     grid-column: 1 / -1;
     flex-direction: row;
-    max-width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .featured .photo {
     width: 45%;
-    height: auto;
+    /* Altura fija (no "auto"): sin esto, el flex stretch por defecto hacía
+       que la foto (y con ella toda la tarjeta) tomara la altura natural
+       de la imagen a ese ancho — gigante en pantallas anchas. */
+    height: 260px;
     flex-shrink: 0;
 }
 
