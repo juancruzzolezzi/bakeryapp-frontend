@@ -35,37 +35,43 @@ function Home() {
 
       {paymentStatus && (
         <div
-          className={
-            paymentStatus === "success"
-              ? `${style.paymentBanner} ${style.paymentBannerSuccess}`
-              : `${style.paymentBanner} ${style.paymentBannerError}`
-          }
+          className={style.paymentOverlay}
+          data-payment-banner="true"
+          onClick={() => setPaymentStatus(null)}
         >
-          <button
-            onClick={() => setPaymentStatus(null)}
-            className={style.paymentBannerClose}
-            aria-label="Cerrar aviso"
+          <div
+            className={
+              paymentStatus === "success"
+                ? `${style.paymentBanner} ${style.paymentBannerSuccess}`
+                : `${style.paymentBanner} ${style.paymentBannerError}`
+            }
           >
-            ✕
-          </button>
-          {paymentStatus === "success" ? (
-            <>
-              <p className={style.paymentBannerTitle}>
-                ¡Felicitaciones por tu compra!
-              </p>
-              <p className={style.paymentBannerText}>
-                En breve nos vamos a comunicar con vos para coordinar la entrega.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className={style.paymentBannerTitle}>Algo salió mal</p>
-              <p className={style.paymentBannerText}>
-                No pudimos confirmar tu pago. Tu carrito sigue igual que lo
-                dejaste, podés intentar de nuevo cuando quieras.
-              </p>
-            </>
-          )}
+            <button
+              onClick={() => setPaymentStatus(null)}
+              className={style.paymentBannerClose}
+              aria-label="Cerrar aviso"
+            >
+              ✕
+            </button>
+            {paymentStatus === "success" ? (
+              <>
+                <p className={style.paymentBannerTitle}>
+                  ¡Felicitaciones por tu compra!
+                </p>
+                <p className={style.paymentBannerText}>
+                  En breve nos vamos a comunicar con vos para coordinar la entrega.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className={style.paymentBannerTitle}>Algo salió mal</p>
+                <p className={style.paymentBannerText}>
+                  No pudimos confirmar tu pago. Tu carrito sigue igual que lo
+                  dejaste, podés intentar de nuevo cuando quieras.
+                </p>
+              </>
+            )}
+          </div>
         </div>
       )}
 
