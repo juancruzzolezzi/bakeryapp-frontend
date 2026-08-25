@@ -59,7 +59,7 @@ const NavBarHome = () => {
           </Link>
 
           <Link to="/products" className={style.navLink}>
-            <div className={style.btn}> COCINA </div>
+            <div className={style.btn}> PRODUCTOS </div>
           </Link>
 
           <Link to="/contactanos" className={style.navLink}>
@@ -68,6 +68,10 @@ const NavBarHome = () => {
 
           <Link to="/nosotros" className={style.navLink}>
             <div className={style.btn}> NOSOTROS </div>
+          </Link>
+
+          <Link to="/preguntas-frecuentes" className={style.navLink}>
+            <div className={style.btn}> PREGUNTAS FRECUENTES </div>
           </Link>
         </div>
       </div>

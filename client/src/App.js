@@ -7,6 +7,7 @@ import Products from "./views/Products/Products";
 import Loading from "./components/Loading/Loading";
 import Nosotros from "./views/Nosotros/Nosotros";
 import Contactanos from "./views/Contactanos/Contactanos";
+import PreguntasFrecuentes from "./views/PreguntasFrecuentes/PreguntasFrecuentes";
 //Estilos
 import "./App.css";
 
@@ -44,6 +45,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/contactanos" element={<Contactanos />} />
+        <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
       </Routes>
     </div>
   );

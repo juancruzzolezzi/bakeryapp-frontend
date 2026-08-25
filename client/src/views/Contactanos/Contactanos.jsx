@@ -15,8 +15,8 @@ import {
 const CONTACTO = {
     instagramUser: "bakery.oficial",
     instagramUrl: "https://www.instagram.com/bakery.oficial",
-    whatsappNumero: "5491100000000", // Placeholder, actualizar con el número real
-    whatsappTexto: "+54 9 11 0000-0000",
+    whatsappNumero: "5491167565288",
+    whatsappTexto: "+54 9 11 6756-5288",
     email: "contactobakery@gmail.com", // Placeholder, actualizar con el mail real
     direccion: "Zavalía 2026, Belgrano",
 };
