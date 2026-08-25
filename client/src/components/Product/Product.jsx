@@ -8,7 +8,7 @@ import style from "./Product.module.css";
 //centradas con el recorte por defecto (no hay ningún campo para esto en
 //la base, así que se resuelve acá con el título como clave).
 const AJUSTE_ENCUADRE = {
-  "Lágrima": "75% center",
+  "Lágrima": "100% center",
 };
 
 const Product = ({ product, featured }) => {
