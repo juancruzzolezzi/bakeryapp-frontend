@@ -205,14 +205,14 @@
     z-index: 1;
 }
 
-/* Producto destacado: ocupa todo el ancho de la grilla (en vez de una
-   celda más) y pasa a layout horizontal (foto al lado del texto, no
-   arriba), como punto focal antes de que arranque la grilla pareja. */
+/* Producto destacado: vive en su propia fila (.featuredRow en
+   Products.module.css, no en la grilla de abajo) y pasa a layout
+   horizontal (foto al lado del texto, no arriba). "flex-basis" grande
+   con "flex: 1": dos entran lado a lado en pantallas anchas, y en
+   cuanto no entran más de uno por fila (ancho angosto), cada uno pasa a
+   ocupar el 100% solo — sin necesidad de un breakpoint fijo. */
 .featured {
-    /* Ocupa 2 columnas de la grilla en vez de 1 sola fila entera: con dos
-       productos destacados uno al lado del otro se aprovecha mejor el
-       ancho que uno solo estirado de punta a punta. */
-    grid-column: span 2;
+    flex: 1 1 420px;
     flex-direction: row;
     max-width: 100%;
 }
@@ -259,9 +259,6 @@
 
 @media screen and (max-width: 760px) {
     .featured {
-        /* Con la grilla a 1 sola columna en mobile, "span 2" no tiene
-           dónde ir: cada destacado ocupa su única columna, como el resto. */
-        grid-column: span 1;
         flex-direction: column;
     }
 

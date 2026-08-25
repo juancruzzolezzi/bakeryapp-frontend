@@ -202,18 +202,31 @@ const Products = () => {
         )}
 
         {!isLoading && !isError && productosFiltrados && productosFiltrados.length > 0 && (
-          <div className={style.productList} ref={productListRef}>
-            {productosFiltrados.map((product, i) => (
-              // Los primeros dos se muestran destacados (más grandes, uno
-              // al lado del otro) solo con el filtro "Todo" — con una
-              // categoría puntual ya elegida no aporta destacar entre pocos.
-              <Product
-                key={product.id}
-                product={product}
-                featured={filtroActivo === "Todo" && i < 2}
-              />
-            ))}
-          </div>
+          <>
+            {/* Los primeros dos se muestran destacados (más grandes) solo
+                con el filtro "Todo" — con una categoría puntual ya elegida
+                no aporta destacar entre pocos. Van en su propia fila,
+                AFUERA de la grilla de abajo: adentro de la grilla, según
+                cuántas columnas entraran, el acomodo automático a veces
+                los separaba en dos filas distintas y metía una tarjeta
+                normal angosta al lado de uno de ellos. */}
+            {filtroActivo === "Todo" && (
+              <div className={style.featuredRow}>
+                {productosFiltrados.slice(0, 2).map((product) => (
+                  <Product key={product.id} product={product} featured />
+                ))}
+              </div>
+            )}
+
+            <div className={style.productList} ref={productListRef}>
+              {(filtroActivo === "Todo"
+                ? productosFiltrados.slice(2)
+                : productosFiltrados
+              ).map((product) => (
+                <Product key={product.id} product={product} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

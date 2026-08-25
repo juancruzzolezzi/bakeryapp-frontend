@@ -88,6 +88,19 @@
     margin-top: 1rem;
 }
 
+/* Fila propia para los productos destacados (ver Products.jsx), separada
+   de la grilla de abajo para que nunca terminen compartiendo fila con
+   una tarjeta normal por cómo acomoda el auto-ajuste de la grilla. */
+.featuredRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 0 5vw 2rem;
+    box-sizing: border-box;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .productList {
     display: grid;
     /* Auto-ajustable: cada tarjeta pide un mínimo de 280px y el grid
