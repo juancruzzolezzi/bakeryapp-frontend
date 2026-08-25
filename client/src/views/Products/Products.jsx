@@ -101,7 +101,11 @@ const Products = () => {
       <NavBar />
 
       {paymentStatus && (
-        <div className={style.paymentOverlay} data-payment-banner="true">
+        <div
+          className={style.paymentOverlay}
+          data-payment-banner="true"
+          onClick={() => setPaymentStatus(null)}
+        >
           <div className={`${style.paymentBanner} ${style.paymentBannerError}`}>
             <button
               onClick={() => setPaymentStatus(null)}
