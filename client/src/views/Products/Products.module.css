@@ -6,11 +6,23 @@
     min-height: 100vh;
 }
 
-.paymentBanner {
+/* Fondo oscuro detrás del cartel: lo saca del flujo normal de la página
+   (por encima de navbar, carrito, todo) para que quede claramente en
+   primer plano, como un modal, en vez de flotar entre el resto del
+   contenido. */
+.paymentOverlay {
     position: fixed;
-    top: 22vh;
-    left: 50%;
-    transform: translateX(-50%);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.paymentBanner {
     width: min(90vw, 420px);
     background: #251b13;
     border: 1px solid rgba(230, 201, 138, 0.25);
@@ -18,7 +30,6 @@
     padding: 1.3rem 1.6rem;
     box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.7);
     text-align: center;
-    z-index: 60;
     font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
 }
 

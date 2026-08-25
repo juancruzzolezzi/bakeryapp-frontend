@@ -20,9 +20,9 @@ const Products = () => {
   const products = data;
 
   //Si volvemos acá desde Mercado Pago sin haber pagado (falló o quedó
-  //pendiente), mostramos el cartel de error y le avisamos a NavBar que
-  //abra el carrito solo, para que el comprador lo encuentre tal cual lo
-  //dejó junto con el motivo por el que no se completó la compra.
+  //pendiente), mostramos el cartel de error en primer plano. El carrito
+  //queda cerrado (los productos siguen ahí adentro, solo no se abre
+  //solo) para que el cartel sea lo único que se vea al volver.
   const [searchParams, setSearchParams] = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState(null);
 
@@ -98,25 +98,24 @@ const Products = () => {
 
   return (
     <div className={style.mainContainer}>
-      <NavBar forceCartOpen={paymentStatus === "failure" || paymentStatus === "pending"} />
+      <NavBar />
 
       {paymentStatus && (
-        <div
-          className={`${style.paymentBanner} ${style.paymentBannerError}`}
-          data-payment-banner="true"
-        >
-          <button
-            onClick={() => setPaymentStatus(null)}
-            className={style.paymentBannerClose}
-            aria-label="Cerrar aviso"
-          >
-            ✕
-          </button>
-          <p className={style.paymentBannerTitle}>Algo salió mal</p>
-          <p className={style.paymentBannerText}>
-            No pudimos confirmar tu pago. Tu carrito sigue igual que lo
-            dejaste, podés intentar de nuevo cuando quieras.
-          </p>
+        <div className={style.paymentOverlay} data-payment-banner="true">
+          <div className={`${style.paymentBanner} ${style.paymentBannerError}`}>
+            <button
+              onClick={() => setPaymentStatus(null)}
+              className={style.paymentBannerClose}
+              aria-label="Cerrar aviso"
+            >
+              ✕
+            </button>
+            <p className={style.paymentBannerTitle}>Algo salió mal</p>
+            <p className={style.paymentBannerText}>
+              No pudimos confirmar tu pago. Tu carrito sigue igual que lo
+              dejaste, podés intentar de nuevo cuando quieras.
+            </p>
+          </div>
         </div>
       )}
 
