@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useProductHandlers } from "../../handlers/productHandlers";
+import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import DeleteProductModal from '../Modals/DeleteProductModal';
 import style from "./ProductCart.module.css";
 
@@ -10,6 +11,7 @@ const ProductCart = ({ product }) => {
 
   const currentProduct = cart.find((item) => item.id === product.id);
   const quantity = currentProduct ? currentProduct.quantity : 0;
+  const amountAnimado = useAnimatedNumber(product.price * quantity);
 
   const {
     handleIncrementCart,
@@ -55,7 +57,7 @@ const ProductCart = ({ product }) => {
       </div>
 
       <div className={style.priceCol}>
-        <span className={style.amount}>${(product.price * quantity).toLocaleString("es-AR")}</span>
+        <span className={style.amount}>${amountAnimado.toLocaleString("es-AR")}</span>
         <button
           onClick={() => setModalEmptyOpen(true)}
           className={style.removeBtn}

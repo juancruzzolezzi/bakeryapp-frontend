@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useCartHandlers } from "../../handlers/cartHandlers";
+import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import PaymentModal from "../../components/Modals/PaymentModal";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
@@ -12,6 +13,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
 
   //Estados locales
   const [totalPrice, setTotalPrice] = useState(0);
+  const totalPriceAnimado = useAnimatedNumber(totalPrice);
   const [isModalPaymentOpen, setModalPaymentOpen] = useState(false);
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
 
@@ -128,7 +130,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
       <div className={style.summary}>
         <div className={style.totalRow}>
           <span>Total</span>
-          <span className={style.totalAmount}>${totalPrice.toLocaleString("es-AR")}</span>
+          <span className={style.totalAmount}>${totalPriceAnimado.toLocaleString("es-AR")}</span>
         </div>
 
         <div className={style.actions}>

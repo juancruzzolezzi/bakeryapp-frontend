@@ -114,8 +114,38 @@
 }
 
 .payBtn {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, #c9a15f, #e7c98a);
     color: #241a10;
+}
+
+/* Destello sutil que cruza el botón cada pocos segundos, para que no se
+   pierda de vista sin llegar a parpadear. */
+.payBtn:not(:disabled)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    animation: payBtnShimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes payBtnShimmer {
+    0% {
+        left: -60%;
+    }
+    35%, 100% {
+        left: 130%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .payBtn:not(:disabled)::after {
+        animation: none;
+    }
 }
 
 .payBtn:disabled {

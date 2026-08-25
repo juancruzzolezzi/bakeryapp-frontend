@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useProductHandlers } from "../../handlers/productHandlers";
+import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
+import { flyToCart } from "../../utils/flyToCart";
 import style from "./Product.module.css";
 
 const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
-  const totalPriceFormateado = totalPrice.toLocaleString("es-AR");
+  const totalPriceAnimado = useAnimatedNumber(totalPrice);
+  const totalPriceFormateado = totalPriceAnimado.toLocaleString("es-AR");
   const { handleAddToCart } = useProductHandlers();
+  const photoRef = useRef(null);
 
   //"stock" todavía no lo devuelve la API (ver api/db/products.routes.js);
   //queda listo para cuando lo agreguen, sin inventar disponibilidad
@@ -18,6 +22,7 @@ const Product = ({ product, featured }) => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const addToCart = () => {
+    flyToCart(photoRef.current, product.images?.[0]);
     handleAddToCart(product, quantity);
     setQuantity(1); // Resetea la cantidad a 1 después de agregar
   };
@@ -30,7 +35,7 @@ const Product = ({ product, featured }) => {
       data-category={product.category}
       data-product-card="true"
     >
-      <div className={style.photo}>
+      <div className={style.photo} ref={photoRef}>
         {product.images && product.images.length > 0 && (
           <img
             src={product.images[0]}

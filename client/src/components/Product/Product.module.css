@@ -42,6 +42,11 @@
     object-position: center;
     object-fit: cover;
     display: block;
+    transition: transform 0.35s ease;
+}
+
+.productContainer:hover .image {
+    transform: scale(1.08);
 }
 
 .pricePill {

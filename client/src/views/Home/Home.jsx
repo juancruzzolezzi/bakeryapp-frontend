@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams, Link } from "react-router-dom";
 import style from "./Home.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
+import { playConfetti } from "../../utils/confetti";
 // import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
@@ -29,6 +30,15 @@ function Home() {
     }
   }, [searchParams, dispatch, setSearchParams]);
 
+  //Ráfaga de confetti sobre el cartel de compra exitosa, apenas aparece.
+  const successBannerRef = useRef(null);
+
+  useEffect(() => {
+    if (paymentStatus === "success" && successBannerRef.current) {
+      playConfetti(successBannerRef.current);
+    }
+  }, [paymentStatus]);
+
   return (
     <div className={style.mainContainer}>
       <NavBarHome />
@@ -40,6 +50,7 @@ function Home() {
           onClick={() => setPaymentStatus(null)}
         >
           <div
+            ref={successBannerRef}
             className={
               paymentStatus === "success"
                 ? `${style.paymentBanner} ${style.paymentBannerSuccess}`
