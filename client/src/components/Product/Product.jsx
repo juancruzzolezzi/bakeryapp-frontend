@@ -12,7 +12,14 @@ const AJUSTE_ENCUADRE = {
   "Café Americano": "70% center",
   "Café de Especialidad": "70% center",
   "Milkshake de Frutilla": "center 30%",
+  "Cheesecake de Maracuyá": "30% center",
+  "Medialuna con Jamón y Queso": "30% center",
 };
+
+//"Torta de Coco y Dulce de Leche": la foto quedaba muy recortada con el
+//zoom (cover) por defecto; "contain" muestra la imagen completa sin
+//cortar, aunque queden franjas del fondo del panel a los costados.
+const AJUSTE_SIN_ZOOM = new Set(["Torta de Coco y Dulce de Leche"]);
 
 const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
@@ -57,11 +64,15 @@ const Product = ({ product, featured }) => {
             src={product.images[0]}
             alt={product.title}
             className={style.image}
-            style={
-              AJUSTE_ENCUADRE[product.title]
-                ? { objectPosition: AJUSTE_ENCUADRE[product.title] }
-                : undefined
-            }
+            style={{
+              ...(AJUSTE_ENCUADRE[product.title] && {
+                objectPosition: AJUSTE_ENCUADRE[product.title],
+              }),
+              ...(AJUSTE_SIN_ZOOM.has(product.title) && {
+                objectFit: "contain",
+                backgroundColor: "#2f2318",
+              }),
+            }}
             loading="lazy"
             decoding="async"
           />
