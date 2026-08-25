@@ -9,9 +9,13 @@
     width: 100%;
     height: 20vh;
     display: flex;
-    flex-direction: column;
+    /* En desktop la barra usa todo el ancho: los links se reparten de
+       punta a punta (ver .desktopLinks) en vez de amontonarse en el
+       centro. En mobile (ver media query) vuelve a ser una columna. */
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    padding: 0 clamp(2.5rem, 6vw, 6rem);
     box-sizing: border-box;
     overflow: hidden;
     z-index: 99;
@@ -35,33 +39,102 @@
     align-self: flex-end;
     padding-right: 1rem;
     pointer-events: auto;
+    /* El botón "MENÚ" (y el panel que abre) quedan solo para mobile: en
+       pantallas grandes los links van siempre visibles en .desktopLinks,
+       ver media query más abajo. */
+    display: none;
+}
+
+/* Links siempre visibles (sin esconderlos detrás de "MENÚ"): solo en
+   pantallas grandes, ver media query de mobile más abajo donde se ocultan
+   y se vuelve a mostrar "MENÚ" en su lugar. "width: 100%" +
+   "space-between" para que se repartan de punta a punta de la barra en
+   vez de agruparse en un cluster. */
+.desktopLinks {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 620px;
+    gap: 1.5rem;
+    pointer-events: auto;
+}
+
+.desktopLink {
+    position: relative;
+    color: #f5f5f5;
+    text-decoration: none;
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    letter-spacing: 0.04em;
+    padding-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+
+.desktopLink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: #d9b767;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.25s ease;
+}
+
+.desktopLink:hover {
+    color: #d9b767;
+}
+
+.desktopLink:hover::after {
+    transform: scaleX(1);
+}
+
+.desktopLinkActive {
+    color: #d9b767;
+    font-weight: 600;
+}
+
+.desktopLinkActive::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .contenido {
     display: none;
 }
 
+/* Fondo oscuro difuminado detrás de la tarjeta: da la sensación de que el
+   menú "flota" por encima del resto de la página en vez de ser un cajón
+   pegado al borde. */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 7, 4, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 18;
+    pointer-events: auto;
+}
+
 .contenidoOpen {
-    /* "auto" en vez de una altura fija: con 4 links (HOME, COCINA,
-       CONTACTANOS, NOSOTROS) una altura fija como 40vh se quedaba corta
-       en pantallas no muy altas y el último link quedaba renderizado por
-       fuera del fondo oscuro de la caja. */
-    height: auto;
-    min-height: 28vh;
-    padding: 1.5rem 0;
     box-sizing: border-box;
-    width: clamp(200px, 16vw, 260px);
-    max-width: 90vw;
+    width: calc(100vw - 2rem);
+    max-width: 340px;
+    position: fixed;
+    /* Arranca cerca de arriba (no pegado a top: 0): el carrito, en
+       cambio, se corre hacia abajo mientras el menú está abierto (ver
+       .cartFixedMenuOpen) para no quedar tapado por esta tarjeta. */
+    top: 1rem;
+    right: 1rem;
+    border-radius: 20px;
+    background-color: #1c140c;
+    border: 1px solid rgba(230, 201, 138, 0.22);
+    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
+    padding: 0.5rem 0 1.4rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    position: fixed;
-    /* Arranca arriba de todo (no debajo del navbar): el carrito, en
-       cambio, se corre hacia abajo mientras el menú está abierto (ver
-       .cartFixedMenuOpen) para no quedar tapado por esta caja. */
-    top: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.85);
     pointer-events: auto;
     z-index: 20;
 }
@@ -70,7 +143,7 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    padding: 0.5rem;
+    padding: 0.4rem 0.4rem 0;
     box-sizing: border-box;
 }
 
@@ -79,36 +152,40 @@
     justify-content: center;
     align-items: center;
     border: none;
-    border-radius: 25px;
-    width: 3rem;
-    height: 3rem;
-    min-width: 3rem;
+    border-radius: 50%;
+    width: 2.4rem;
+    height: 2.4rem;
+    min-width: 2.4rem;
     flex-shrink: 0;
     background-color: rgba(0, 0, 0, 0);
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: bolder;
     color: rgba(255, 255, 255, 0.734);
     cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 .cerrar:hover {
-    transition: 0.5s;
-    transform: translateX(-25px);
+    color: #e7c98a;
 }
 
 .linksCont {
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1rem;
+    padding: 0 0.4rem;
 }
 
 .navLink {
     text-decoration: none;
+}
+
+.navLink .btn {
+    border-bottom: 1px solid rgba(230, 201, 138, 0.1);
+}
+
+.navLink:last-child .btn {
+    border-bottom: none;
 }
 
 /* Envoltorio fijo, independiente del menú: el carrito tiene que seguir
@@ -196,20 +273,31 @@
     transform: translateX(-25px);
 }
 
-.btnMenu{
-    color: #d9b767;
-    font-weight: bold;
-    font-size: clamp(1.8rem, 6vw, 3rem);
+.btnMenu {
+    width: clamp(2.6rem, 7vw, 3.2rem);
+    height: clamp(2.6rem, 7vw, 3.2rem);
+    border-radius: 50%;
+    border: 1px solid rgba(217, 183, 103, 0.35);
     display: flex;
-    justify-content: flex-end;
-    transition: 0.5s;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     cursor: pointer;
     pointer-events: auto;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.btnMenu span {
+    width: 45%;
+    height: 2px;
+    border-radius: 2px;
+    background: #d9b767;
 }
 
 .btnMenu:hover {
-    transition: 0.5s;
-    transform: translateX(-25px);
+    border-color: #d9b767;
+    transform: translateX(-6px);
 }
 
 .btn {
@@ -217,15 +305,46 @@
     font-weight: bold;
     font-size: clamp(1.1rem, 1.8vw, 1.6rem);
     display: flex;
-    justify-content: flex-end;
-    text-align: right;
+    justify-content: center;
+    text-align: center;
     max-width: 100%;
-    transition: 0.5s;
+    padding: 0.85rem 0.5rem;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
 }
 
 .btn:hover {
-    transition: 0.5s;
-    transform: translateX(-25px);
+    background-color: rgba(230, 201, 138, 0.08);
+}
+
+.btnLabel {
+    position: relative;
+    display: inline-block;
+    /* Sin esto, al ser el único hijo de un flex container (.btn), el span
+       hereda min-width: auto (default de flex item) y se niega a encoger
+       por debajo del ancho de la palabra más larga ("CONTACTANOS", etc.),
+       desbordando la caja del menú en vez de partir la palabra. */
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.btnLabel::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.25rem;
+    height: 2px;
+    background: #d9b767;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .btnLabel::after {
+    transform: scaleX(1);
 }
 
 .navLink{
@@ -244,17 +363,21 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        padding: 0;
         z-index: 99;
         margin: 0;
     }
 
     .cartFixed {
-        top: 12.6vh;
-        right: 0.75rem;
+        top: 13.6vh;
+        right: 0.4rem;
     }
 
+    /* La tarjeta flotante del menú es más chica que el panel de antes:
+       alcanza con bajar el carrito lo justo para que no quede debajo de
+       ella (que arranca en top: 1rem). */
     .cartFixedMenuOpen {
-        top: calc(32vh + 9rem);
+        top: 26rem;
     }
 
     .navOpen {
@@ -262,8 +385,23 @@
     }
 
     .nav {
+        display: flex;
         height: 8vh;
         width:fit-content;
+        /* Alineado con el carrito y la flecha de "volver arriba", que
+           también quedan a 0.4rem del borde en mobile. */
+        padding-right: 0.4rem;
+    }
+
+    /* Mismo tamaño que el ícono del carrito (2.75rem, ver .cart más abajo)
+       para que ambos queden alineados. */
+    .btnMenu {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .desktopLinks {
+        display: none;
     }
 
     .contenido {
@@ -271,20 +409,19 @@
     }
 
     .contenidoOpen {
-        height: auto;
-        min-height: 32vh;
-        width: 60vw;
-        max-width: 280px;
-        padding-bottom: 1.5rem;
+        box-sizing: border-box;
+        width: calc(100vw - 2rem);
+        max-width: 320px;
+        padding: 0.4rem 0 1.4rem;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
         position: fixed;
-        /* Arranca arriba de todo (no debajo del navbar): el carrito se
-           corre hacia abajo mientras está abierto (.cartFixedMenuOpen). */
-        top: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.85);
+        top: 1rem;
+        right: 1rem;
+        border-radius: 20px;
+        background-color: #1c140c;
+        border: 1px solid rgba(230, 201, 138, 0.22);
+        box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
         pointer-events: auto;
         z-index: 20;
         /* Nunca dejar que ningún hijo (aunque su tamaño se calcule mal en
@@ -296,7 +433,7 @@
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        padding: 0.4rem;
+        padding: 0.4rem 0.4rem 0;
         box-sizing: border-box;
     }
 
@@ -305,13 +442,13 @@
         justify-content: center;
         align-items: center;
         border: none;
-        border-radius: 25px;
-        width: 2.75rem;
-        height: 2.75rem;
-        min-width: 2.75rem;
+        border-radius: 50%;
+        width: 2.4rem;
+        height: 2.4rem;
+        min-width: 2.4rem;
         flex-shrink: 0;
         background-color: rgba(0, 0, 0, 0);
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: bolder;
         color: rgba(255, 255, 255, 0.734);
         cursor: pointer;
@@ -322,9 +459,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
-        gap: 0.75rem;
-        padding: 1rem;
+        padding: 0 0.4rem;
         box-sizing: border-box;
     }
 
@@ -339,24 +474,21 @@
     .btn {
         color: #d9b767;
         font-weight: bold;
-        font-size: clamp(1.1rem, 5.5vw, 2rem);
+        font-size: clamp(1.1rem, 5.5vw, 1.5rem);
         display: flex;
-        justify-content: flex-end;
-        text-align: right;
+        justify-content: center;
+        text-align: center;
         width: 100%;
         max-width: 100%;
+        padding: 0.85rem 0.5rem;
+        border-radius: 10px;
         overflow-wrap: break-word;
         word-break: break-word;
-        transition: 0.5s;
+        transition: background-color 0.2s ease;
     }
 
-    .btnMenu {
-        color: #d9b767;
-        font-weight: bold;
-        font-size: clamp(1.6rem, 8vw, 2.5rem);
-        display: flex;
-        justify-content: flex-end;
-        transition: 0.5s;
+    .btn:hover {
+        background-color: rgba(230, 201, 138, 0.08);
     }
 
     .navLink {

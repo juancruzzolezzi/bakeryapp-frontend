@@ -4,6 +4,7 @@ import gsap from "gsap";
 import Product from "../../components/Product/Product";
 import Filtros from "../../components/Filtros/Filtros";
 import NavBar from "../../components/Navs/NavBar/NavBar";
+import BackToTop from "../../components/BackToTop/BackToTop";
 import { useGetProductsQuery } from "../../api/appApi";
 import style from "./Products.module.css";
 
@@ -237,6 +238,8 @@ const Products = () => {
           </>
         )}
       </div>
+
+      <BackToTop />
     </div>
   );
 };

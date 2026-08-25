@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./PreguntasFrecuentes.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
+import Footer from "../../components/Footer/Footer";
+import BackToTop from "../../components/BackToTop/BackToTop";
 
 // TODO: revisar y ajustar el contenido de las preguntas cuando esté definido
 const FAQS = [
@@ -33,6 +35,7 @@ const FAQS = [
 
 const PreguntasFrecuentes = () => {
     const [openIndex, setOpenIndex] = useState(null);
+    const sectionRef = useRef(null);
 
     const toggle = (index) => {
         setOpenIndex((prev) => (prev === index ? null : index));
@@ -42,7 +45,8 @@ const PreguntasFrecuentes = () => {
         <div className={styles.container}>
             <NavBarHome />
 
-            <div className={styles.sectionContainer}>
+            <div className={styles.sectionContainer} ref={sectionRef}>
+                <div className={styles.pageContent}>
                 <div className={styles.intro}>
                     <h1>Preguntas Frecuentes</h1>
                     <p>
@@ -55,7 +59,12 @@ const PreguntasFrecuentes = () => {
                     {FAQS.map((faq, index) => {
                         const isOpen = openIndex === index;
                         return (
-                            <div key={faq.pregunta} className={styles.faqItem}>
+                            <div
+                                key={faq.pregunta}
+                                className={`${styles.faqItem} ${
+                                    isOpen ? styles.faqItemActive : ""
+                                }`}
+                            >
                                 <button
                                     type="button"
                                     className={styles.faqQuestion}
@@ -82,7 +91,12 @@ const PreguntasFrecuentes = () => {
                         );
                     })}
                 </div>
+                </div>
+
+                <Footer />
             </div>
+
+            <BackToTop containerRef={sectionRef} />
         </div>
     );
 };

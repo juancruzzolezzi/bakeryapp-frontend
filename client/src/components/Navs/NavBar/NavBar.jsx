@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import style from "./NavBar.module.css";
 import Cart from "../../../views/Cart/Cart";
+import { NAV_LINKS } from "../../../constants/navLinks";
 
 const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const location = useLocation();
 
   //Cantidad total de unidades en el carrito, para mostrar el "badge"
   //sobre el ícono (independiente de que el carrito esté abierto o no).
@@ -44,15 +46,40 @@ const NavBar = () => {
       {/* Menú: NO es fixed, scrollea con la página (solo se ve arriba
           de todo, no se queda flotando encima de los productos). */}
       <nav className={style.navbar}>
+        {/* Solo visible en pantallas grandes (ver media query): en mobile
+            queda oculta y se usa el botón "MENÚ" con el panel de abajo. */}
+        <div className={style.desktopLinks}>
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`${style.desktopLink} ${
+                location.pathname === link.to ? style.desktopLinkActive : ""
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+
         <div className={isOpen ? `${style.navOpen}` : `${style.nav}`}>
           <div
             onClick={() => setIsOpen(true)}
             className={style.btnMenu}
             data-menu-toggle="true"
+            role="button"
+            aria-label="Abrir menú"
           >
-            MENÚ
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </div>
+
+        {/* Fondo difuminado detrás de la tarjeta flotante: al ser un
+            elemento aparte (no dentro de menuRef), tocarlo cuenta como
+            "click afuera" y cierra el menú con la misma lógica de arriba. */}
+        {isOpen && <div className={style.backdrop} />}
 
         <div
           ref={menuRef}
@@ -65,25 +92,13 @@ const NavBar = () => {
           </div>
 
           <div className={style.linksCont}>
-            <Link to="/" className={style.navLink}>
-              <div className={style.btn}>HOME</div>
-            </Link>
-
-            <Link to="/products" className={style.navLink}>
-              <div className={style.btn}> PRODUCTOS </div>
-            </Link>
-
-            <Link to="/contactanos" className={style.navLink}>
-              <div className={style.btn}> CONTACTANOS </div>
-            </Link>
-
-            <Link to="/nosotros" className={style.navLink}>
-              <div className={style.btn}> NOSOTROS </div>
-            </Link>
-
-            <Link to="/preguntas-frecuentes" className={style.navLink}>
-              <div className={style.btn}> PREGUNTAS FRECUENTES </div>
-            </Link>
+            {NAV_LINKS.map((link) => (
+              <Link key={link.to} to={link.to} className={style.navLink}>
+                <div className={style.btn}>
+                  <span className={style.btnLabel}>{link.label}</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </nav>

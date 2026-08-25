@@ -19,3 +19,38 @@
   object-fit: cover;
   z-index: -1;
 }
+
+/* Transición suave entre páginas: en vez de un corte seco al cambiar de
+   ruta, la página saliente se desvanece un poco (mientras el spinner de
+   "Loading" está activo) y la entrante aparece con un fade + leve subida. */
+.fadeRoutes {
+  width: 100%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fadeRoutesOut {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fadeRoutesIn {
+  opacity: 1;
+  /* "none", no "translateY(0)": cualquier transform que no sea "none"
+     crea un nuevo contenedor de posicionamiento para sus descendientes,
+     así que un valor "en reposo" != none acá rompía el "position: fixed"
+     del carrito (ver .cartFixed en NavBar.module.css), que dejaba de
+     quedarse fijo al scrollear. La transición sigue animando igual desde
+     translateY(8px) hasta "none". */
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeRoutes {
+    transition: opacity 0.2s ease;
+  }
+
+  .fadeRoutesOut,
+  .fadeRoutesIn {
+    transform: none;
+  }
+}

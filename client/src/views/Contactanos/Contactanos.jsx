@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import styles from "./Contactanos.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
+import BackToTop from "../../components/BackToTop/BackToTop";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faInstagram,
@@ -10,23 +11,17 @@ import {
     faEnvelope,
     faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-
-// TODO: reemplazar mail y teléfono por los datos reales del local cuando estén disponibles
-const CONTACTO = {
-    instagramUser: "bakery.oficial",
-    instagramUrl: "https://www.instagram.com/bakery.oficial",
-    whatsappNumero: "5491167565288",
-    whatsappTexto: "+54 9 11 6756-5288",
-    email: "contactobakery@gmail.com", // Placeholder, actualizar con el mail real
-    direccion: "Zavalía 2026, Belgrano",
-};
+import { CONTACTO } from "../../constants/contacto";
 
 const Contactanos = () => {
+    const sectionRef = useRef(null);
+
     return (
         <div className={styles.container}>
             <NavBarHome />
 
-            <div className={styles.sectionContainer}>
+            <div className={styles.sectionContainer} ref={sectionRef}>
+                <div className={styles.pageContent}>
                 <div className={styles.intro}>
                     <h1>Contactanos</h1>
                     <p>
@@ -112,7 +107,10 @@ const Contactanos = () => {
                         </a>
                     </div>
                 </div>
+                </div>
             </div>
+
+            <BackToTop containerRef={sectionRef} />
         </div>
     );
 };

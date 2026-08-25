@@ -2,6 +2,14 @@
     min-width: 100vw;
     height: 100vh;
     overflow: hidden;
+    /* Grano casi imperceptible, igual al de las tarjetas de producto: le
+       da un toque más artesanal al fondo oscuro sin competir con el
+       contenido. Se combina con un oscurecido suave (no un color sólido)
+       para no tapar del todo la imagen de fondo del sitio. */
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
+        linear-gradient(rgba(23, 16, 9, 0.45), rgba(23, 16, 9, 0.45));
+    background-size: 6px 6px, cover;
 }
 
 .sectionContainer{
@@ -14,8 +22,21 @@
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
-    padding: 0 1.5rem 5rem;
+    padding: 0 1.5rem 1.5rem;
     font-family: "Lexend", sans-serif;
+}
+
+/* Envuelve todo menos el Footer: con "flex: 1" empuja el Footer al fondo
+   de .sectionContainer en vez de dejarlo pegado justo debajo del
+   contenido con un hueco vacío después (la altura de .sectionContainer
+   es fija, no se ajusta al contenido). */
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    justify-content: center;
 }
 
 .intro {
@@ -59,6 +80,11 @@
     border-color: #b69443;
 }
 
+.faqItemActive {
+    border-color: #b69443;
+    box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.55);
+}
+
 .faqQuestion {
     width: 100%;
     background: none;
@@ -84,6 +110,7 @@
 
 .faqIconOpen {
     transform: rotate(45deg);
+    color: #e7c98a;
 }
 
 .faqAnswer {
@@ -127,7 +154,7 @@ a {
         margin-top: 20vh;
         height: calc(100vh - 20vh);
         font-size: 1rem;
-        padding: 0 1rem 3rem;
+        padding: 0 1rem 1.25rem;
     }
 
     .intro h1 {

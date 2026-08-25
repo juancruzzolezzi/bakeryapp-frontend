@@ -7,6 +7,14 @@
        medio: todo el scroll pasa a .sectionContainer, que arranca recién
        debajo del navbar y nunca llega a esa franja. */
     overflow: hidden;
+    /* Grano casi imperceptible, igual al de las tarjetas de producto: le
+       da un toque más artesanal al fondo oscuro sin competir con el
+       contenido. Se combina con un oscurecido suave (no un color sólido)
+       para no tapar del todo la imagen de fondo del sitio. */
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
+        linear-gradient(rgba(23, 16, 9, 0.45), rgba(23, 16, 9, 0.45));
+    background-size: 6px 6px, cover;
 }
 
 .sectionContainer{
@@ -19,14 +27,27 @@
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
-    padding: 0 1.5rem 5rem;
+    padding: 0 1.5rem 1.5rem;
     font-family: "Lexend", sans-serif;
+}
+
+/* Envuelve todo menos el Footer: con "flex: 1" empuja el Footer al fondo
+   de .sectionContainer en vez de dejarlo pegado justo debajo del
+   contenido con un hueco vacío después (la altura de .sectionContainer
+   es fija, no se ajusta al contenido). */
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    justify-content: center;
 }
 
 .intro {
     max-width: 70ch;
     text-align: center;
-    margin: 0 auto 2.5rem;
+    margin: 0 auto 2rem;
 }
 
 .intro h1 {
@@ -44,64 +65,85 @@
     margin: 0;
 }
 
-.cardsGrid {
+.statsRow {
+    display: flex;
+    justify-content: center;
+    gap: 2.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.statNum {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    color: #e7c98a;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.statLabel {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #c9bda9;
+    margin-top: 0.35rem;
+}
+
+.checklist {
     width: 100%;
-    max-width: 1400px;
+    max-width: 640px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.6rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.3rem 2rem;
 }
 
-.card {
-    background: #2f2318;
-    border: 1px solid rgba(230, 201, 138, 0.18);
-    border-radius: 14px;
-    padding: 2rem 1.7rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+.checkItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    text-align: left;
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    border-color: #b69443;
-    box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.6);
-}
-
-.cardIcon {
-    width: 3.2rem;
-    height: 3.2rem;
+.checkIcon {
+    flex-shrink: 0;
+    width: 1.7rem;
+    height: 1.7rem;
     border-radius: 50%;
-    background: rgba(182, 148, 67, 0.15);
+    background: rgba(182, 148, 67, 0.18);
     border: 1px solid #b69443;
+    color: #e7c98a;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
-.card h3 {
+.checkText h4 {
     font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #f6ecdb;
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.2rem;
 }
 
-.card p {
-    font-size: 0.92rem;
+.checkText p {
+    font-size: 0.85rem;
     color: #c9bda9;
-    line-height: 1.6;
+    line-height: 1.5;
     margin: 0;
 }
 
 a {
     color: #e7c98a;
     text-decoration: none;
-}
-
-@media screen and (max-width: 900px) {
-    .cardsGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 @media screen and (max-width: 760px) {
@@ -119,14 +161,23 @@ a {
         margin-top: 20vh;
         height: calc(100vh - 20vh);
         font-size: 1rem;
-        padding: 0 1rem 3rem;
+        padding: 0 1rem 1.25rem;
     }
 
     .intro h1 {
         font-size: 1.8rem;
     }
 
-    .cardsGrid {
+    .statsRow {
+        gap: 1.6rem;
+    }
+
+    .statNum {
+        font-size: 1.7rem;
+    }
+
+    .checklist {
         grid-template-columns: 1fr;
+        max-width: 340px;
     }
 }

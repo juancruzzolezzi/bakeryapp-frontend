@@ -1,8 +1,9 @@
 //Dependencias de REACT
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 //Importacion de estilos
 import style from "./NavBarHome.module.css";
+import { NAV_LINKS } from "../../../constants/navLinks";
 //Dependencias de GSAP
 import gsap from "gsap";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,6 +15,7 @@ gsap.registerPlugin( ScrollTrigger);
 const NavBarHome = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const location = useLocation();
 
   // Cierra el menú "MENÚ" al hacer click en cualquier lugar que no sea el
   // menú en sí ni el botón que lo abre. Fase de captura (igual que en
@@ -33,15 +35,40 @@ const NavBarHome = () => {
 
   return (
     <nav className={style.navbar}>
+      {/* Solo visible en pantallas grandes (ver media query): en mobile
+          queda oculta y se usa el botón "MENÚ" con el panel de abajo. */}
+      <div className={style.desktopLinks}>
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.to}
+            to={link.to}
+            className={`${style.desktopLink} ${
+              location.pathname === link.to ? style.desktopLinkActive : ""
+            }`}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+
       <div className={isOpen ? `${style.navOpen}` : `${style.nav}`}>
         <div
           onClick={() => setIsOpen(true)}
           className={style.btnMenu}
           data-menu-toggle="true"
+          role="button"
+          aria-label="Abrir menú"
         >
-          MENÚ
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
+
+      {/* Fondo difuminado detrás de la tarjeta flotante: al ser un
+          elemento aparte (no dentro de menuRef), tocarlo cuenta como
+          "click afuera" y cierra el menú con la misma lógica de arriba. */}
+      {isOpen && <div className={style.backdrop} />}
 
       <div
         ref={menuRef}
@@ -54,25 +81,13 @@ const NavBarHome = () => {
         </div>
 
         <div className={style.linksCont}>
-          <Link to="/" className={style.navLink}>
-            <div className={style.btn}>HOME</div>
-          </Link>
-
-          <Link to="/products" className={style.navLink}>
-            <div className={style.btn}> PRODUCTOS </div>
-          </Link>
-
-          <Link to="/contactanos" className={style.navLink}>
-            <div className={style.btn}> CONTACTANOS </div>
-          </Link>
-
-          <Link to="/nosotros" className={style.navLink}>
-            <div className={style.btn}> NOSOTROS </div>
-          </Link>
-
-          <Link to="/preguntas-frecuentes" className={style.navLink}>
-            <div className={style.btn}> PREGUNTAS FRECUENTES </div>
-          </Link>
+          {NAV_LINKS.map((link) => (
+            <Link key={link.to} to={link.to} className={style.navLink}>
+              <div className={style.btn}>
+                <span className={style.btnLabel}>{link.label}</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

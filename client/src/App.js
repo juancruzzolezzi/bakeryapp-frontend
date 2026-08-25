@@ -40,13 +40,15 @@ function App() {
       <img src="/Portada.jpg" alt="fondo" className="background-image"></img>
 
       {isLoading && <Loading/>}
-      <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/nosotros" element={<Nosotros />} />
-        <Route path="/contactanos" element={<Contactanos />} />
-        <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
-      </Routes>
+      <div className={`fadeRoutes ${isLoading ? "fadeRoutesOut" : "fadeRoutesIn"}`}>
+        <Routes>
+          <Route path="/" exact element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/contactanos" element={<Contactanos />} />
+          <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+        </Routes>
+      </div>
     </div>
   );
 };
