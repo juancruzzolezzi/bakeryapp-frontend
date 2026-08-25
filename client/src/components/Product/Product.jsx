@@ -11,6 +11,7 @@ const AJUSTE_ENCUADRE = {
   "Lágrima": "100% center",
   "Café Americano": "70% center",
   "Café de Especialidad": "70% center",
+  "Milkshake de Frutilla": "center 30%",
 };
 
 const Product = ({ product, featured }) => {
