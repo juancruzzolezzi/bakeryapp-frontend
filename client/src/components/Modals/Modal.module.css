@@ -212,15 +212,39 @@
     }
 }
 
+/* ---- Confirmaciones destructivas (vaciar carrito, eliminar producto) ---- */
+
+.modalConfirmIcon {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    background: rgba(194, 105, 74, 0.15);
+    border: 1px solid #c2694a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 1rem;
+}
+
+.modalConfirmActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
 .modalBtnNeutral {
-    padding: 0.75rem 1.3rem;
+    width: 100%;
+    padding: 0.8rem;
     background: transparent;
     color: #c9bda9;
+    font-family: inherit;
+    font-size: 0.9rem;
     border: 1px solid rgba(230, 201, 138, 0.25);
-    border-radius: 999px;
+    border-radius: 12px;
     cursor: pointer;
-    margin-right: 1rem;
-    margin-top: 1rem;
+    box-sizing: border-box;
     transition: background 0.15s ease;
 }
 
@@ -229,19 +253,22 @@
 }
 
 .modalBtnDanger {
-    padding: 0.75rem 1.3rem;
-    background: #a9744a;
-    color: #fff;
+    width: 100%;
+    padding: 0.8rem;
+    background: #c2694a;
+    color: #fff5ee;
     font-weight: 700;
+    font-family: inherit;
+    font-size: 0.9rem;
     border: none;
-    border-radius: 999px;
+    border-radius: 12px;
     cursor: pointer;
-    margin-top: 1rem;
+    box-sizing: border-box;
     transition: background 0.15s ease;
 }
 
 .modalBtnDanger:hover {
-    background: #c08a5c;
+    background: #d97b5c;
 }
 
 @media screen and (max-width: 760px) {

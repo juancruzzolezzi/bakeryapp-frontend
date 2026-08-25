@@ -18,16 +18,20 @@ const EmptyCartModal = ({ isOpen, onCancel, onConfirm }) => {
             }}
         >
             <div className={style.modalContent}>
+                <div className={style.modalConfirmIcon}>🗑️</div>
                 <h2 className={style.modalHeader}>Vaciar carrito</h2>
                 <p className={style.modalText}>
-                    ¿Estás seguro que querés vaciar el carrito?
+                    ¿Estás seguro que querés vaciar el carrito? Esta acción no
+                    se puede deshacer.
                 </p>
-                <button onClick={onCancel} className={style.modalBtnNeutral}>
-                    Cancelar
-                </button>
-                <button onClick={onConfirm} className={style.modalBtnDanger}>
-                    Sí
-                </button>
+                <div className={style.modalConfirmActions}>
+                    <button onClick={onConfirm} className={style.modalBtnDanger}>
+                        Vaciar carrito
+                    </button>
+                    <button onClick={onCancel} className={style.modalBtnNeutral}>
+                        Cancelar
+                    </button>
+                </div>
             </div>
         </Modal>
     );

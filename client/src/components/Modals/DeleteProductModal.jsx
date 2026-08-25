@@ -18,18 +18,19 @@ const DeleteProductModal = ({ isOpen, onCancel, onConfirm }) => {
         }}
       >
         <div className={style.modalContent}>
-          <h5 className={style.modalHeader}>
-            Vas a eliminar el producto de tu carrito.
-          </h5>
+          <div className={style.modalConfirmIcon}>🗑️</div>
+          <h2 className={style.modalHeader}>Eliminar producto</h2>
           <p className={style.modalText}>
-            ¿Estás seguro?
+            Vas a eliminar este producto de tu carrito. ¿Estás seguro?
           </p>
-          <button onClick={onCancel} className={style.modalBtnNeutral}>
-            Cancelar
-          </button>
-          <button onClick={onConfirm} className={style.modalBtnDanger}>
-            Sí
-          </button>
+          <div className={style.modalConfirmActions}>
+            <button onClick={onConfirm} className={style.modalBtnDanger}>
+              Eliminar
+            </button>
+            <button onClick={onCancel} className={style.modalBtnNeutral}>
+              Cancelar
+            </button>
+          </div>
         </div>
       </Modal>
     );
