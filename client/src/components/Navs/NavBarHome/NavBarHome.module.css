@@ -44,10 +44,10 @@
        en pantallas no muy altas y el último link (NOSOTROS) quedaba
        renderizado por fuera del fondo oscuro de la caja. */
     height: auto;
-    min-height: 40vh;
-    padding: 2rem 0;
+    min-height: 28vh;
+    padding: 1.5rem 0;
     box-sizing: border-box;
-    width: clamp(220px, 22vw, 320px);
+    width: clamp(200px, 16vw, 260px);
     max-width: 90vw;
     display: flex;
     flex-direction: column;
@@ -123,7 +123,7 @@
 .btn {
     color: #d9b767;
     font-weight: bold;
-    font-size: clamp(1.3rem, 2.4vw, 2.2rem);
+    font-size: clamp(1.1rem, 1.8vw, 1.6rem);
     display: flex;
     justify-content: flex-end;
     text-align: right;

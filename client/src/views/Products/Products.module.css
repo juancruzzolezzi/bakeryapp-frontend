@@ -19,7 +19,7 @@
     box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.7);
     text-align: center;
     z-index: 60;
-    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
 }
 
 .paymentBannerError {
@@ -47,7 +47,7 @@
 }
 
 .paymentBannerTitle {
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.5rem;
@@ -68,21 +68,103 @@
 
 .productList {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 2rem;
-    column-gap: 0.8rem;
-    justify-content: space-between;
-    padding: 0 3vw 3rem 8vw;
+    /* Auto-ajustable: cada tarjeta pide un mínimo de 280px y el grid
+       decide sola cuántas entran por fila (2, 3, hasta 4+ en monitores
+       grandes), en vez de forzar siempre 2 columnas y dejar espacio
+       muerto a los costados de cada tarjeta en pantallas anchas. */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 0 5vw 3rem;
     box-sizing: border-box;
-    max-width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.stateMessage {
+    width: 100%;
+    text-align: center;
+    color: #c9bda9;
+    font-size: 1rem;
+    padding: 3rem 1rem;
+}
+
+/* Esqueleto de carga: misma forma que .productContainer/.photo/.body de
+   Product.module.css, para que no "salte" el layout cuando llegan los
+   productos reales. */
+.skeletonCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    background: #251b13;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.skeletonPhoto {
+    height: 190px;
+    width: 100%;
+    background: #2f2318;
+}
+
+.skeletonBody {
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.skeletonLine {
+    height: 0.9rem;
+    border-radius: 6px;
+    background: #2f2318;
+}
+
+.skeletonPhoto,
+.skeletonLine {
+    animation: skeletonPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeletonPhoto,
+    .skeletonLine {
+        animation: none;
+    }
+}
+
+.intro {
+    max-width: 60ch;
+    text-align: center;
+    margin: 20vh auto 0;
+    padding: 0 1.5rem;
+}
+
+.intro h1 {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 2.2rem;
+    color: #f6ecdb;
+    margin: 0 0 0.6rem;
+}
+
+.intro p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #c9bda9;
+    margin: 0;
 }
 
 .filters {
-    /* El navbar (MENÚ / carrito) es fixed y siempre queda arriba; los
-       filtros, en cambio, scrollean con el resto de la página como
-       cualquier otro contenido — solo necesitan bajar lo suficiente para
-       no arrancar tapados por el navbar. */
-    margin-top: 20vh;
+    /* El margin-top que despegaba esto del navbar (20vh) ahora lo pone
+       .intro, que pasó a ser lo primero debajo del navbar. */
+    margin-top: 1.5rem;
     width: 95%;
     height: auto;
 }
@@ -98,22 +180,23 @@
         margin-top: 2rem;
     }
 
+    /* El grid auto-ajustable (ver .productList) ya resuelve solo cuántas
+       columnas entran en pantallas angostas — acá solo achicamos
+       padding/gap, sin forzar una sola columna a la fuerza. */
     .productList {
-        grid-template-columns: 1fr;
-        grid-template-rows: none;
         gap: 1.5rem;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
+        padding: 0 1rem 2rem;
     }
 }
 
 /* El navbar achica su altura (de 20vh a 18vh) recién en este breakpoint
    (ver NavBar.module.css). */
 @media screen and (max-width: 760px) {
-    .filters {
+    .intro {
         margin-top: 19vh;
+    }
+
+    .intro h1 {
+        font-size: 1.7rem;
     }
 }

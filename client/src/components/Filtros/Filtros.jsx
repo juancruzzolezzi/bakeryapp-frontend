@@ -12,15 +12,17 @@ const Filtros = ({ filtroActivo, setFiltroActivo }) => {
 
   return (
     <div className={style.filtros}>
-      {["Todo", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano"].map((filtro) => (
-        <span
-          key={filtro}
-          className={obtenerClaseFiltro(filtro)}
-          onClick={() => setFiltroActivo(filtro)}
-        >
-          {filtro}
-        </span>
-      ))}
+      <div className={style.filtrosGrupo}>
+        {["Todo", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano"].map((filtro) => (
+          <span
+            key={filtro}
+            className={obtenerClaseFiltro(filtro)}
+            onClick={() => setFiltroActivo(filtro)}
+          >
+            {filtro}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

@@ -27,91 +27,90 @@ const Contactanos = () => {
             <NavBarHome />
 
             <div className={styles.sectionContainer}>
-                <div className={styles.textContainer}>
-                    <section className={styles.section1}>
-                        <h1>Contactanos</h1>
-                        <p>
-                            ¿Tenés dudas, un pedido especial o querés hacernos
-                            llegar tu consulta? Encontranos en nuestras redes,
-                            escribinos o visitanos en el local.
-                        </p>
-                    </section>
+                <div className={styles.intro}>
+                    <h1>Contactanos</h1>
+                    <p>
+                        ¿Tenés dudas, un pedido especial o querés hacernos
+                        llegar tu consulta? Encontranos en nuestras redes,
+                        escribinos o visitanos en el local.
+                    </p>
+                </div>
 
-                    <section className={styles.linksGrid}>
+                <div className={styles.layout}>
+                    {/* WhatsApp como vía principal: es la forma más rápida de
+                        coordinar un pedido, así que se destaca como bloque
+                        grande en vez de quedar igualada al resto. */}
+                    <a
+                        className={styles.mainCard}
+                        href={`https://wa.me/${CONTACTO.whatsappNumero}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <div className={styles.mainIcon}>
+                            <FontAwesomeIcon icon={faWhatsapp} />
+                        </div>
+                        <h2>Escribinos por WhatsApp</h2>
+                        <p>
+                            La forma más rápida de coordinar tu pedido o
+                            resolver cualquier duda.
+                        </p>
+                        <span className={styles.mainBtn}>Abrir chat →</span>
+                    </a>
+
+                    <div className={styles.secondaryList}>
                         <a
-                            className={styles.contactBtn}
+                            className={styles.contactRow}
                             href={CONTACTO.instagramUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <FontAwesomeIcon
-                                icon={faInstagram}
-                                className={styles.icon}
-                            />
-                            <div className={styles.btnText}>
-                                <span className={styles.btnLabel}>Instagram</span>
-                                <span className={styles.btnValue}>
+                            <div className={styles.rowIcon}>
+                                <FontAwesomeIcon icon={faInstagram} />
+                            </div>
+                            <div className={styles.rowText}>
+                                <span className={styles.rowLabel}>Instagram</span>
+                                <span className={styles.rowValue}>
                                     @{CONTACTO.instagramUser}
                                 </span>
                             </div>
                         </a>
 
                         <a
-                            className={styles.contactBtn}
-                            href={`https://wa.me/${CONTACTO.whatsappNumero}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <FontAwesomeIcon
-                                icon={faWhatsapp}
-                                className={styles.icon}
-                            />
-                            <div className={styles.btnText}>
-                                <span className={styles.btnLabel}>WhatsApp</span>
-                                <span className={styles.btnValue}>
-                                    {CONTACTO.whatsappTexto}
-                                </span>
-                            </div>
-                        </a>
-
-                        <a
-                            className={styles.contactBtn}
+                            className={styles.contactRow}
                             href={`https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACTO.email}`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <FontAwesomeIcon
-                                icon={faEnvelope}
-                                className={styles.icon}
-                            />
-                            <div className={styles.btnText}>
-                                <span className={styles.btnLabel}>Email</span>
-                                <span className={styles.btnValue}>
+                            <div className={styles.rowIcon}>
+                                <FontAwesomeIcon icon={faEnvelope} />
+                            </div>
+                            <div className={styles.rowText}>
+                                <span className={styles.rowLabel}>Email</span>
+                                <span className={styles.rowValue}>
                                     {CONTACTO.email}
                                 </span>
                             </div>
                         </a>
 
                         <a
-                            className={styles.contactBtn}
+                            className={styles.contactRow}
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                                 CONTACTO.direccion
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <FontAwesomeIcon
-                                icon={faLocationDot}
-                                className={styles.icon}
-                            />
-                            <div className={styles.btnText}>
-                                <span className={styles.btnLabel}>Dirección</span>
-                                <span className={styles.btnValue}>
+                            <div className={styles.rowIcon}>
+                                <FontAwesomeIcon icon={faLocationDot} />
+                            </div>
+                            <div className={styles.rowText}>
+                                <span className={styles.rowLabel}>Dirección</span>
+                                <span className={styles.rowValue}>
                                     {CONTACTO.direccion}
                                 </span>
                             </div>
                         </a>
-                    </section>
+                    </div>
                 </div>
             </div>
         </div>

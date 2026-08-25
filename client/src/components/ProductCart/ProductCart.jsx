@@ -55,7 +55,7 @@ const ProductCart = ({ product }) => {
       </div>
 
       <div className={style.priceCol}>
-        <span className={style.amount}>${product.price * quantity}</span>
+        <span className={style.amount}>${(product.price * quantity).toLocaleString("es-AR")}</span>
         <button
           onClick={() => setModalEmptyOpen(true)}
           className={style.removeBtn}

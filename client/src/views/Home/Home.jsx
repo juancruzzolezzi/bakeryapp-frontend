@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import style from "./Home.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
@@ -73,6 +73,9 @@ function Home() {
         <div className={style.presentacion}>
           <h1>BakeryApp</h1>
           <h2>[baked goods & cookies]</h2>
+          <Link to="/products" className={style.heroCta}>
+            Ver productos →
+          </Link>
         </div>
       </div>
       {/* <ProductsHome/> */}

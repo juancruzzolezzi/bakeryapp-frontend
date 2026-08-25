@@ -8,12 +8,24 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow-x: hidden;
+  /* "clip" en vez de "hidden": hidden convierte a body en scroll
+     container (le agrega overflow-y:auto implícito) y eso rompe
+     position:sticky en toda la página. clip evita el scroll horizontal
+     igual, sin ese efecto secundario. */
+  overflow-x: clip;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Oculta la barra de scroll (Firefox); el scroll sigue funcionando
+     con mouse, trackpad, teclado y touch, solo no se dibuja la barra. */
+  scrollbar-width: none;
+}
+
+/* Oculta la barra de scroll (Chrome/Edge/Safari). */
+::-webkit-scrollbar {
+  display: none;
 }
 
 code {

@@ -109,7 +109,13 @@ const NavBar = ({ forceCartOpen }) => {
           >
             <FontAwesomeIcon icon={faShoppingCart} />
             {cartItemsCount > 0 && (
-              <span className={style.cartBadge}>{cartItemsCount}</span>
+              // "key" fuerza a React a recrear el <span> cada vez que
+              // cambia la cantidad, así la animación de "rebote" (ver
+              // NavBar.module.css) se vuelve a disparar en cada cambio,
+              // no solo la primera vez que aparece el badge.
+              <span key={cartItemsCount} className={style.cartBadge}>
+                {cartItemsCount}
+              </span>
             )}
           </div>
         </div>

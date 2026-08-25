@@ -128,7 +128,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
       <div className={style.summary}>
         <div className={style.totalRow}>
           <span>Total</span>
-          <span className={style.totalAmount}>${totalPrice}</span>
+          <span className={style.totalAmount}>${totalPrice.toLocaleString("es-AR")}</span>
         </div>
 
         <div className={style.actions}>

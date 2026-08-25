@@ -5,7 +5,13 @@ import style from "./Product.module.css";
 const Product = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
+  const totalPriceFormateado = totalPrice.toLocaleString("es-AR");
   const { handleAddToCart } = useProductHandlers();
+
+  //"stock" todavía no lo devuelve la API (ver api/db/products.routes.js);
+  //queda listo para cuando lo agreguen, sin inventar disponibilidad
+  //mientras tanto (product.stock === undefined nunca marca "agotado").
+  const agotado = product.stock === 0;
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
@@ -18,7 +24,7 @@ const Product = ({ product }) => {
 
   return (
     <div
-      className={style.productContainer}
+      className={`${style.productContainer} ${agotado ? style.agotado : ""}`}
       data-category={product.category}
       data-product-card="true"
     >
@@ -32,7 +38,9 @@ const Product = ({ product }) => {
             decoding="async"
           />
         )}
-        <span className={style.pricePill}>${totalPrice}</span>
+        {agotado && <span className={style.agotadoTag}>Agotado</span>}
+        <span className={style.pricePill}>${totalPriceFormateado}</span>
+        <div className={style.photoFade} />
       </div>
 
       <div className={style.body}>
@@ -54,8 +62,9 @@ const Product = ({ product }) => {
             onClick={addToCart}
             className={style.addToCartButton}
             data-add-to-cart="true"
+            disabled={agotado}
           >
-            Añadir
+            {agotado ? "Agotado" : "Añadir"}
           </button>
         </div>
       </div>

@@ -1,10 +1,25 @@
 .mainContainer {
+    position: relative;
     height: 100vh;
     width: 100%;
     overflow: hidden;
     background-image: url("../../../public/Portada.jpg");
     background-position: center;
     background-size: cover;
+}
+
+/* Funde la base del hero hacia el mismo tono oscuro que usa el resto de
+   la app (paneles, tarjetas de producto, Cocina), para que Home no se
+   sienta como una foto vívida "pegada" contra el resto, más apagado. */
+.mainContainer::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30vh;
+    background: linear-gradient(to bottom, transparent, #251b13);
+    pointer-events: none;
 }
 
 .paymentBanner {
@@ -20,7 +35,7 @@
     box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.7);
     text-align: center;
     z-index: 60;
-    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
 }
 
 .paymentBannerSuccess {
@@ -52,7 +67,7 @@
 }
 
 .paymentBannerTitle {
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.5rem;
@@ -102,11 +117,33 @@
 }
 
 .presentacion h2 {
-    margin: 0;
+    margin: 0 0 1.6rem;
     color: #d9b767;
     font-weight: 500;
     font-size: 1.5rem;
     text-shadow: 3px 1px 20px black;
+}
+
+.heroCta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #e7c98a;
+    border: 1px solid #e7c98a;
+    color: #241a10;
+    font-family: "Lexend", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.heroCta:hover {
+    background: #f6ecdb;
+    transform: translateY(-2px);
 }
 
 @media screen and (max-width: 860px) {

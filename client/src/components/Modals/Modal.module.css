@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #251b13;
+    background-color: #251b13;
     border: 1px solid rgba(230, 201, 138, 0.18);
     padding: 1.6rem;
     border-radius: 20px;
@@ -13,7 +13,7 @@
     overflow-y: auto;
     text-align: center;
     box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
-    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
     z-index: 99;
 }
 
@@ -34,15 +34,69 @@
 }
 
 .modalHeader {
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-size: 1.4rem;
     font-weight: 500;
     color: #f6ecdb;
     margin-bottom: 1.2rem;
 }
 
+/* ---- Modal de pago: pasos numerados (ver PaymentModal.jsx) ---- */
+
+.modalStep {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
+    text-align: left;
+}
+
+.modalStepNum {
+    flex-shrink: 0;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    background: #2f2318;
+    border: 1px solid #c9a15f;
+    color: #e7c98a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.modalStepBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.modalStepTitle {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+    color: #f6ecdb;
+}
+
+.modalTotalBox {
+    background: #2f2318;
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0.5rem 0 1.3rem;
+    color: #f6ecdb;
+    font-weight: 600;
+}
+
+.modalTotalBox span:last-child {
+    font-weight: 700;
+    color: #e7c98a;
+    font-variant-numeric: tabular-nums;
+}
+
 .modalTotal {
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-size: 1.2rem;
     font-weight: 700;
     color: #f6ecdb;
@@ -107,19 +161,22 @@
 
 .modalContactMethods {
     display: flex;
-    justify-content: center;
     gap: 0.5rem;
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .modalMethodBtn {
-    padding: 8px 16px;
+    flex: 1;
+    padding: 0.55rem;
     background: transparent;
-    color: #e7c98a;
-    border: 1px solid rgba(230, 201, 138, 0.35);
+    color: #c9bda9;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid rgba(230, 201, 138, 0.25);
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .modalMethodBtn:hover {
@@ -127,22 +184,22 @@
 }
 
 .modalMethodBtnActive {
-    background: linear-gradient(135deg, #c9a15f, #e7c98a);
-    color: #241a10;
-    border-color: transparent;
-    font-weight: 700;
+    border-color: #b69443;
+    background: rgba(182, 148, 67, 0.12);
+    color: #e7c98a;
 }
 
 .modalBtn {
-    padding: 0.75rem 1.3rem;
+    width: 100%;
+    padding: 0.85rem;
     background: linear-gradient(135deg, #c9a15f, #e7c98a);
     color: #241a10;
     font-weight: 700;
+    font-size: 0.95rem;
     border: none;
-    border-radius: 999px;
+    border-radius: 12px;
     cursor: pointer;
-    margin-right: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 
     &:disabled {
         background: #4a3f30;
@@ -189,6 +246,10 @@
         max-height: 80vh;
         padding: 1.2rem;
         z-index: 99 !important;
+    }
+
+    .modalPhotoStrip {
+        margin: -1.2rem -1.2rem 1.1rem;
     }
 
     .overlay {

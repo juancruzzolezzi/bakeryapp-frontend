@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
+import gsap from "gsap";
 import Product from "../../components/Product/Product";
 import Filtros from "../../components/Filtros/Filtros";
 import NavBar from "../../components/Navs/NavBar/NavBar";
@@ -15,7 +16,7 @@ import style from "./Products.module.css";
 let yaSeMontoProductsEnEstaSesion = false;
 
 const Products = () => {
-  const { data } = useGetProductsQuery();
+  const { data, isLoading, isError } = useGetProductsQuery();
   const products = data;
 
   //Si volvemos acá desde Mercado Pago sin haber pagado (falló o quedó
@@ -61,8 +62,6 @@ const Products = () => {
     localStorage.setItem("filtroActivo", filtro);
   };
 
-  console.log(products);
-
   //Orden fijo de categorías para cuando se muestran todos los productos
   //(filtro "Todo"): las que no estén en esta lista van al final, en el
   //orden en que las devuelva la API.
@@ -80,6 +79,22 @@ const Products = () => {
             ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category)
         )
       : products.filter((product) => product.category === filtroActivo);
+
+  //Entrada escalonada de las tarjetas: cada vez que cambia el filtro (o
+  //llegan los productos por primera vez), aparecen una tras otra en vez
+  //de todas de golpe.
+  const productListRef = useRef(null);
+
+  useEffect(() => {
+    if (!productListRef.current) return;
+    const cards = productListRef.current.children;
+    if (!cards.length) return;
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.05 }
+    );
+  }, [filtroActivo, productosFiltrados?.length]);
 
   return (
     <div className={style.mainContainer}>
@@ -105,17 +120,49 @@ const Products = () => {
         </div>
       )}
 
+      <div className={style.intro}>
+        <h1>Nuestros productos</h1>
+        <p>Horneados frescos cada día, elegí una categoría o mirá todo.</p>
+      </div>
+
       <div className={style.filters}>
         <Filtros filtroActivo={filtroActivo} setFiltroActivo={setFiltroActivo} />
       </div>
 
       <div className={style.productListWrapper}>
-        <div className={style.productList}>
-          {productosFiltrados &&
-            productosFiltrados.map((product) => (
+        {isLoading && (
+          <div className={style.productList}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className={style.skeletonCard}>
+                <div className={style.skeletonPhoto} />
+                <div className={style.skeletonBody}>
+                  <div className={style.skeletonLine} style={{ width: "70%" }} />
+                  <div className={style.skeletonLine} style={{ width: "45%" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!isLoading && isError && (
+          <p className={style.stateMessage}>
+            No pudimos cargar los productos. Probá de nuevo en un rato.
+          </p>
+        )}
+
+        {!isLoading && !isError && productosFiltrados && productosFiltrados.length === 0 && (
+          <p className={style.stateMessage}>
+            No hay productos en "{filtroActivo}" por ahora.
+          </p>
+        )}
+
+        {!isLoading && !isError && productosFiltrados && productosFiltrados.length > 0 && (
+          <div className={style.productList} ref={productListRef}>
+            {productosFiltrados.map((product) => (
               <Product key={product.id} product={product} />
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
