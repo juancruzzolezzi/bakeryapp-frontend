@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams, Link } from "react-router-dom";
 import style from "./Home.module.css";
@@ -29,8 +29,31 @@ function Home() {
     }
   }, [searchParams, dispatch, setSearchParams]);
 
+  //Parallax de la portada: la foto se desplaza levemente en sentido
+  //contrario al mouse, dando sensación de profundidad. Con un pequeño
+  //factor (12px máx) para que sea un detalle sutil, no un efecto mareador.
+  const heroPhotoRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!heroPhotoRef.current) return;
+    const { innerWidth, innerHeight } = window;
+    const x = e.clientX / innerWidth - 0.5;
+    const y = e.clientY / innerHeight - 0.5;
+    heroPhotoRef.current.style.transform = `translate(${x * -12}px, ${y * -12}px)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!heroPhotoRef.current) return;
+    heroPhotoRef.current.style.transform = "translate(0, 0)";
+  };
+
   return (
-    <div className={style.mainContainer}>
+    <div
+      className={style.mainContainer}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className={style.heroPhoto} ref={heroPhotoRef} />
       <NavBarHome />
 
       {paymentStatus && (
@@ -78,6 +101,9 @@ function Home() {
       <div className={style.design}>
         <div className={style.presentacion}>
           <h1>BakeryApp</h1>
+          <svg className={style.brushStroke} viewBox="0 0 220 24" aria-hidden="true">
+            <path className={style.brushPath} d="M6 14 C 60 4, 160 22, 214 10" />
+          </svg>
           <h2>[baked goods & cookies]</h2>
           <Link to="/products" className={style.heroCta}>
             Ver productos →

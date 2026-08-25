@@ -3,9 +3,20 @@
     height: 100vh;
     width: 100%;
     overflow: hidden;
+}
+
+/* Capa propia (separada del contenedor) para poder moverla con el mouse
+   (parallax, ver Home.jsx) sin afectar el resto del layout. Un poco más
+   grande que el contenedor (inset negativo) para que nunca se vea el
+   borde al desplazarla. */
+.heroPhoto {
+    position: absolute;
+    inset: -20px;
     background-image: url("../../../public/Portada.jpg");
     background-position: center;
     background-size: cover;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
 }
 
 /* Funde la base del hero hacia el mismo tono oscuro que usa el resto de
@@ -125,6 +136,39 @@
     font-size: 5rem;
     margin: 0;
     text-shadow: 2px 1px 20px black;
+}
+
+/* Pincelada dorada bajo el título: se dibuja sola al cargar la página
+   (ver Home.jsx), como un pequeño momento de marca en la primera
+   impresión. */
+.brushStroke {
+    display: block;
+    width: clamp(140px, 18vw, 220px);
+    height: 20px;
+    margin: 0.2rem auto 0;
+}
+
+.brushPath {
+    fill: none;
+    stroke: #e7c98a;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: drawBrush 0.9s 0.3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes drawBrush {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brushPath {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
 }
 
 .presentacion h2 {

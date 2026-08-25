@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import style from "./Product.module.css";
 
-const Product = ({ product }) => {
+const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
   const totalPriceFormateado = totalPrice.toLocaleString("es-AR");
@@ -24,7 +24,9 @@ const Product = ({ product }) => {
 
   return (
     <div
-      className={`${style.productContainer} ${agotado ? style.agotado : ""}`}
+      className={`${style.productContainer} ${featured ? style.featured : ""} ${
+        agotado ? style.agotado : ""
+      }`}
       data-category={product.category}
       data-product-card="true"
     >
@@ -38,6 +40,7 @@ const Product = ({ product }) => {
             decoding="async"
           />
         )}
+        {featured && <span className={style.featuredTag}>Recomendado</span>}
         {agotado && <span className={style.agotadoTag}>Agotado</span>}
         <span className={style.pricePill}>${totalPriceFormateado}</span>
         <div className={style.photoFade} />
