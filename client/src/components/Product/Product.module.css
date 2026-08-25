@@ -193,7 +193,10 @@
    celda más) y pasa a layout horizontal (foto al lado del texto, no
    arriba), como punto focal antes de que arranque la grilla pareja. */
 .featured {
-    grid-column: 1 / -1;
+    /* Ocupa 2 columnas de la grilla en vez de 1 sola fila entera: con dos
+       productos destacados uno al lado del otro se aprovecha mejor el
+       ancho que uno solo estirado de punta a punta. */
+    grid-column: span 2;
     flex-direction: row;
     max-width: 100%;
 }
@@ -240,6 +243,9 @@
 
 @media screen and (max-width: 760px) {
     .featured {
+        /* Con la grilla a 1 sola columna en mobile, "span 2" no tiene
+           dónde ir: cada destacado ocupa su única columna, como el resto. */
+        grid-column: span 1;
         flex-direction: column;
     }
 

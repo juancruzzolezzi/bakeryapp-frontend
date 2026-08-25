@@ -204,13 +204,13 @@ const Products = () => {
         {!isLoading && !isError && productosFiltrados && productosFiltrados.length > 0 && (
           <div className={style.productList} ref={productListRef}>
             {productosFiltrados.map((product, i) => (
-              // El primero se muestra destacado (más grande) solo con el
-              // filtro "Todo" — con una categoría puntual ya elegida no
-              // aporta destacar uno más entre pocos.
+              // Los primeros dos se muestran destacados (más grandes, uno
+              // al lado del otro) solo con el filtro "Todo" — con una
+              // categoría puntual ya elegida no aporta destacar entre pocos.
               <Product
                 key={product.id}
                 product={product}
-                featured={filtroActivo === "Todo" && i === 0}
+                featured={filtroActivo === "Todo" && i < 2}
               />
             ))}
           </div>
