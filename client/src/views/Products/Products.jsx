@@ -91,24 +91,13 @@ const Products = () => {
   //orden en que las devuelva la API.
   const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
 
-  //Dentro de Infusiones: los cafés primero, los milkshakes después (tanto
-  //en el filtro "Infusiones" como dentro de "Todo"). Los que no estén acá
-  //van al final, en el orden en que los devuelva la API.
-  const ordenInfusiones = [
-    "Café Americano",
-    "Capuccino",
-    "Café con Leche",
-    "Café de Especialidad",
-    "Lágrima",
-    "Milkshake de Chocolate",
-    "Milkshake de Frutilla",
-  ];
-
+  //Dentro de cada categoría, los productos van alfabéticamente (con
+  //localeCompare para que los acentos ordenen bien en español).
   const compararProductos = (a, b) => {
     const categoriaDiff =
       ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category);
     if (categoriaDiff !== 0) return categoriaDiff;
-    return ordenInfusiones.indexOf(a.title) - ordenInfusiones.indexOf(b.title);
+    return a.title.localeCompare(b.title, "es");
   };
 
   //"products" puede ser undefined mientras todavía no responde la API
