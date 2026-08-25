@@ -9,6 +9,8 @@ import style from "./Product.module.css";
 //la base, así que se resuelve acá con el título como clave).
 const AJUSTE_ENCUADRE = {
   "Lágrima": "100% center",
+  "Café Americano": "70% center",
+  "Café de Especialidad": "70% center",
 };
 
 const Product = ({ product, featured }) => {
