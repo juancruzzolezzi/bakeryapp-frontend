@@ -4,6 +4,13 @@ import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import { flyToCart } from "../../utils/flyToCart";
 import style from "./Product.module.css";
 
+//Ajustes puntuales de encuadre para fotos concretas que quedan mal
+//centradas con el recorte por defecto (no hay ningún campo para esto en
+//la base, así que se resuelve acá con el título como clave).
+const AJUSTE_ENCUADRE = {
+  "Lágrima": "75% center",
+};
+
 const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
@@ -47,6 +54,11 @@ const Product = ({ product, featured }) => {
             src={product.images[0]}
             alt={product.title}
             className={style.image}
+            style={
+              AJUSTE_ENCUADRE[product.title]
+                ? { objectPosition: AJUSTE_ENCUADRE[product.title] }
+                : undefined
+            }
             loading="lazy"
             decoding="async"
           />
