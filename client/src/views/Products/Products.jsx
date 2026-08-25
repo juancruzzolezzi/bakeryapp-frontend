@@ -42,6 +42,22 @@ const Products = () => {
     }
   }, [searchParams, setSearchParams]);
 
+  //Si volvés acá con el botón "atrás" del navegador (en vez de un link),
+  //algunos navegadores (sobre todo en celular) no vuelven a cargar la
+  //página: la restauran tal cual quedó en memoria (bfcache) — con el
+  //modal de pago todavía en "Procesando..." y sin correr el chequeo de
+  //arriba. "pageshow" con persisted=true detecta justo ese caso, y
+  //forzamos un reload real para que todo arranque de cero.
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
   //Se guarda el filtro elegido en localStorage para que, si se refresca la
   //página, se mantenga seleccionado en vez de volver a "Todo". Pero si se
   //vuelve navegando (Home -> Cocina) en la misma sesión, se resetea a "Todo".
