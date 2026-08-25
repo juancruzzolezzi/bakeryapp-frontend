@@ -89,7 +89,7 @@ const Products = () => {
   //Orden fijo de categorías para cuando se muestran todos los productos
   //(filtro "Todo"): las que no estén en esta lista van al final, en el
   //orden en que las devuelva la API.
-  const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano"];
+  const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
 
   //"products" puede ser undefined mientras todavía no responde la API
   //(ej: recién refrescada la página con un filtro distinto de "Todo" ya

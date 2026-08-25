@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import style from "./Filtros.module.css";
 
-const CATEGORIAS = ["Todo", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano"];
+const CATEGORIAS = ["Todo", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
 
 const Filtros = ({ filtroActivo, setFiltroActivo }) => {
   // Paso 1: Aplicar clase activa al filtro seleccionado (el estado en sí
