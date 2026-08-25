@@ -24,3 +24,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# backups de prueba y logs de desarrollo (no son parte del proyecto)
+*.bak
+frontend.log
+backend.log
