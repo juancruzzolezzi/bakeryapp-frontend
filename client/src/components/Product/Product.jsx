@@ -16,10 +16,9 @@ const AJUSTE_ENCUADRE = {
   "Medialuna con Jamón y Queso": "30% center",
 };
 
-//"Torta de Coco y Dulce de Leche": la foto quedaba muy recortada con el
-//zoom (cover) por defecto; "contain" muestra la imagen completa sin
-//cortar, aunque queden franjas del fondo del panel a los costados.
-const AJUSTE_SIN_ZOOM = new Set(["Torta de Coco y Dulce de Leche"]);
+//Productos cuya foto se muestra completa (sin recortar con "cover"), por
+//si algún encuadre queda mal con el zoom por defecto.
+const AJUSTE_SIN_ZOOM = new Set([]);
 
 const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
