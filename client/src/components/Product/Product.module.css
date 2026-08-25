@@ -215,6 +215,13 @@
     flex-shrink: 0;
 }
 
+/* En esta variante la foto está al costado del texto, no arriba: el
+   degradado hacia el color del panel (pensado para esa segunda
+   situación) acá solo se ve como una franja oscura de más. */
+.featured .photoFade {
+    display: none;
+}
+
 .featured .body {
     padding: 1.8rem 2rem;
     gap: 1.1rem;
