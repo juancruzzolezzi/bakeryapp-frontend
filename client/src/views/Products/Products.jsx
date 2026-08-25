@@ -91,6 +91,26 @@ const Products = () => {
   //orden en que las devuelva la API.
   const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
 
+  //Dentro de Infusiones: los cafés primero, los milkshakes después (tanto
+  //en el filtro "Infusiones" como dentro de "Todo"). Los que no estén acá
+  //van al final, en el orden en que los devuelva la API.
+  const ordenInfusiones = [
+    "Café Americano",
+    "Capuccino",
+    "Café con Leche",
+    "Café de Especialidad",
+    "Lágrima",
+    "Milkshake de Chocolate",
+    "Milkshake de Frutilla",
+  ];
+
+  const compararProductos = (a, b) => {
+    const categoriaDiff =
+      ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category);
+    if (categoriaDiff !== 0) return categoriaDiff;
+    return ordenInfusiones.indexOf(a.title) - ordenInfusiones.indexOf(b.title);
+  };
+
   //"products" puede ser undefined mientras todavía no responde la API
   //(ej: recién refrescada la página con un filtro distinto de "Todo" ya
   //guardado en localStorage).
@@ -98,11 +118,10 @@ const Products = () => {
     !products
       ? products
       : filtroActivo === "Todo"
-      ? [...products].sort(
-          (a, b) =>
-            ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category)
-        )
-      : products.filter((product) => product.category === filtroActivo);
+      ? [...products].sort(compararProductos)
+      : [...products]
+          .filter((product) => product.category === filtroActivo)
+          .sort(compararProductos);
 
   //Entrada escalonada de las tarjetas: cada vez que cambia el filtro (o
   //llegan los productos por primera vez), aparecen una tras otra en vez
