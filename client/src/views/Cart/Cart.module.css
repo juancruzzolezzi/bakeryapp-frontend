@@ -254,24 +254,30 @@
 }
 
 /* Destello sutil que cruza el botón cada pocos segundos, para que no se
-   pierda de vista sin llegar a parpadear. */
+   pierda de vista sin llegar a parpadear. Anima "transform" (no "left",
+   como antes): "left" fuerza un recálculo de layout en CADA frame,
+   mientras el carrito esté abierto, para siempre — "transform" lo
+   resuelve la GPU sin tocar layout ni pintura. Mismo recorrido exacto
+   (los porcentajes de translateX son relativos al ancho del propio
+   elemento, no al del botón, por eso no son los mismos números que antes). */
 .payBtn:not(:disabled)::after {
     content: "";
     position: absolute;
     top: 0;
-    left: -60%;
+    left: 0;
     width: 40%;
     height: 100%;
     background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
     animation: payBtnShimmer 3.5s ease-in-out infinite;
+    will-change: transform;
 }
 
 @keyframes payBtnShimmer {
     0% {
-        left: -60%;
+        transform: translateX(-150%);
     }
     35%, 100% {
-        left: 130%;
+        transform: translateX(325%);
     }
 }
 
