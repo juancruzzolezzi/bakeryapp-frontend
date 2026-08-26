@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { isStandalone, isIOS } from "../../utils/pwa";
 import { usePwaInstall } from "../../hooks/usePwaInstall";
 import styles from "./InstallAppBanner.module.css";
@@ -18,6 +19,11 @@ const InstallAppBanner = () => {
     );
     const user = useSelector((state) => state.authSlice.user);
     const bannerRef = useRef(null);
+    //El "gracias por instalar" (ver "yaInstalada" más abajo) solo tiene
+    //que verse en el home: en cualquier otra página, aunque se refresque,
+    //no debe aparecer.
+    const location = useLocation();
+    const enHome = location.pathname === "/";
 
     useEffect(() => {
         if (isStandalone()) return;
@@ -74,8 +80,12 @@ const InstallAppBanner = () => {
     // (ver AccountButton.jsx), no de la web. Si ya está instalada, el
     // aviso solo tiene que recordarle que abra la app para tener el 10%.
     if (cerrado) return null;
-    if (!visible && !yaInstalada) return null;
     if (isStandalone()) return null;
+    if (yaInstalada) {
+        if (!enHome) return null;
+    } else if (!visible) {
+        return null;
+    }
 
     return (
         <div className={styles.banner} ref={bannerRef}>
