@@ -38,6 +38,9 @@
     align-items: center;
     align-self: flex-end;
     padding-right: 1rem;
+    /* Separación entre "MENÚ" e "Ingresar" (solo mobile, ver media query):
+       van pegados como unidad al borde derecho, pero no uno sobre otro. */
+    gap: 0.8rem;
     pointer-events: auto;
     /* El botón "MENÚ" (y el panel que abre) quedan solo para mobile: en
        pantallas grandes los links van siempre visibles en .desktopLinks,
@@ -214,6 +217,18 @@
     width: fit-content;
     display: flex;
     align-items: center;
+}
+
+/* Solo desktop (ver media query de mobile más abajo): pegado al borde
+   derecho real de la pantalla, dentro de .navbar (que es "absolute", no
+   "fixed"), así que scrollea con el menú y desaparece al bajar la página
+   — a diferencia del carrito (.cartFixed), que sí queda siempre visible. */
+.accountSlot {
+    position: absolute;
+    top: 50%;
+    right: 1.2rem;
+    transform: translateY(-50%);
+    pointer-events: auto;
 }
 
 .cartBox .cart {
@@ -402,6 +417,13 @@
         padding: 0;
         z-index: 99;
         margin: 0;
+    }
+
+    /* En mobile "Ingresar" ya va pegado a "MENÚ" dentro de .nav (ver
+       NavBar.jsx): este otro (pensado para desktop) se oculta para no
+       duplicarlo. */
+    .accountSlot {
+        display: none;
     }
 
     .cartFixed {

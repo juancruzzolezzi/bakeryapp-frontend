@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
@@ -19,6 +19,26 @@ const ProductDetail = () => {
 
     //Mismo "blur-up" que las tarjetas de la grilla (ver Product.jsx).
     const [imgCargada, setImgCargada] = useState(false);
+
+    //Mismo tilt 3D sutil que sigue al mouse que las tarjetas de la grilla
+    //(ver Product.jsx), acá sobre la foto grande.
+    const photoRef = useRef(null);
+
+    const handleTilt = (e) => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const photo = photoRef.current;
+        if (!photo) return;
+        const rect = photo.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        photo.style.transform = `scale(1.03) perspective(800px) rotateY(${
+            x * 8
+        }deg) rotateX(${-y * 8}deg)`;
+    };
+
+    const resetTilt = () => {
+        if (photoRef.current) photoRef.current.style.transform = "";
+    };
 
     const product = products?.find((p) => String(p.id) === id);
 
@@ -81,7 +101,12 @@ const ProductDetail = () => {
 
                 {!isLoading && product && (
                     <div className={styles.detail}>
-                        <div className={styles.photo}>
+                        <div
+                            className={styles.photo}
+                            ref={photoRef}
+                            onMouseMove={handleTilt}
+                            onMouseLeave={resetTilt}
+                        >
                             {product.images?.[0] && (
                                 <img
                                     src={product.images[0]}

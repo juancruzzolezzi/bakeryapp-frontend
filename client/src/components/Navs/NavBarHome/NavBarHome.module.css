@@ -29,11 +29,26 @@
     display: none;
 }
 
+/* Pegado al borde derecho real de la pantalla (no al de algún contenedor
+   flex más angosto), a la misma altura que "MENÚ"/los links: al vivir
+   dentro de .navbar (absolute, no fixed) scrollea con el resto del menú y
+   desaparece al bajar la página. */
+.accountSlot {
+    position: absolute;
+    top: 50%;
+    right: 1.2rem;
+    transform: translateY(-50%);
+    pointer-events: auto;
+}
+
 .nav {
     height: 15vh;
     width: fit-content;
     display: flex;
     align-items: center;
+    /* Separación entre "MENÚ" e "Ingresar" (solo mobile, ver media query):
+       van pegados como unidad al borde derecho, pero no uno sobre otro. */
+    gap: 0.8rem;
     /* Antes ocupaba el 100% del ancho para alinear "MENÚ" a la derecha, lo
        que creaba una franja invisible del ancho de toda la pantalla que
        tapaba contenido debajo, sin importar el scroll. Con "fit-content"
@@ -301,6 +316,13 @@
         display: flex;
         height: 15vh;
         max-width: 100vw;
+    }
+
+    /* En mobile "Ingresar" ya va pegado a "MENÚ" dentro de .nav (ver
+       arriba): este otro (pensado para el hueco que deja .desktopLinks en
+       pantallas grandes) se oculta para no duplicarlo. */
+    .accountSlot {
+        display: none;
     }
 
     .desktopLinks {

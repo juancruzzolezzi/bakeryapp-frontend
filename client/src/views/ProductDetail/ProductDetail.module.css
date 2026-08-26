@@ -45,6 +45,17 @@
     overflow: hidden;
     border: 1px solid rgba(230, 201, 138, 0.18);
     background: #2f2318;
+    /* Tilt 3D sutil que sigue al mouse (ver ProductDetail.jsx): la
+       transición solo corre cuando el transform vuelve a "" al sacar el
+       mouse (mientras se mueve, el propio seguimiento ya es continuo). */
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .photo {
+        transition: none;
+    }
 }
 
 .image {

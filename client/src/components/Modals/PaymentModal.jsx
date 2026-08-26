@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import Modal from "react-modal";
 import { useCartHandlers } from "../../handlers/cartHandlers";
 import style from "./Modal.module.css";
 import { validations } from "../../validations/validations";
+import { ACCOUNT_DISCOUNT_RATE } from "../../utils/discount";
 
 Modal.setAppElement("#root");
 
@@ -17,6 +19,9 @@ const DELIVERY_FEE = 2000;
 const FREE_SHIPPING_THRESHOLD = 15000;
 
 const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
+  const user = useSelector((state) => state.authSlice.user);
+  const isLoggedIn = Boolean(user);
+
   const [contactMethod, setContactMethod] = useState("instagram");
   const [contactValue, setContactValue] = useState("");
   const [touched, setTouched] = useState(false);
@@ -44,8 +49,15 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
 
   const envioGratis = totalPrice >= FREE_SHIPPING_THRESHOLD;
 
+  // 10% OFF para cuentas registradas (ver utils/discount.js). El umbral de
+  // envío gratis se calcula sobre el subtotal SIN descuento, igual que en
+  // el backend (payment.controller.js), que es el que cobra de verdad.
+  const discountAmount = isLoggedIn ? totalPrice * ACCOUNT_DISCOUNT_RATE : 0;
+  const subtotalConDescuento = totalPrice - discountAmount;
+
   const finalTotal =
-    totalPrice + (deliveryType === "delivery" && !envioGratis ? DELIVERY_FEE : 0);
+    subtotalConDescuento +
+    (deliveryType === "delivery" && !envioGratis ? DELIVERY_FEE : 0);
 
   const handleMethodChange = (method) => {
     setContactMethod(method);
@@ -281,6 +293,12 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
             )}
           </div>
         </div>
+
+        {isLoggedIn && (
+          <div className={style.modalHintOk}>
+            🎉 Descuento por tu cuenta (10%): -${discountAmount.toLocaleString("es-AR")}
+          </div>
+        )}
 
         <div className={style.modalTotalBox}>
           <span>Total a pagar</span>

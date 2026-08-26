@@ -10,6 +10,7 @@ import Nosotros from "./views/Nosotros/Nosotros";
 import Contactanos from "./views/Contactanos/Contactanos";
 import PreguntasFrecuentes from "./views/PreguntasFrecuentes/PreguntasFrecuentes";
 import NotFound from "./views/NotFound/NotFound";
+import InstallAppBanner from "./components/InstallAppBanner/InstallAppBanner";
 //Estilos
 import "./App.css";
 
@@ -58,6 +59,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+
+      <InstallAppBanner />
     </div>
   );
 };

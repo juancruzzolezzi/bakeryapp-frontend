@@ -1,0 +1,112 @@
+.banner {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 400;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #241b12;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.7);
+    font-family: "Lexend", sans-serif;
+    animation: bannerSlideUp 0.3s ease both;
+}
+
+@keyframes bannerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .banner {
+        animation: none;
+    }
+}
+
+.icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.text {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0;
+    color: #f6ecdb;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin: 0.2rem 0 0;
+    color: #c9bda9;
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.subtitle strong {
+    color: #e7c98a;
+    letter-spacing: 0.03em;
+}
+
+.primaryBtn {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.closeBtn {
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #8a7f6d;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeBtn:hover {
+    color: #e7c98a;
+}
+
+@media screen and (max-width: 500px) {
+    .banner {
+        flex-wrap: wrap;
+        left: 0.6rem;
+        right: 0.6rem;
+        bottom: 0.6rem;
+    }
+
+    .primaryBtn {
+        order: 3;
+        width: 100%;
+        margin-top: 0.3rem;
+    }
+}

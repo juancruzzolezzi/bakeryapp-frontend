@@ -16,10 +16,20 @@ export const appApi = createApi({
         getProducts: builder.query({
             query: () => "products",
         }),
+
+        registerUser: builder.mutation({
+            query: (body) => ({ url: "register", method: "POST", body }),
+        }),
+
+        loginUser: builder.mutation({
+            query: (body) => ({ url: "login", method: "POST", body }),
+        }),
     }),
 });
 
 export const {
     useGetCategoriesQuery,
     useGetProductsQuery,
+    useRegisterUserMutation,
+    useLoginUserMutation,
 } = appApi;

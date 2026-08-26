@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import style from "./NavBar.module.css";
 import Cart from "../../../views/Cart/Cart";
+import AccountButton from "../../Auth/AccountButton";
 import { NAV_LINKS } from "../../../constants/navLinks";
 
 // TODO: ajustar cuánto tiempo sin abrir el carrito cuenta como "se olvidó".
@@ -91,6 +92,9 @@ const NavBar = () => {
         </div>
 
         <div className={isOpen ? `${style.navOpen}` : `${style.nav}`}>
+          {/* Solo mobile (este bloque queda oculto en desktop): "Ingresar"
+              va después del hamburguesa, pegados como unidad al borde
+              derecho. */}
           <div
             onClick={() => setIsOpen(true)}
             className={style.btnMenu}
@@ -102,6 +106,15 @@ const NavBar = () => {
             <span></span>
             <span></span>
           </div>
+          <AccountButton />
+        </div>
+
+        {/* Solo desktop (ver media query): pegado al borde derecho real de
+            la pantalla, no fijo (ver style.navbar, "absolute") — a
+            diferencia del carrito, este sí tiene que desaparecer al
+            scrollear, no quedar siempre visible. */}
+        <div className={style.accountSlot}>
+          <AccountButton />
         </div>
 
         {/* Fondo difuminado detrás de la tarjeta flotante: al ser un

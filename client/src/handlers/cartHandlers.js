@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { emptyCart } from "../redux/slice/homeSlice";
 import axios from "axios";
 
@@ -22,6 +22,12 @@ export const useCartHandlers = (
 
   //Se declara la constante "dispatch" la cual ejecuta el Hook de React "useDispatch()"
   const dispatch = useDispatch();
+
+  //Token de sesión (si hay), para que el backend sepa qué cuenta hace el
+  //pedido y le aplique el 10% OFF (ver optionalAuth en el backend). Sin
+  //esto el backend no tiene forma de saber quién está comprando y el
+  //descuento no se cobraría de verdad, aunque se muestre en la pantalla.
+  const token = useSelector((state) => state.authSlice.token);
 
 
 
@@ -52,7 +58,10 @@ export const useCartHandlers = (
         totalPrice,
         deliveryType,
         address,
-      }, { timeout: 60000 });
+      }, {
+        timeout: 60000,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
 
       //Recibe la respuesta de la API y redirecciona al usuario al checkout real de Mercado Pago
       const initPoint = response.data.init_point;

@@ -196,6 +196,16 @@
     background: #2f2318;
 }
 
+.discountRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: #a8d5a2;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
 .totalRow {
     display: flex;
     justify-content: space-between;

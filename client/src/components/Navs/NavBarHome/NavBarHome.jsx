@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 //Importacion de estilos
 import style from "./NavBarHome.module.css";
+import AccountButton from "../../Auth/AccountButton";
 import { NAV_LINKS } from "../../../constants/navLinks";
 //Dependencias de GSAP
 import gsap from "gsap";
@@ -34,9 +35,12 @@ const NavBarHome = () => {
   }, [isOpen]);
 
   return (
+    <>
     <nav className={style.navbar}>
       {/* Solo visible en pantallas grandes (ver media query): en mobile
-          queda oculta y se usa el botón "MENÚ" con el panel de abajo. */}
+          queda oculta y se usa el botón "MENÚ" con el panel de abajo. A la
+          misma altura que los links (dentro de la misma fila), en vez de
+          quedar flotando aparte con position:fixed. */}
       <div className={style.desktopLinks}>
         {NAV_LINKS.map((link) => (
           <Link
@@ -52,6 +56,9 @@ const NavBarHome = () => {
       </div>
 
       <div className={isOpen ? `${style.navOpen}` : `${style.nav}`}>
+        {/* Solo mobile (este bloque queda oculto en desktop, ver
+            .nav/.navOpen): "Ingresar" va después del hamburguesa, los dos
+            pegados como unidad al borde derecho real de la pantalla. */}
         <div
           onClick={() => setIsOpen(true)}
           className={style.btnMenu}
@@ -63,6 +70,17 @@ const NavBarHome = () => {
           <span></span>
           <span></span>
         </div>
+        <AccountButton />
+      </div>
+
+      {/* Solo desktop (ver media query): pegado al borde derecho REAL de
+          la pantalla, no al de .desktopLinks (que es un bloque angosto y
+          centrado, por eso antes "Ingresar" se veía cerca del medio). Al
+          ser "absolute" dentro de .navbar (que ya es "absolute", no
+          "fixed"), scrollea con el resto del menú y desaparece al bajar,
+          en vez de quedar siempre visible. */}
+      <div className={style.accountSlot}>
+        <AccountButton />
       </div>
 
       {/* Fondo difuminado detrás de la tarjeta flotante: al ser un
@@ -91,6 +109,7 @@ const NavBarHome = () => {
         </div>
       </div>
     </nav>
+    </>
   );
 };
 

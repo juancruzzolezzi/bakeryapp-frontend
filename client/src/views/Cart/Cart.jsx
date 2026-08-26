@@ -8,6 +8,7 @@ import PaymentModal from "../../components/Modals/PaymentModal";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import { CONTACTO } from "../../constants/contacto";
+import { ACCOUNT_DISCOUNT_RATE } from "../../utils/discount";
 import style from "./Cart.module.css";
 
 // TODO: ajustar al monto mínimo real que definan para envío gratis.
@@ -20,6 +21,7 @@ const LAST_ORDER_MAX_AGE_DAYS = 30;
 function Cart({ isCartOpen, setIsCartOpen }) {
 
   const cartList = useSelector((state) => state.homeSlice.cartList);
+  const user = useSelector((state) => state.authSlice.user);
   const dispatch = useDispatch();
 
   //Último pedido confirmado (ver cartHandlers.js, se guarda justo antes de
@@ -65,6 +67,14 @@ function Cart({ isCartOpen, setIsCartOpen }) {
 
   //Estados locales
   const [totalPrice, setTotalPrice] = useState(0);
+
+  //10% OFF para cuentas registradas (ver utils/discount.js): se muestra
+  //acá para que se vea reflejado en el subtotal, pero el monto real que se
+  //cobra lo calcula el backend en base al token de sesión, no a esto.
+  const isLoggedIn = Boolean(user);
+  const discountAmount = isLoggedIn ? totalPrice * ACCOUNT_DISCOUNT_RATE : 0;
+  const discountedTotal = totalPrice - discountAmount;
+  const discountedTotalAnimado = useAnimatedNumber(discountedTotal);
   const totalPriceAnimado = useAnimatedNumber(totalPrice);
   const [isModalPaymentOpen, setModalPaymentOpen] = useState(false);
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
@@ -241,9 +251,16 @@ function Cart({ isCartOpen, setIsCartOpen }) {
               </div>
             </div>
 
+            {isLoggedIn && (
+              <div className={style.discountRow}>
+                <span>🎉 Descuento por tu cuenta (10%)</span>
+                <span>-${discountAmount.toLocaleString("es-AR")}</span>
+              </div>
+            )}
+
             <div className={style.totalRow}>
               <span>Total</span>
-              <span className={style.totalAmount}>${totalPriceAnimado.toLocaleString("es-AR")}</span>
+              <span className={style.totalAmount}>${discountedTotalAnimado.toLocaleString("es-AR")}</span>
             </div>
 
             <div className={style.actions}>

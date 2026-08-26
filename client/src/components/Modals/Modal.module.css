@@ -219,6 +219,56 @@
     color: #8a7f6d;
 }
 
+/* Envuelve el input de contraseña + el ojito para mostrarla/ocultarla. El
+   margin-bottom vive acá (no en el input, que dentro del wrapper no debe
+   tener el suyo propio) para no duplicar el espacio hacia el siguiente
+   campo. */
+.modalPasswordField {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.modalPasswordField .modalInput {
+    margin-bottom: 0;
+    padding-right: 2.6rem;
+}
+
+.modalPasswordToggle {
+    position: absolute;
+    top: 50%;
+    right: 0.6rem;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #8a7f6d;
+    cursor: pointer;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+
+.modalPasswordToggle:hover {
+    color: #e7c98a;
+}
+
+.modalCheckboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #c9bda9;
+    font-size: 0.85rem;
+    margin: 0.2rem 0 0.8rem;
+    cursor: pointer;
+}
+
+.modalCheckboxLabel input {
+    accent-color: #d9b767;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
 .modalError {
     color: #d97b64;
     margin-top: 10px;
