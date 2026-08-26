@@ -93,8 +93,11 @@
     height: 2.1rem;
     border-radius: 50%;
     border: none;
-    background: rgba(28, 20, 15, 0.6);
-    backdrop-filter: blur(4px);
+    /* Sin "backdrop-filter" (era blur(4px)): con una tarjeta por producto
+       en la grilla, eso son decenas de capas de blur recomponiéndose todo
+       el tiempo mientras se scrollea — uno de los efectos CSS más caros
+       que hay. El fondo ya es bastante opaco, así que se nota poco. */
+    background: rgba(24, 17, 12, 0.78);
     color: #f6ecdb;
     font-size: 1.05rem;
     display: flex;
@@ -136,8 +139,9 @@
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background: rgba(28, 20, 15, 0.82);
-    backdrop-filter: blur(4px);
+    /* Sin "backdrop-filter" acá tampoco: mismo motivo que .favoriteBtn de
+       arriba. El fondo ya era casi opaco (0.82), así que se nota poco. */
+    background: rgba(24, 17, 12, 0.92);
     color: #e7c98a;
     font-weight: 700;
     font-size: 0.9rem;
