@@ -253,28 +253,6 @@
     border-color: #b69443;
 }
 
-/* Destello al llegar por un link de "Compartir producto" (ver Product.jsx
-   y el scroll en este archivo): resalta un instante la tarjeta puntual
-   entre todo el resto de la grilla. */
-.productoCompartidoDestacado {
-    animation: productoCompartidoPulso 2s ease;
-}
-
-@keyframes productoCompartidoPulso {
-    0%, 100% {
-        box-shadow: none;
-    }
-    20%, 60% {
-        box-shadow: 0 0 0 3px #b69443;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .productoCompartidoDestacado {
-        animation: none;
-    }
-}
-
 @media screen and (max-width: 1170px) {
     .mainContainer {
         padding-top: 0;

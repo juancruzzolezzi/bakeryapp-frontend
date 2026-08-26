@@ -1,0 +1,257 @@
+.container {
+    min-width: 100vw;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
+        linear-gradient(rgba(23, 16, 9, 0.55), rgba(23, 16, 9, 0.55));
+    background-size: 6px 6px, cover;
+}
+
+.sectionContainer {
+    display: flex;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: calc(22vh + 1rem) 1.5rem 4rem;
+    box-sizing: border-box;
+    font-family: "Lexend", sans-serif;
+}
+
+.stateMessage {
+    color: #c9bda9;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.notFound {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detail {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.photo {
+    position: relative;
+    height: 420px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    background: #2f2318;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* "Blur-up": arranca borrosa y se define de golpe al terminar de
+       cargar (mismo tratamiento que las tarjetas de la grilla). */
+    filter: blur(20px);
+    transform: scale(1.1);
+    transition: filter 0.5s ease, transform 0.35s ease;
+}
+
+.imageCargada {
+    filter: blur(0);
+    transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .image {
+        transition: filter 0.3s ease;
+    }
+}
+
+.agotadoTag {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-family: "Lexend", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ventaTag {
+    position: absolute;
+    bottom: 0.9rem;
+    left: 0.9rem;
+    background: rgba(20, 14, 8, 0.75);
+    color: #e7c98a;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 201, 138, 0.35);
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+}
+
+.backLink {
+    align-self: flex-start;
+    color: #c9bda9;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+    transition: color 0.15s ease;
+}
+
+.backLink:hover {
+    color: #e7c98a;
+}
+
+.name {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #f6ecdb;
+    margin: 0 0 0.6rem;
+}
+
+.price {
+    font-family: "Fraunces", serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #e7c98a;
+    margin: 0 0 1.1rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.desc {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: #c9bda9;
+    margin: 0 0 1.8rem;
+}
+
+.actionsRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(230, 201, 138, 0.18);
+    border-radius: 999px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.stepper button {
+    width: 2.6rem;
+    height: 2.6rem;
+    border: none;
+    background: transparent;
+    color: #e7c98a;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.stepper button:hover {
+    background: #2f2318;
+}
+
+.qty {
+    min-width: 2rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.05rem;
+    color: #f6ecdb;
+}
+
+.addToCartButton {
+    flex: 1;
+    border: 1px solid #b69443;
+    border-radius: 10px;
+    padding: 0.85rem 1.2rem;
+    background: #b69443;
+    color: #241a10;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+
+.addToCartButton:hover:not(:disabled) {
+    background: #c9a15f;
+    border-color: #c9a15f;
+}
+
+.addToCartButton:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.addToCartButton:disabled {
+    background: transparent;
+    border-color: rgba(230, 201, 138, 0.25);
+    color: #8a7f6d;
+    cursor: not-allowed;
+}
+
+.secondaryRow {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.secondaryBtn {
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    background: transparent;
+    color: #e7c98a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.secondaryBtn:hover {
+    border-color: #e7c98a;
+    color: #f6ecdb;
+}
+
+.secondaryBtnActive {
+    color: #e0607a;
+    border-color: rgba(224, 96, 122, 0.4);
+}
+
+@media screen and (max-width: 760px) {
+    .sectionContainer {
+        padding-top: calc(20vh + 1rem);
+    }
+
+    .detail {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .photo {
+        height: 280px;
+    }
+
+    .name {
+        font-size: 1.5rem;
+    }
+}

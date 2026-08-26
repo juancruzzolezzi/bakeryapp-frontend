@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import { useFavorites } from "../../hooks/useFavorites";
+import { useToast } from "../../context/ToastContext";
 import { flyToCart } from "../../utils/flyToCart";
+import { getVentaInfo } from "../../utils/ventaTag";
 import style from "./Product.module.css";
 
 //Ajustes puntuales de encuadre para fotos concretas que quedan mal
@@ -29,7 +32,31 @@ const Product = ({ product, featured }) => {
   const { handleAddToCart } = useProductHandlers();
   const { isFavorite, toggleFavorite } = useFavorites();
   const esFavorito = isFavorite(product.id);
+  const showToast = useToast();
   const photoRef = useRef(null);
+  const cardRef = useRef(null);
+
+  //Tilt 3D sutil que sigue al mouse (solo desktop, con mouse real): se
+  //combina con el lift que ya tiene la tarjeta al hover (ver
+  //Product.module.css) en el mismo transform inline, para no perder ese
+  //efecto al pisarlo con JS.
+  const handleTilt = (e) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `translateY(-8px) scale(1.015) perspective(800px) rotateY(${
+      x * 6
+    }deg) rotateX(${-y * 6}deg)`;
+  };
+
+  const resetTilt = () => {
+    if (cardRef.current) cardRef.current.style.transform = "";
+  };
+
+  const { tag: ventaTag, descripcionLimpia } = getVentaInfo(product.description);
 
   //Confirmación local en el botón: dice "✓ Agregado" un instante antes de
   //volver a "Añadir", como refuerzo extra además del vuelo hacia el carrito.
@@ -65,12 +92,22 @@ const Product = ({ product, featured }) => {
     setQuantity(1); // Resetea la cantidad a 1 después de agregar
     setRecienAgregado(true);
     setTimeout(() => setRecienAgregado(false), 1200);
+    showToast("Agregado al carrito", "🛒");
   };
 
-  //Comparte un link directo a este producto (con ?producto=<id>, ver el
-  //scroll-to en Products.jsx): usa el share nativo del celular si está
-  //disponible, y si no copia el link al portapapeles.
-  const shareUrl = `${window.location.origin}/products?producto=${product.id}`;
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    toggleFavorite(product.id);
+    showToast(
+      esFavorito ? "Quitado de favoritos" : "Guardado en favoritos",
+      esFavorito ? "♡" : "♥"
+    );
+  };
+
+  //Comparte un link directo a la página de detalle de este producto: usa
+  //el share nativo del celular si está disponible, y si no copia el link
+  //al portapapeles.
+  const shareUrl = `${window.location.origin}/products/${product.id}`;
 
   const shareProduct = async (e) => {
     e.stopPropagation();
@@ -87,6 +124,7 @@ const Product = ({ product, featured }) => {
       await navigator.clipboard.writeText(shareUrl);
       setLinkCopiado(true);
       setTimeout(() => setLinkCopiado(false), 1500);
+      showToast("Link copiado", "🔗");
     } catch {
       // Portapapeles no disponible (ej: sitio sin HTTPS): no hay fallback.
     }
@@ -94,7 +132,9 @@ const Product = ({ product, featured }) => {
 
   return (
     <div
-      id={`producto-${product.id}`}
+      ref={cardRef}
+      onMouseMove={handleTilt}
+      onMouseLeave={resetTilt}
       className={`${style.productContainer} ${featured ? style.featured : ""} ${
         agotado ? style.agotado : ""
       }`}
@@ -102,6 +142,11 @@ const Product = ({ product, featured }) => {
       data-product-card="true"
     >
       <div className={style.photo} ref={photoRef}>
+        <Link
+          to={`/products/${product.id}`}
+          className={style.photoLink}
+          aria-label={`Ver ${product.title}`}
+        />
         {product.images && product.images.length > 0 && (
           <img
             ref={imgRef}
@@ -122,15 +167,12 @@ const Product = ({ product, featured }) => {
             onLoad={() => setImgCargada(true)}
           />
         )}
-        {!imgCargada && <div className={style.photoSkeleton} aria-hidden="true" />}
         {featured && <span className={style.featuredTag}>Recomendado</span>}
         {agotado && <span className={style.agotadoTag}>Agotado</span>}
+        {ventaTag && <span className={style.ventaTag}>{ventaTag}</span>}
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite(product.id);
-          }}
+          onClick={handleToggleFavorite}
           className={`${style.favoriteBtn} ${esFavorito ? style.favoriteBtnActive : ""}`}
           aria-label={esFavorito ? "Quitar de favoritos" : "Agregar a favoritos"}
           aria-pressed={esFavorito}
@@ -142,7 +184,9 @@ const Product = ({ product, featured }) => {
 
       <div className={style.body}>
         <div className={style.nameRow}>
-          <p className={style.name}>{product.title}</p>
+          <Link to={`/products/${product.id}`} className={style.name}>
+            {product.title}
+          </Link>
           <button
             type="button"
             onClick={shareProduct}
@@ -152,7 +196,7 @@ const Product = ({ product, featured }) => {
             {linkCopiado ? "✓" : "🔗"}
           </button>
         </div>
-        <p className={style.desc}>{product.description}</p>
+        <p className={style.desc}>{descripcionLimpia}</p>
 
         <div className={style.footerRow}>
           <div className={style.stepper}>

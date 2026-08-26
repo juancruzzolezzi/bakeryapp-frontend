@@ -1,20 +1,8 @@
 .container {
     min-width: 100vw;
-    height: 100vh;
-    /* El navbar (NavBarHome) es "fixed" y siempre está pegado arriba. Sin
-       esto, al scrollear el contenido de la página pasaba por detrás del
-       navbar y se superponía con "MENÚ". Acá arriba no hay scroll de por
-       medio: todo el scroll pasa a .sectionContainer, que arranca recién
-       debajo del navbar y nunca llega a esa franja. */
-    overflow: hidden;
-    /* Grano casi imperceptible, igual al de las tarjetas de producto: le
-       da un toque más artesanal al fondo oscuro sin competir con el
-       contenido. Se combina con un oscurecido suave (no un color sólido)
-       para no tapar del todo la imagen de fondo del sitio. */
-    background-image:
-        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
-        linear-gradient(rgba(23, 16, 9, 0.45), rgba(23, 16, 9, 0.45));
-    background-size: 6px 6px, cover;
+    min-height: 100vh;
+    /* Sin fondo propio: usa el mismo fondo global que el resto del sitio
+       (Portada.jpg + oscurecido de App.css), igual que Products.jsx. */
 }
 
 .sectionContainer{
@@ -23,9 +11,6 @@
     align-items: center;
     max-width: 100vw;
     margin-top: 22vh;
-    height: calc(100vh - 22vh);
-    overflow-y: auto;
-    overflow-x: hidden;
     box-sizing: border-box;
     padding: 0 1.5rem 1.5rem;
     font-family: "Lexend", sans-serif;
@@ -110,6 +95,19 @@
     align-items: flex-start;
     gap: 0.8rem;
     text-align: left;
+    padding: 0.7rem;
+    margin: -0.7rem;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease,
+        background-color 0.25s ease;
+}
+
+.checkItem:hover {
+    transform: translateY(-4px);
+    background-color: rgba(47, 35, 24, 0.6);
+    border-color: rgba(230, 201, 138, 0.18);
+    box-shadow: 0 14px 26px -16px rgba(0, 0, 0, 0.6);
 }
 
 .checkIcon {
@@ -152,14 +150,11 @@ a {
         flex-direction: column;
         align-items: center;
         max-width: 100%;
-        height: 100vh;
-        overflow: hidden;
     }
 
     .sectionContainer {
         /* El navbar mobile mide 18vh (ver NavBar.module.css) en vez de 20vh. */
         margin-top: 20vh;
-        height: calc(100vh - 20vh);
         font-size: 1rem;
         padding: 0 1rem 1.25rem;
     }

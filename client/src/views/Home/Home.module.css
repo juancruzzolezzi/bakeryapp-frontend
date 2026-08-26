@@ -353,6 +353,10 @@
     transform: translateY(-2px);
 }
 
+.heroCta:active {
+    transform: scale(0.94);
+}
+
 @media screen and (max-width: 860px) {
 
     .presentacion h1 {

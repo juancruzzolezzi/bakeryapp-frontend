@@ -7,6 +7,7 @@ import { updateCart } from "../../redux/slice/homeSlice";
 import PaymentModal from "../../components/Modals/PaymentModal";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
+import { CONTACTO } from "../../constants/contacto";
 import style from "./Cart.module.css";
 
 // TODO: ajustar al monto mínimo real que definan para envío gratis.
@@ -41,6 +42,25 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   const repetirPedido = () => {
     if (!lastOrder?.items?.length) return;
     dispatch(updateCart(lastOrder.items));
+  };
+
+  //Arma el pedido como texto y lo abre en WhatsApp, para quien prefiere
+  //coordinar por chat antes de pagar por Mercado Pago.
+  const compartirPorWhatsApp = () => {
+    const detalle = cartList
+      .map((product) => `${product.quantity}x ${product.title} - $${(
+        product.price * product.quantity
+      ).toLocaleString("es-AR")}`)
+      .join("\n");
+
+    const mensaje = `Hola! Quiero hacer este pedido:\n${detalle}\n\nTotal: $${totalPrice.toLocaleString(
+      "es-AR"
+    )}`;
+
+    window.open(
+      `https://wa.me/${CONTACTO.whatsappNumero}?text=${encodeURIComponent(mensaje)}`,
+      "_blank"
+    );
   };
 
   //Estados locales
@@ -204,7 +224,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
               ) : (
                 <span className={style.shippingMsg}>
                   Te faltan $
-                  {(FREE_SHIPPING_THRESHOLD - totalPrice).toLocaleString("es-AR")}{" "}
+                  {(FREE_SHIPPING_THRESHOLD - totalPriceAnimado).toLocaleString("es-AR")}{" "}
                   para envío gratis
                 </span>
               )}
@@ -213,7 +233,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
                   className={style.shippingFill}
                   style={{
                     width: `${Math.min(
-                      (totalPrice / FREE_SHIPPING_THRESHOLD) * 100,
+                      (totalPriceAnimado / FREE_SHIPPING_THRESHOLD) * 100,
                       100
                     )}%`,
                   }}
@@ -232,6 +252,13 @@ function Cart({ isCartOpen, setIsCartOpen }) {
                 className={style.payBtn}
               >
                 Pagar
+              </button>
+
+              <button
+                onClick={compartirPorWhatsApp}
+                className={style.whatsappBtn}
+              >
+                💬 Coordinar por WhatsApp
               </button>
 
               <button

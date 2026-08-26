@@ -73,6 +73,55 @@
     margin-bottom: 1.2rem;
 }
 
+/* Indicador de progreso (contacto -> entrega -> listo para pagar): para
+   que el formulario se sienta más guiado, sin cambiar cómo se completa. */
+.progressTrack {
+    display: flex;
+    align-items: center;
+    max-width: 220px;
+    margin: 0 auto 0.6rem;
+}
+
+.progressDot {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #2f2318;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    color: #8a7f6d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.progressDotDone {
+    background: #b69443;
+    border-color: #b69443;
+    color: #241a10;
+}
+
+.progressLine {
+    flex: 1;
+    height: 2px;
+    background: rgba(230, 201, 138, 0.18);
+    transition: background-color 0.2s ease;
+}
+
+.progressLineDone {
+    background: #b69443;
+}
+
+.progressLabel {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #c9bda9;
+    margin: 0 0 1.2rem;
+}
+
 /* ---- Modal de pago: pasos numerados (ver PaymentModal.jsx) ---- */
 
 .modalStep {
@@ -183,6 +232,13 @@
     font-size: 0.8rem;
     margin-top: -14px;
     margin-bottom: 10px;
+}
+
+.modalHintOk {
+    display: block;
+    color: #8fd6a0;
+    font-size: 0.78rem;
+    margin-top: 6px;
 }
 
 /* Igual que .modalHint pero sin el margin-top negativo: para usar cuando no

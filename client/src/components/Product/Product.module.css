@@ -34,6 +34,18 @@
        quedar igual para todas las tarjetas. */
     height: 280px;
     width: 100%;
+    /* Se ve mientras la foto todavía no tiene bytes (antes de que el blur
+       de abajo tenga algo que difuminar). */
+    background-color: #2f2318;
+}
+
+/* Cubre toda la foto para llevar al detalle del producto al tocarla, por
+   detrás de los botones/etiquetas (todos con z-index: 1) que sí necesitan
+   su propio click. */
+.photoLink {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
 }
 
 .image {
@@ -42,46 +54,22 @@
     object-position: center;
     object-fit: cover;
     display: block;
-    opacity: 0;
-    transition: transform 0.35s ease, opacity 0.3s ease;
+    /* "Blur-up": arranca borrosa y un poco más grande (el zoom disimula el
+       borde difuminado asomando fuera del recuadro) y se define de golpe
+       al terminar de cargar, en vez del gris plano de un skeleton aparte. */
+    filter: blur(18px);
+    transform: scale(1.1);
+    transition: transform 0.35s ease, filter 0.5s ease;
 }
 
 .imageCargada {
-    opacity: 1;
-}
-
-/* Skeleton gris pulsante mientras carga la foto (conexión lenta, primera
-   visita sin caché): mismo lenguaje visual que el skeleton de la lista
-   completa (ver Products.module.css), pero por tarjeta individual. */
-.photoSkeleton {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    background: #2f2318;
-}
-
-.photoSkeleton::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(231, 201, 138, 0.14), transparent);
-    animation: photoSkeletonSweep 1.6s ease-in-out infinite;
-}
-
-@keyframes photoSkeletonSweep {
-    to {
-        transform: translateX(100%);
-    }
+    filter: blur(0);
+    transform: scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
     .image {
-        transition: transform 0.35s ease;
-    }
-
-    .photoSkeleton::after {
-        animation: none;
+        transition: transform 0.35s ease, filter 0.3s ease;
     }
 }
 
@@ -154,6 +142,25 @@
     z-index: 1;
 }
 
+/* Chip "Por porción" / "Por unidad" (ver VENTA_TAG_REGEX en Product.jsx):
+   abajo a la izquierda, para no competir con el resto de las etiquetas de
+   arriba (Recomendado, Agotado, favorito, precio). */
+.ventaTag {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    background: rgba(20, 14, 8, 0.75);
+    color: #e7c98a;
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.28rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 201, 138, 0.35);
+    z-index: 1;
+}
+
 .body {
     padding: 1.1rem 1.2rem 1.2rem;
     display: flex;
@@ -175,6 +182,12 @@
     font-size: 1.3rem;
     margin: 0;
     color: #f6ecdb;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.name:hover {
+    color: #e7c98a;
 }
 
 .shareBtn {
@@ -261,7 +274,11 @@
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+
+.addToCartButton:active:not(:disabled) {
+    transform: scale(0.94);
 }
 
 .addToCartButton:hover {
@@ -329,9 +346,43 @@
    cuanto no entran más de uno por fila (ancho angosto), cada uno pasa a
    ocupar el 100% solo — sin necesidad de un breakpoint fijo. */
 .featured {
+    position: relative;
     flex: 1 1 420px;
     flex-direction: row;
     max-width: 100%;
+}
+
+/* Brillo recorriendo el borde: solo en las tarjetas destacadas
+   ("Recomendado"), para que resalten más entre el resto de la grilla. */
+.featured::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 2px;
+    background: linear-gradient(120deg, transparent 35%, #e7c98a 50%, transparent 65%);
+    background-size: 250% 250%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: featuredShine 6s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes featuredShine {
+    0% {
+        background-position: 250% 0;
+    }
+    100% {
+        background-position: -250% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .featured::before {
+        animation: none;
+    }
 }
 
 .featured .photo {

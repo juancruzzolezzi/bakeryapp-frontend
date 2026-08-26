@@ -6,6 +6,30 @@
     align-items: center;
     padding: 0.85rem 0.2rem;
     border-bottom: 1px solid rgba(230, 201, 138, 0.16);
+    overflow: hidden;
+    max-height: 6rem;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease 0.05s,
+        padding 0.3s ease 0.05s, margin 0.3s ease 0.05s, border-color 0.3s ease;
+}
+
+/* Se dispara al confirmar "Eliminar" (ver ProductCart.jsx): la fila se
+   desvanece y se corre antes de sacarse de verdad del carrito, en vez de
+   desaparecer de golpe. */
+.rowRemoving {
+    opacity: 0;
+    transform: translateX(24px);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .row {
+        transition: opacity 0.2s ease;
+    }
 }
 
 .row::after {

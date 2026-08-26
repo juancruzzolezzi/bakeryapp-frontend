@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styles from "./PreguntasFrecuentes.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import Footer from "../../components/Footer/Footer";
@@ -35,7 +35,6 @@ const FAQS = [
 
 const PreguntasFrecuentes = () => {
     const [openIndex, setOpenIndex] = useState(null);
-    const sectionRef = useRef(null);
 
     const toggle = (index) => {
         setOpenIndex((prev) => (prev === index ? null : index));
@@ -45,7 +44,7 @@ const PreguntasFrecuentes = () => {
         <div className={styles.container}>
             <NavBarHome />
 
-            <div className={styles.sectionContainer} ref={sectionRef}>
+            <div className={styles.sectionContainer}>
                 <div className={styles.pageContent}>
                 <div className={styles.intro}>
                     <h1>Preguntas Frecuentes</h1>
@@ -96,7 +95,7 @@ const PreguntasFrecuentes = () => {
                 <Footer />
             </div>
 
-            <BackToTop containerRef={sectionRef} />
+            <BackToTop />
         </div>
     );
 };

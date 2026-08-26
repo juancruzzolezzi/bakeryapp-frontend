@@ -1,15 +1,8 @@
 .container {
     min-width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    /* Grano casi imperceptible, igual al de las tarjetas de producto: le
-       da un toque más artesanal al fondo oscuro sin competir con el
-       contenido. Se combina con un oscurecido suave (no un color sólido)
-       para no tapar del todo la imagen de fondo del sitio. */
-    background-image:
-        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
-        linear-gradient(rgba(23, 16, 9, 0.45), rgba(23, 16, 9, 0.45));
-    background-size: 6px 6px, cover;
+    min-height: 100vh;
+    /* Sin fondo propio: usa el mismo fondo global que el resto del sitio
+       (Portada.jpg + oscurecido de App.css), igual que Products.jsx. */
 }
 
 .sectionContainer{
@@ -18,9 +11,6 @@
     align-items: center;
     max-width: 100vw;
     margin-top: 22vh;
-    height: calc(100vh - 22vh);
-    overflow-y: auto;
-    overflow-x: hidden;
     box-sizing: border-box;
     padding: 0 1.5rem 1.5rem;
     font-family: "Lexend", sans-serif;
@@ -146,13 +136,10 @@ a {
         flex-direction: column;
         align-items: center;
         max-width: 100%;
-        height: 100vh;
-        overflow: hidden;
     }
 
     .sectionContainer {
         margin-top: 20vh;
-        height: calc(100vh - 20vh);
         font-size: 1rem;
         padding: 0 1rem 1.25rem;
     }

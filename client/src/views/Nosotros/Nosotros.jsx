@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styles from "./Nosotros.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import Footer from "../../components/Footer/Footer";
@@ -25,13 +25,11 @@ const DIFERENCIADORES = [
 ];
 
 const Nosotros = () => {
-    const sectionRef = useRef(null);
-
     return (
         <div className={styles.container}>
             <NavBarHome />
 
-            <div className={styles.sectionContainer} ref={sectionRef}>
+            <div className={styles.sectionContainer}>
                 <div className={styles.pageContent}>
                 <div className={styles.intro}>
                     <h1>Sobre Nosotros</h1>
@@ -73,7 +71,7 @@ const Nosotros = () => {
                 <Footer />
             </div>
 
-            <BackToTop containerRef={sectionRef} />
+            <BackToTop />
         </div>
     );
 };

@@ -36,6 +36,16 @@ const ProductCart = ({ product }) => {
     handleDelete,
   } = useProductHandlers(setModalEmptyOpen);
 
+  //Anima la salida (fade + colapso) antes de borrar de verdad el producto
+  //del carrito, en vez de que la fila desaparezca de golpe al confirmar.
+  const [removiendo, setRemoviendo] = useState(false);
+
+  const confirmarEliminar = () => {
+    setModalEmptyOpen(false);
+    setRemoviendo(true);
+    setTimeout(() => handleDelete(product.id), 300);
+  };
+
   const handleIncrement = () => {
     handleIncrementCart(product, quantity + 1);
   };
@@ -51,7 +61,11 @@ const ProductCart = ({ product }) => {
   };
 
   return (
-    <div className={`${style.row} ${flashing ? style.rowFlash : ""}`}>
+    <div
+      className={`${style.row} ${flashing ? style.rowFlash : ""} ${
+        removiendo ? style.rowRemoving : ""
+      }`}
+    >
       <div className={style.thumb}>
         {product.images && product.images.length > 0 && (
           <img src={product.images[0]} alt={product.title} />
@@ -85,7 +99,7 @@ const ProductCart = ({ product }) => {
       <DeleteProductModal
         isOpen={isModalEmptyOpen}
         onCancel={handleModalCancel}
-        onConfirm={() => handleDelete(product.id)}
+        onConfirm={confirmarEliminar}
       />
     </div>
   );

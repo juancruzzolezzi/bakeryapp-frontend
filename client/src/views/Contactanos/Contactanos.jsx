@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styles from "./Contactanos.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import BackToTop from "../../components/BackToTop/BackToTop";
@@ -12,15 +12,16 @@ import {
     faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { CONTACTO } from "../../constants/contacto";
+import { estaAbiertoAhora } from "../../utils/horarioLocal";
 
 const Contactanos = () => {
-    const sectionRef = useRef(null);
+    const abierto = estaAbiertoAhora(CONTACTO.horarioAtencion);
 
     return (
         <div className={styles.container}>
             <NavBarHome />
 
-            <div className={styles.sectionContainer} ref={sectionRef}>
+            <div className={styles.sectionContainer}>
                 <div className={styles.pageContent}>
                 <div className={styles.intro}>
                     <h1>Contactanos</h1>
@@ -29,6 +30,14 @@ const Contactanos = () => {
                         llegar tu consulta? Encontranos en nuestras redes,
                         escribinos o visitanos en el local.
                     </p>
+                    <span
+                        className={`${styles.statusBadge} ${
+                            abierto ? styles.statusOpen : styles.statusClosed
+                        }`}
+                    >
+                        <span className={styles.statusDot} />
+                        {abierto ? "Abierto ahora" : "Cerrado ahora"}
+                    </span>
                 </div>
 
                 <div className={styles.layout}>
@@ -110,7 +119,7 @@ const Contactanos = () => {
                 </div>
             </div>
 
-            <BackToTop containerRef={sectionRef} />
+            <BackToTop />
         </div>
     );
 };

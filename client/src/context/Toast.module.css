@@ -1,0 +1,42 @@
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translate(-50%, 20px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #241b12;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    color: #f6ecdb;
+    font-family: "Lexend", sans-serif;
+    font-size: 0.88rem;
+    box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    max-width: calc(100vw - 2rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast {
+        transition: opacity 0.2s ease;
+        transform: translate(-50%, 0);
+    }
+}

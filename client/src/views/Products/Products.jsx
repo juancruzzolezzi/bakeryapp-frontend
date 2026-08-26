@@ -81,16 +81,6 @@ const Products = () => {
   //sin filtrar por texto, a diferencia de la categoría elegida).
   const [busqueda, setBusqueda] = useState("");
 
-  //Si se llega acá con ?producto=<id> (link de "Compartir producto", ver
-  //Product.jsx), se fuerza el filtro a "Todo" para que se vea sin importar
-  //en qué categoría esté, y más abajo se hace scroll hasta esa tarjeta.
-  useEffect(() => {
-    if (searchParams.get("producto")) {
-      setFiltroActivoState("Todo");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (yaSeMontoProductsEnEstaSesion) {
       localStorage.setItem("filtroActivo", "Todo");
@@ -147,25 +137,6 @@ const Products = () => {
       : productosPorCategoria.filter((product) =>
           normalizar(product.title).includes(normalizar(busqueda))
         );
-
-  //Deep-link de "Compartir producto" (?producto=<id>, ver Product.jsx):
-  //apenas está la lista pintada, se scrollea hasta esa tarjeta puntual y
-  //se la resalta un instante.
-  useEffect(() => {
-    const productoId = searchParams.get("producto");
-    if (!productoId || !productosFiltrados?.length) return;
-
-    const timeout = setTimeout(() => {
-      const el = document.getElementById(`producto-${productoId}`);
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.classList.add(style.productoCompartidoDestacado);
-      setTimeout(() => el.classList.remove(style.productoCompartidoDestacado), 2000);
-    }, 100);
-
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productosFiltrados?.length]);
 
   //Entrada escalonada de las tarjetas: cada vez que cambia el filtro (o
   //llegan los productos por primera vez), aparecen una tras otra en vez

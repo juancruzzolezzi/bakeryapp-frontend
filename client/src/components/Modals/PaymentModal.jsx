@@ -21,8 +21,15 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const [contactValue, setContactValue] = useState("");
   const [touched, setTouched] = useState(false);
   const [deliveryType, setDeliveryType] = useState("delivery");
-  const [address, setAddress] = useState("");
+
+  //Precarga con la última dirección usada (si hay), en vez de arrancar
+  //siempre vacío: la mayoría de los pedidos van a la misma dirección. Sigue
+  //siendo editable por si cambió.
+  const [address, setAddress] = useState(
+    () => localStorage.getItem("lastAddress") || ""
+  );
   const [addressTouched, setAddressTouched] = useState(false);
+  const direccionRecordada = Boolean(address) && !addressTouched;
 
   const { handleSubmitModal, isSubmitting, submitError } = useCartHandlers();
 
@@ -48,14 +55,26 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
 
   const handleDeliveryTypeChange = (type) => {
     setDeliveryType(type);
-    setAddress("");
+    // Al volver a "delivery" se recupera la última dirección guardada en
+    // vez de dejarlo vacío otra vez.
+    setAddress(type === "delivery" ? localStorage.getItem("lastAddress") || "" : "");
     setAddressTouched(false);
   };
 
   const canSubmit = isValid && contactValue !== "" && isAddressValid && !isSubmitting;
 
+  //Indicador de progreso (3 pasos): contacto -> entrega -> listo para
+  //pagar, para que el formulario se sienta más guiado.
+  const pasoContactoListo = isValid && contactValue !== "";
+  const pasoEntregaListo = pasoContactoListo && isAddressValid;
+  const pasoFinalListo = canSubmit;
+
   const submitPayment = () => {
     if (canSubmit) {
+      if (deliveryType === "delivery" && address.trim()) {
+        localStorage.setItem("lastAddress", address.trim());
+      }
+
       handleSubmitModal(
         cartList,
         contactValue,
@@ -97,6 +116,47 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
     >
       <div className={style.modalContent}>
         <h2 className={style.modalHeader}>Ingresa tu información</h2>
+
+        <div className={style.progressTrack} aria-hidden="true">
+          <span
+            className={`${style.progressDot} ${
+              pasoContactoListo ? style.progressDotDone : ""
+            }`}
+          >
+            1
+          </span>
+          <span
+            className={`${style.progressLine} ${
+              pasoEntregaListo ? style.progressLineDone : ""
+            }`}
+          />
+          <span
+            className={`${style.progressDot} ${
+              pasoEntregaListo ? style.progressDotDone : ""
+            }`}
+          >
+            2
+          </span>
+          <span
+            className={`${style.progressLine} ${
+              pasoFinalListo ? style.progressLineDone : ""
+            }`}
+          />
+          <span
+            className={`${style.progressDot} ${
+              pasoFinalListo ? style.progressDotDone : ""
+            }`}
+          >
+            3
+          </span>
+        </div>
+        <p className={style.progressLabel}>
+          {!pasoContactoListo
+            ? "Paso 1 de 3 — Contacto"
+            : !pasoEntregaListo
+            ? "Paso 2 de 3 — Cómo lo recibís"
+            : "Paso 3 de 3 — Confirmar y pagar"}
+        </p>
 
         <div className={style.modalStep}>
           <span className={style.modalStepNum}>1</span>
@@ -199,6 +259,11 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
                   placeholder="Calle y número (piso/depto y barrio opcional)"
                   className={style.modalInput}
                 />
+                {direccionRecordada && (
+                  <span className={style.modalHintOk}>
+                    ✓ Autocompletada con tu última dirección
+                  </span>
+                )}
                 <span className={style.modalHint}>
                   Tiene que incluir calle y altura, ej: Zavalía 2026
                 </span>

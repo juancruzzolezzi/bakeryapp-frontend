@@ -226,6 +226,11 @@
     cursor: pointer;
     font-size: 0.92rem;
     font-weight: 700;
+    transition: transform 0.12s ease;
+}
+
+.actions button:active:not(:disabled) {
+    transform: scale(0.96);
 }
 
 .payBtn {
@@ -267,6 +272,19 @@
     background: #4a3f30;
     color: #8a7f6d;
     cursor: not-allowed;
+}
+
+.whatsappBtn {
+    background: transparent;
+    border: 1px solid rgba(37, 211, 102, 0.4);
+    color: #6fdb8f;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.whatsappBtn:hover {
+    border-color: #25d366;
+    color: #25d366;
 }
 
 .clearBtn {

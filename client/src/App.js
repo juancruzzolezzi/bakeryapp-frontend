@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 //Views
 import Home from "./views/Home/Home";
 import Products from "./views/Products/Products";
+import ProductDetail from "./views/ProductDetail/ProductDetail";
 import Loading from "./components/Loading/Loading";
 import Nosotros from "./views/Nosotros/Nosotros";
 import Contactanos from "./views/Contactanos/Contactanos";
@@ -50,6 +51,7 @@ function App() {
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/contactanos" element={<Contactanos />} />
           <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
