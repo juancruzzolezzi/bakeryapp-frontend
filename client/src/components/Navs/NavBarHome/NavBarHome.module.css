@@ -188,6 +188,10 @@
     height: clamp(2.6rem, 7vw, 3.2rem);
     border-radius: 50%;
     border: 1px solid rgba(217, 183, 103, 0.35);
+    /* Sin fondo, en el home (con la imagen de portada de fondo, más clara
+       arriba) el ícono casi no se veía. Un relleno oscuro semitransparente
+       le da contraste sin importar qué haya detrás. */
+    background: rgba(20, 14, 8, 0.45);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -195,7 +199,8 @@
     gap: 5px;
     cursor: pointer;
     pointer-events: auto;
-    transition: border-color 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
 .btnMenu span {
@@ -206,6 +211,7 @@
 }
 
 .btnMenu:hover {
+    background: rgba(20, 14, 8, 0.65);
     border-color: #d9b767;
     transform: translateX(-6px);
 }

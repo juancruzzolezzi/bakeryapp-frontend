@@ -4,7 +4,9 @@ import style from "./Loading.module.css";
 const Loading = () => {
   return (
     <div className={style.spinnerContainer}>
-      <div className={style.spinner}></div>
+      <div className={style.breadLoader} role="status" aria-label="Cargando">
+        🥐
+      </div>
     </div>
   );
 };

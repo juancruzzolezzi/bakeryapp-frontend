@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
+import { useFavorites } from "../../hooks/useFavorites";
 import { flyToCart } from "../../utils/flyToCart";
 import style from "./Product.module.css";
 
@@ -26,6 +27,8 @@ const Product = ({ product, featured }) => {
   const totalPriceAnimado = useAnimatedNumber(totalPrice);
   const totalPriceFormateado = totalPriceAnimado.toLocaleString("es-AR");
   const { handleAddToCart } = useProductHandlers();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const esFavorito = isFavorite(product.id);
   const photoRef = useRef(null);
 
   //Confirmación local en el botón: dice "✓ Agregado" un instante antes de
@@ -78,6 +81,18 @@ const Product = ({ product, featured }) => {
         )}
         {featured && <span className={style.featuredTag}>Recomendado</span>}
         {agotado && <span className={style.agotadoTag}>Agotado</span>}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(product.id);
+          }}
+          className={`${style.favoriteBtn} ${esFavorito ? style.favoriteBtnActive : ""}`}
+          aria-label={esFavorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+          aria-pressed={esFavorito}
+        >
+          {esFavorito ? "♥" : "♡"}
+        </button>
         <span className={style.pricePill}>${totalPriceFormateado}</span>
       </div>
 

@@ -66,6 +66,9 @@ function Home() {
             </button>
             {paymentStatus === "success" ? (
               <>
+                <div className={style.successCheck} aria-hidden="true">
+                  ✓
+                </div>
                 <p className={style.paymentBannerTitle}>
                   ¡Felicitaciones por tu compra!
                 </p>

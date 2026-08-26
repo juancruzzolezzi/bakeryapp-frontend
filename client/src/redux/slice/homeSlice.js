@@ -59,6 +59,7 @@ export const {
     setSetectedProduct,
     getProductById,
     addToCart,
+    updateCart,
     updateQuantity,
     removeFromCart,
     emptyCart,

@@ -1,15 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { useCartHandlers } from "../../handlers/cartHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
+import { updateCart } from "../../redux/slice/homeSlice";
 import PaymentModal from "../../components/Modals/PaymentModal";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import style from "./Cart.module.css";
 
+// TODO: ajustar al monto mínimo real que definan para envío gratis.
+const FREE_SHIPPING_THRESHOLD = 15000;
+
 function Cart({ isCartOpen, setIsCartOpen }) {
-  
+
   const cartList = useSelector((state) => state.homeSlice.cartList);
+  const dispatch = useDispatch();
+
+  //Último pedido confirmado (ver cartHandlers.js, se guarda justo antes de
+  //ir a pagar a Mercado Pago), para ofrecer "repetir pedido" con el
+  //carrito vacío en vez de que el cliente arme todo de nuevo a mano.
+  const [lastOrder] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("lastOrder"));
+    } catch {
+      return null;
+    }
+  });
+
+  const repetirPedido = () => {
+    if (!lastOrder?.items?.length) return;
+    dispatch(updateCart(lastOrder.items));
+  };
 
   //Estados locales
   const [totalPrice, setTotalPrice] = useState(0);
@@ -121,36 +143,97 @@ function Cart({ isCartOpen, setIsCartOpen }) {
         </button>
       </div>
 
-      <div className={style.items}>
-        {cartList.map((product, index) => (
-          <ProductCart product={product} key={index} />
-        ))}
-      </div>
-
-      <div className={style.summary}>
-        <div className={style.totalRow}>
-          <span>Total</span>
-          <span className={style.totalAmount}>${totalPriceAnimado.toLocaleString("es-AR")}</span>
-        </div>
-
-        <div className={style.actions}>
-          <button
-            onClick={() => setModalPaymentOpen(true)}
-            disabled={cartList.length === 0}
-            className={style.payBtn}
+      {cartList.length === 0 ? (
+        <div className={style.emptyState}>
+          <div className={style.emptyIcon}>🛒</div>
+          <h4>Tu carrito está vacío</h4>
+          <p>Todavía no agregaste nada. ¡Mirá lo que tenemos para vos!</p>
+          <Link
+            to="/products"
+            className={style.emptyCta}
+            onClick={() => setIsCartOpen(false)}
           >
-            Pagar
-          </button>
+            Ver productos →
+          </Link>
 
-          <button
-            onClick={() => setModalEmptyOpen(true)}
-            disabled={cartList.length === 0}
-            className={style.clearBtn}
-          >
-            Vaciar carrito
-          </button>
+          {lastOrder?.items?.length > 0 && (
+            <div className={style.lastOrder}>
+              <span className={style.lastOrderLabel}>
+                Tu último pedido
+                {lastOrder.date &&
+                  ` (${new Date(lastOrder.date).toLocaleDateString("es-AR")})`}
+              </span>
+              {lastOrder.items.map((product) => (
+                <div key={product.id} className={style.lastOrderRow}>
+                  <span>
+                    {product.quantity}x {product.title}
+                  </span>
+                </div>
+              ))}
+              <button onClick={repetirPedido} className={style.lastOrderBtn}>
+                Repetir pedido
+              </button>
+            </div>
+          )}
         </div>
-      </div>
+      ) : (
+        <>
+          <div className={style.items}>
+            {cartList.map((product, index) => (
+              <ProductCart product={product} key={index} />
+            ))}
+          </div>
+
+          <div className={style.summary}>
+            {/* TODO: reemplazar FREE_SHIPPING_THRESHOLD por el monto real */}
+            <div className={style.shipping}>
+              {totalPrice >= FREE_SHIPPING_THRESHOLD ? (
+                <span className={style.shippingUnlocked}>
+                  🎉 ¡Envío gratis desbloqueado!
+                </span>
+              ) : (
+                <span className={style.shippingMsg}>
+                  Te faltan $
+                  {(FREE_SHIPPING_THRESHOLD - totalPrice).toLocaleString("es-AR")}{" "}
+                  para envío gratis
+                </span>
+              )}
+              <div className={style.shippingTrack}>
+                <div
+                  className={style.shippingFill}
+                  style={{
+                    width: `${Math.min(
+                      (totalPrice / FREE_SHIPPING_THRESHOLD) * 100,
+                      100
+                    )}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className={style.totalRow}>
+              <span>Total</span>
+              <span className={style.totalAmount}>${totalPriceAnimado.toLocaleString("es-AR")}</span>
+            </div>
+
+            <div className={style.actions}>
+              <button
+                onClick={() => setModalPaymentOpen(true)}
+                className={style.payBtn}
+              >
+                Pagar
+              </button>
+
+              <button
+                onClick={() => setModalEmptyOpen(true)}
+                className={style.clearBtn}
+              >
+                Vaciar carrito
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       <EmptyCartModal
         isOpen={isModalEmptyOpen}

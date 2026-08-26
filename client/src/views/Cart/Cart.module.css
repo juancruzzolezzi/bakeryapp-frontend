@@ -74,6 +74,121 @@
     padding: 0.2rem 1.3rem;
 }
 
+.emptyState {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.2rem 1.5rem 2.4rem;
+}
+
+.emptyIcon {
+    font-size: 2.6rem;
+    opacity: 0.55;
+    margin-bottom: 0.9rem;
+}
+
+.emptyState h4 {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.1rem;
+    color: #f6ecdb;
+    margin: 0 0 0.5rem;
+}
+
+.emptyState p {
+    font-size: 0.85rem;
+    color: #c9bda9;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.emptyCta {
+    margin-top: 1.2rem;
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.3rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.emptyCta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.6);
+}
+
+.lastOrder {
+    margin-top: 1.8rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(230, 201, 138, 0.14);
+    width: 100%;
+    text-align: left;
+}
+
+.lastOrderLabel {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #8a7f6d;
+    margin-bottom: 0.5rem;
+}
+
+.lastOrderRow {
+    font-size: 0.85rem;
+    color: #c9bda9;
+    padding: 0.2rem 0;
+}
+
+.lastOrderBtn {
+    width: 100%;
+    margin-top: 0.9rem;
+    background: linear-gradient(135deg, #c9a15f, #e7c98a);
+    color: #241a10;
+    border: none;
+    border-radius: 10px;
+    padding: 0.7rem;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.shipping {
+    margin-bottom: 1rem;
+}
+
+.shippingMsg {
+    display: block;
+    font-size: 0.8rem;
+    color: #8fd6a0;
+    margin-bottom: 0.5rem;
+}
+
+.shippingUnlocked {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #e7c98a;
+    margin-bottom: 0.5rem;
+}
+
+.shippingTrack {
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(230, 201, 138, 0.12);
+    overflow: hidden;
+}
+
+.shippingFill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #b69443, #e7c98a);
+    transition: width 0.4s ease;
+}
+
 .summary {
     flex-shrink: 0;
     padding: 1rem 1.3rem 1.3rem;

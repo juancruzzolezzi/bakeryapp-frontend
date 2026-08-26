@@ -64,6 +64,17 @@ export const useCartHandlers = (
       //marca para saber que el pago quedó sin completar y avisarle
       //(ver "pagoAbandonado" en Products.jsx).
       sessionStorage.setItem("mpCheckoutIniciado", "1");
+
+      //Guarda este pedido como "el último", para poder ofrecer "Repetir
+      //pedido" con el carrito vacío más adelante (ver Cart.jsx). Se guarda
+      //acá (al iniciar el pago) y no recién si se confirma, porque el
+      //frontend no se entera de forma confiable de un pago aprobado hecho
+      //fuera del sitio (Mercado Pago no vuelve a avisar en todos los casos).
+      localStorage.setItem(
+        "lastOrder",
+        JSON.stringify({ items: cartList, date: new Date().toISOString() })
+      );
+
       window.location.href = initPoint;
 
     } catch (error) {

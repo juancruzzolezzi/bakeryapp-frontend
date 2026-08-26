@@ -6,6 +6,7 @@ import Filtros from "../../components/Filtros/Filtros";
 import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
 import { useGetProductsQuery } from "../../api/appApi";
+import { useFavorites } from "../../hooks/useFavorites";
 import style from "./Products.module.css";
 
 //Variable de módulo (no useState): sobrevive mientras dure la sesión del
@@ -18,6 +19,7 @@ let yaSeMontoProductsEnEstaSesion = false;
 
 const Products = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
+  const { favorites } = useFavorites();
   const products = data;
 
   //Si volvemos acá desde Mercado Pago sin haber pagado (falló o quedó
@@ -109,6 +111,10 @@ const Products = () => {
       ? products
       : filtroActivo === "Todo"
       ? [...products].sort(compararProductos)
+      : filtroActivo === "Favoritos"
+      ? [...products]
+          .filter((product) => favorites.includes(product.id))
+          .sort(compararProductos)
       : [...products]
           .filter((product) => product.category === filtroActivo)
           .sort(compararProductos);
@@ -206,7 +212,9 @@ const Products = () => {
 
         {!isLoading && !isError && productosFiltrados && productosFiltrados.length === 0 && (
           <p className={style.stateMessage}>
-            No hay productos en "{filtroActivo}" por ahora.
+            {filtroActivo === "Favoritos"
+              ? "Todavía no marcaste ningún producto como favorito. Tocá el ♡ en la tarjeta de un producto para guardarlo acá."
+              : `No hay productos en "${filtroActivo}" por ahora.`}
           </p>
         )}
 
