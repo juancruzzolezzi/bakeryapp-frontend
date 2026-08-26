@@ -49,12 +49,17 @@ const ProductDetail = () => {
 
     const handleTiltEnter = () => {
         if (prefiereMenosMovimiento() || !photoRef.current) return;
-        rectRef.current = photoRef.current.getBoundingClientRect();
         photoRef.current.style.willChange = "transform";
     };
 
     const handleTilt = (e) => {
-        if (prefiereMenosMovimiento() || !rectRef.current) return;
+        if (prefiereMenosMovimiento() || !photoRef.current) return;
+        //El rect se mide acá (primer mousemove real), no en "onMouseEnter":
+        //ver el comentario largo en Product.jsx sobre por qué (scroll rápido
+        //con el mouse quieto dispara mouseenter/mouseleave sin moverlo).
+        if (!rectRef.current) {
+            rectRef.current = photoRef.current.getBoundingClientRect();
+        }
         pointerRef.current = { x: e.clientX, y: e.clientY };
         if (rafRef.current == null) {
             rafRef.current = requestAnimationFrame(aplicarTilt);

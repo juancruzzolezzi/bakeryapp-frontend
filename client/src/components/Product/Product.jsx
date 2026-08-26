@@ -81,15 +81,27 @@ const Product = ({ product, featured }) => {
 
   const handleTiltEnter = () => {
     if (prefiereMenosMovimiento() || !cardRef.current) return;
-    rectRef.current = cardRef.current.getBoundingClientRect();
     //Le avisa al navegador que promueva la tarjeta a su propia capa recién
     //ahora (no siempre, en las ~30 tarjetas de la grilla a la vez: eso
-    //gastaría memoria de más sin necesidad). Se saca en resetTilt.
+    //gastaría memoria de más sin necesidad). Se saca en resetTilt. Esto NO
+    //fuerza layout (a diferencia de getBoundingClientRect, ver handleTilt).
     cardRef.current.style.willChange = "transform";
   };
 
   const handleTilt = (e) => {
-    if (prefiereMenosMovimiento() || !rectRef.current) return;
+    if (prefiereMenosMovimiento() || !cardRef.current) return;
+    //El rect recién se mide acá (en el primer mousemove real de este
+    //paso por la tarjeta), no en "onMouseEnter": al bajar rápido con el
+    //mouse quieto, las tarjetas pasan por debajo del cursor y disparan
+    //mouseenter/mouseleave en cadena sin que el mouse se mueva de
+    //verdad — si el rect se midiera ahí, cada una forzaría un reflow
+    //sincrónico en medio del scroll rápido, y eso era lo que se sentía
+    //trabado al bajar rápido por la grilla. "mousemove" en cambio solo
+    //dispara con movimiento real del cursor, así que un scroll con el
+    //mouse quieto no cuesta nada acá.
+    if (!rectRef.current) {
+      rectRef.current = cardRef.current.getBoundingClientRect();
+    }
     pointerRef.current = { x: e.clientX, y: e.clientY };
     if (rafRef.current == null) {
       rafRef.current = requestAnimationFrame(aplicarTilt);
