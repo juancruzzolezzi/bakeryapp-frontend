@@ -42,7 +42,47 @@
     object-position: center;
     object-fit: cover;
     display: block;
-    transition: transform 0.35s ease;
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.3s ease;
+}
+
+.imageCargada {
+    opacity: 1;
+}
+
+/* Skeleton gris pulsante mientras carga la foto (conexión lenta, primera
+   visita sin caché): mismo lenguaje visual que el skeleton de la lista
+   completa (ver Products.module.css), pero por tarjeta individual. */
+.photoSkeleton {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #2f2318;
+}
+
+.photoSkeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(231, 201, 138, 0.14), transparent);
+    animation: photoSkeletonSweep 1.6s ease-in-out infinite;
+}
+
+@keyframes photoSkeletonSweep {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .image {
+        transition: transform 0.35s ease;
+    }
+
+    .photoSkeleton::after {
+        animation: none;
+    }
 }
 
 .productContainer:hover .image {

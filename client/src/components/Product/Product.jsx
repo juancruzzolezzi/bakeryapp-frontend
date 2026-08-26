@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -43,6 +43,17 @@ const Product = ({ product, featured }) => {
   //queda listo para cuando lo agreguen, sin inventar disponibilidad
   //mientras tanto (product.stock === undefined nunca marca "agotado").
   const agotado = product.stock === 0;
+
+  //Skeleton gris pulsante mientras carga la foto (conexión lenta, primera
+  //visita sin caché), en vez del hueco vacío que quedaba hasta que
+  //apareciera. imgRef.complete cubre el caso de que ya esté cacheada y
+  //"onLoad" no llegue a dispararse después de montar el listener.
+  const [imgCargada, setImgCargada] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (imgRef.current?.complete) setImgCargada(true);
+  }, []);
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
@@ -93,9 +104,10 @@ const Product = ({ product, featured }) => {
       <div className={style.photo} ref={photoRef}>
         {product.images && product.images.length > 0 && (
           <img
+            ref={imgRef}
             src={product.images[0]}
             alt={product.title}
-            className={style.image}
+            className={`${style.image} ${imgCargada ? style.imageCargada : ""}`}
             style={{
               ...(AJUSTE_ENCUADRE[product.title] && {
                 objectPosition: AJUSTE_ENCUADRE[product.title],
@@ -107,8 +119,10 @@ const Product = ({ product, featured }) => {
             }}
             loading="lazy"
             decoding="async"
+            onLoad={() => setImgCargada(true)}
           />
         )}
+        {!imgCargada && <div className={style.photoSkeleton} aria-hidden="true" />}
         {featured && <span className={style.featuredTag}>Recomendado</span>}
         {agotado && <span className={style.agotadoTag}>Agotado</span>}
         <button
