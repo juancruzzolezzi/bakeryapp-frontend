@@ -48,6 +48,12 @@
    como estilo inline. */
 .panel {
     position: fixed;
+    /* Valor de respaldo: se usa solo hasta que AccountButton.jsx calcule
+       la posición real a partir del botón (o si por lo que sea ese
+       cálculo llegara a fallar), para que el cartel nunca deje de
+       aparecer del todo al tocar el botón. */
+    top: 4.5rem;
+    right: 1rem;
     width: 15.5rem;
     box-sizing: border-box;
     background-color: #1c140c;

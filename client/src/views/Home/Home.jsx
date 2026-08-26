@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams, Link } from "react-router-dom";
 import style from "./Home.module.css";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
 import { playConfetti } from "../../utils/confetti";
+import { useAuthModal } from "../../context/AuthModalContext";
+import { isStandalone } from "../../utils/pwa";
 // import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const user = useSelector((state) => state.authSlice.user);
+  const openAuthModal = useAuthModal();
   //"success" | "failure" | "pending" | null: qué cartel mostrar al volver
   //de Mercado Pago.
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -155,6 +159,31 @@ function Home() {
           <Link to="/products" className={style.heroCta}>
             Ver productos →
           </Link>
+
+          {/* Iniciar sesión (y el 10% OFF que viene con la cuenta) es una
+              función solo de la app instalada, no de la web normal: ver
+              AccountButton.jsx. */}
+          {!user && isStandalone() && (
+            <div className={style.discountBanner} data-print-hide>
+              <p className={style.discountBannerText}>
+                🔓 Iniciá sesión y llevate 10% OFF en toda la tienda
+              </p>
+              <button
+                type="button"
+                onClick={() => openAuthModal("login")}
+                className={style.discountBannerBtn}
+              >
+                Iniciar sesión
+              </button>
+              <button
+                type="button"
+                onClick={() => openAuthModal("register")}
+                className={style.discountBannerLink}
+              >
+                ¿No tenés cuenta? Registrate
+              </button>
+            </div>
+          )}
         </div>
       </div>
       {/* <ProductsHome/> */}

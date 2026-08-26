@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -61,9 +61,11 @@ const AccountButton = ({ onOpenChange }) => {
     }, [isOpen]);
 
     //Al abrirse, calcula dónde va el cartel según la posición real del
-    //botón. Si se scrollea o cambia el tamaño de ventana mientras está
-    //abierto, se cierra en vez de quedar desalineado del botón.
-    useEffect(() => {
+    //botón. "useLayoutEffect" (no "useEffect"): corre antes de pintar, así
+    //no hay ni un instante donde se vea en la posición de respaldo del CSS
+    //en vez de la real. Si se scrollea o cambia el tamaño de ventana
+    //mientras está abierto, se cierra en vez de quedar desalineado.
+    useLayoutEffect(() => {
         if (!isOpen) return;
 
         const updatePos = () => {
@@ -126,11 +128,16 @@ const AccountButton = ({ onOpenChange }) => {
                 <span className={style.label}>{user ? user.username : "Ingresar"}</span>
             </button>
 
-            {isOpen && user && panelPos && (
+            {isOpen && user && (
                 <div
                     ref={panelRef}
                     className={style.panel}
-                    style={{ top: panelPos.top, right: panelPos.right }}
+                    //Si por lo que sea todavía no se calculó la posición
+                    //real (ver el efecto de arriba), el cartel igual se ve
+                    //gracias al top/right por defecto del CSS: antes,
+                    //exigir panelPos acá hacía que el cartel directamente
+                    //no apareciera si ese cálculo fallaba en silencio.
+                    style={panelPos ? { top: panelPos.top, right: panelPos.right } : undefined}
                 >
                     <p className={style.panelName}>¡Hola, {user.username}!</p>
                     <p className={style.panelEmail}>{user.email}</p>

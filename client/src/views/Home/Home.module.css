@@ -357,6 +357,67 @@
     transform: scale(0.94);
 }
 
+/* Invita a iniciar sesión (solo aparece en la app instalada, ver
+   Home.jsx) para llevarse el 10% OFF, debajo del CTA principal. */
+.discountBanner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    padding: 1rem 1.4rem;
+    border: 1px dashed rgba(230, 201, 138, 0.5);
+    border-radius: 18px;
+    animation: heroFadeUp 0.6s 0.95s ease both;
+}
+
+.discountBannerText {
+    margin: 0;
+    color: #e7c98a;
+    font-family: "Lexend", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.discountBannerBtn {
+    background: #e7c98a;
+    border: 1px solid #e7c98a;
+    color: #241a10;
+    font-family: "Lexend", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.5rem 1.3rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.discountBannerBtn:hover {
+    background: #f6ecdb;
+    transform: translateY(-2px);
+}
+
+.discountBannerLink {
+    background: transparent;
+    border: none;
+    color: #c9bda9;
+    font-family: "Lexend", sans-serif;
+    font-size: 0.78rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+}
+
+.discountBannerLink:hover {
+    color: #e7c98a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .discountBanner {
+        animation: none;
+    }
+}
+
 @media screen and (max-width: 860px) {
 
     .presentacion h1 {
