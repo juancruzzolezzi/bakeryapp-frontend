@@ -42,88 +42,18 @@
     }
 }
 
-/* "fixed" (no "absolute" anclado al botón): el navbar tiene "overflow:
-   hidden" y recortaba el cartel a la mitad. La posición (top/right) se
-   calcula a mano en AccountButton.jsx a partir del botón real, y se pasa
-   como estilo inline. */
-.panel {
-    position: fixed;
-    /* Valor de respaldo: se usa solo hasta que AccountButton.jsx calcule
-       la posición real a partir del botón (o si por lo que sea ese
-       cálculo llegara a fallar), para que el cartel nunca deje de
-       aparecer del todo al tocar el botón. */
-    top: 4.5rem;
-    right: 1rem;
-    width: 15.5rem;
-    box-sizing: border-box;
-    background-color: #1c140c;
-    border: 1px solid rgba(230, 201, 138, 0.22);
-    border-radius: 14px;
-    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75);
-    padding: 1rem 1.1rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-    /* Más alto que el navbar (z-index: 99) y el carrito, que son sus
-       hermanos más cercanos en el stacking context. */
-    z-index: 200;
-    animation: panelDrop 0.18s ease both;
-}
-
-@keyframes panelDrop {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .panel {
-        animation: none;
-    }
-}
-
-.panelName {
-    margin: 0;
-    color: #f6ecdb;
-    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-weight: 600;
-    font-size: 1.05rem;
-}
-
+/* El resto del contenido de la cuenta (nombre, email, dirección, cerrar
+   sesión) vive dentro de un <Modal> de react-modal (ver AccountButton.jsx)
+   reusando las clases de Modals/Modal.module.css — mismo mecanismo ya
+   probado en AuthModal/PaymentModal/Cart. Acá solo quedan los estilos que
+   ese modal no tiene de fábrica. */
 .panelEmail {
-    margin: 0.15rem 0 0.9rem;
+    margin: 0 0 0.9rem;
     color: #8a7f6d;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.panelLabel {
-    display: block;
-    color: #c9bda9;
-    font-size: 0.78rem;
-    margin-bottom: 0.4rem;
-}
-
-.panelInput {
-    width: 100%;
-    padding: 0.55rem 0.6rem;
-    margin-bottom: 0.6rem;
-    background: #2f2318;
-    border: 1px solid rgba(230, 201, 138, 0.25);
-    border-radius: 8px;
-    color: #f6ecdb;
-    box-sizing: border-box;
-    font-size: 0.85rem;
-}
-
-.panelInput::placeholder {
-    color: #8a7f6d;
 }
 
 .panelSaveBtn {
@@ -160,10 +90,27 @@
     font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
+    margin-bottom: 0.6rem;
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .panelLogoutBtn:hover {
     background: rgba(217, 96, 96, 0.12);
     border-color: rgba(217, 96, 96, 0.6);
+}
+
+.panelCloseBtn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(230, 201, 138, 0.2);
+    color: #c9bda9;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.panelCloseBtn:hover {
+    background: rgba(230, 201, 138, 0.08);
 }

@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "../../redux/slice/authSlice";
@@ -8,85 +9,33 @@ import { useAuthModal } from "../../context/AuthModalContext";
 import { useToast } from "../../context/ToastContext";
 import { isStandalone } from "../../utils/pwa";
 import { getSavedAddress, setSavedAddress } from "../../utils/savedAddress";
+import modalStyle from "../Modals/Modal.module.css";
 import style from "./AccountButton.module.css";
 
-const AccountButton = ({ onOpenChange }) => {
+Modal.setAppElement("#root");
+
+const AccountButton = () => {
     const user = useSelector((state) => state.authSlice.user);
     const dispatch = useDispatch();
     const openAuthModal = useAuthModal();
     const showToast = useToast();
     const navigate = useNavigate();
 
-    //Mini cartel con el nombre + cerrar sesión (en vez de cerrar sesión de
-    //golpe al tocar el botón de nuevo, ver handleClick más abajo).
+    //Antes esto era un cartel flotante posicionado a mano (position: fixed
+    //+ coordenadas calculadas con JS): un modal de verdad (mismo mecanismo
+    //que AuthModal/PaymentModal/Cart, ya probado en el resto del sitio) es
+    //mucho más confiable que reinventar ese posicionamiento — ver historial
+    //de intentos previos que no terminaban de andar en todos los casos.
     const [isOpen, setIsOpen] = useState(false);
     const [address, setAddress] = useState("");
-    //Posición calculada a mano (en vez de "position: absolute" anclado al
-    //botón): el navbar tiene "overflow: hidden" (ver NavBar.module.css /
-    //NavBarHome.module.css) y recortaba el cartel a la mitad. Con
-    //"position: fixed" + estas coordenadas, el cartel se posiciona
-    //relativo a toda la pantalla y ya no depende de ese contenedor.
-    const [panelPos, setPanelPos] = useState(null);
-    const panelRef = useRef(null);
-    const buttonRef = useRef(null);
 
     //Precarga el campo de dirección con la que ya tenga guardada esta
-    //cuenta cada vez que se abre el cartel.
+    //cuenta cada vez que se abre el modal.
     useEffect(() => {
         if (isOpen && user) {
             setAddress(getSavedAddress(user.id));
         }
     }, [isOpen, user]);
-
-    //Avisa al que lo use (NavBar.jsx) si el cartel está abierto o no, para
-    //que pueda correr el carrito hacia abajo mientras tanto y no se
-    //superpongan, igual que ya hace con el menú hamburguesa.
-    useEffect(() => {
-        onOpenChange?.(isOpen);
-    }, [isOpen, onOpenChange]);
-
-    //Cierra el cartel al hacer click afuera, misma lógica de siempre
-    //(Cart.jsx, NavBarHome.jsx).
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const handleClickOutside = (event) => {
-            if (panelRef.current && panelRef.current.contains(event.target)) return;
-            if (event.target.closest("[data-account-toggle]")) return;
-            setIsOpen(false);
-        };
-
-        document.addEventListener("click", handleClickOutside, true);
-        return () => document.removeEventListener("click", handleClickOutside, true);
-    }, [isOpen]);
-
-    //Al abrirse, calcula dónde va el cartel según la posición real del
-    //botón. "useLayoutEffect" (no "useEffect"): corre antes de pintar, así
-    //no hay ni un instante donde se vea en la posición de respaldo del CSS
-    //en vez de la real. Si se scrollea o cambia el tamaño de ventana
-    //mientras está abierto, se cierra en vez de quedar desalineado.
-    useLayoutEffect(() => {
-        if (!isOpen) return;
-
-        const updatePos = () => {
-            const rect = buttonRef.current?.getBoundingClientRect();
-            if (!rect) return;
-            setPanelPos({
-                top: rect.bottom + 8,
-                right: window.innerWidth - rect.right,
-            });
-        };
-
-        updatePos();
-
-        const cerrar = () => setIsOpen(false);
-        window.addEventListener("scroll", cerrar, true);
-        window.addEventListener("resize", cerrar);
-        return () => {
-            window.removeEventListener("scroll", cerrar, true);
-            window.removeEventListener("resize", cerrar);
-        };
-    }, [isOpen]);
 
     // Registrarse/iniciar sesión (y el 10% OFF que viene con la cuenta) es
     // una función solo de la app instalada, no de la web normal.
@@ -94,9 +43,7 @@ const AccountButton = ({ onOpenChange }) => {
 
     const handleClick = () => {
         if (user) {
-            //Ya no cierra sesión directo: solo abre/cierra el mini cartel
-            //con el nombre y el botón de cerrar sesión.
-            setIsOpen((v) => !v);
+            setIsOpen(true);
         } else {
             openAuthModal("login");
         }
@@ -117,7 +64,6 @@ const AccountButton = ({ onOpenChange }) => {
     return (
         <div className={style.wrapper}>
             <button
-                ref={buttonRef}
                 type="button"
                 onClick={handleClick}
                 className={style.accountBtn}
@@ -128,47 +74,69 @@ const AccountButton = ({ onOpenChange }) => {
                 <span className={style.label}>{user ? user.username : "Ingresar"}</span>
             </button>
 
-            {isOpen && user && (
-                <div
-                    ref={panelRef}
-                    className={style.panel}
-                    //Si por lo que sea todavía no se calculó la posición
-                    //real (ver el efecto de arriba), el cartel igual se ve
-                    //gracias al top/right por defecto del CSS: antes,
-                    //exigir panelPos acá hacía que el cartel directamente
-                    //no apareciera si ese cálculo fallaba en silencio.
-                    style={panelPos ? { top: panelPos.top, right: panelPos.right } : undefined}
+            {user && (
+                <Modal
+                    isOpen={isOpen}
+                    onRequestClose={() => setIsOpen(false)}
+                    contentLabel="Tu cuenta"
+                    closeTimeoutMS={200}
+                    className={{
+                        base: modalStyle.modal,
+                        afterOpen: modalStyle.modalAfterOpen,
+                        beforeClose: modalStyle.modalBeforeClose,
+                    }}
+                    overlayClassName={{
+                        base: modalStyle.overlay,
+                        afterOpen: modalStyle.overlayAfterOpen,
+                        beforeClose: modalStyle.overlayBeforeClose,
+                    }}
+                    style={{
+                        overlay: { zIndex: 999999 },
+                        content: { zIndex: 999999 },
+                    }}
                 >
-                    <p className={style.panelName}>¡Hola, {user.username}!</p>
-                    <p className={style.panelEmail}>{user.email}</p>
+                    <div className={modalStyle.modalContent}>
+                        <h2 className={modalStyle.modalHeader}>¡Hola, {user.username}!</h2>
+                        <p className={style.panelEmail}>{user.email}</p>
 
-                    <label className={style.panelLabel}>Dirección de entrega</label>
-                    <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Calle y número, barrio"
-                        className={style.panelInput}
-                    />
-                    <button
-                        type="button"
-                        onClick={handleSaveAddress}
-                        className={style.panelSaveBtn}
-                    >
-                        Guardar dirección
-                    </button>
-                    <p className={style.panelHint}>
-                        Se va a sugerir sola la próxima vez que hagas un pedido.
-                    </p>
+                        <label className={modalStyle.modalLabel} style={{ marginTop: "0.9rem" }}>
+                            Dirección de entrega
+                        </label>
+                        <input
+                            type="text"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            placeholder="Calle y número, barrio"
+                            className={modalStyle.modalInput}
+                        />
+                        <button
+                            type="button"
+                            onClick={handleSaveAddress}
+                            className={style.panelSaveBtn}
+                        >
+                            Guardar dirección
+                        </button>
+                        <p className={style.panelHint}>
+                            Se va a sugerir sola la próxima vez que hagas un pedido.
+                        </p>
 
-                    <button
-                        type="button"
-                        onClick={handleLogout}
-                        className={style.panelLogoutBtn}
-                    >
-                        Cerrar sesión
-                    </button>
-                </div>
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            className={style.panelLogoutBtn}
+                        >
+                            Cerrar sesión
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsOpen(false)}
+                            className={style.panelCloseBtn}
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                </Modal>
             )}
         </div>
     );

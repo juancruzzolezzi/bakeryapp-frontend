@@ -14,9 +14,6 @@ const CART_REMINDER_THRESHOLD_MS = 30 * 60 * 1000; // 30 minutos
 const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  //Si el cartel de cuenta (ver AccountButton.jsx) está abierto: corre el
-  //carrito hacia abajo mientras tanto, misma idea que con "isOpen" (menú).
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const menuRef = useRef(null);
   const location = useLocation();
 
@@ -109,7 +106,7 @@ const NavBar = () => {
             <span></span>
             <span></span>
           </div>
-          <AccountButton onOpenChange={setIsAccountOpen} />
+          <AccountButton />
         </div>
 
         {/* Solo desktop (ver media query): pegado al borde derecho real de
@@ -117,7 +114,7 @@ const NavBar = () => {
             diferencia del carrito, este sí tiene que desaparecer al
             scrollear, no quedar siempre visible. */}
         <div className={style.accountSlot}>
-          <AccountButton onOpenChange={setIsAccountOpen} />
+          <AccountButton />
         </div>
 
         {/* Fondo difuminado detrás de la tarjeta flotante: al ser un
@@ -148,16 +145,11 @@ const NavBar = () => {
       </nav>
 
       {/* Carrito: este sí queda fijo, siempre accesible sin importar el
-          scroll. Mientras el menú o el cartel de cuenta están abiertos,
-          baja para no superponerse con ellos. */}
+          scroll. Mientras el menú está abierto, baja para no superponerse
+          con él. El cartel de cuenta ya no necesita este mismo cuidado:
+          ahora es un modal con su propio fondo oscuro que cubre todo. */}
       <div
-        className={`${style.cartFixed} ${
-          isOpen
-            ? style.cartFixedMenuOpen
-            : isAccountOpen
-            ? style.cartFixedAccountOpen
-            : ""
-        }`}
+        className={`${style.cartFixed} ${isOpen ? style.cartFixedMenuOpen : ""}`}
       >
         <div className={style.cartBox}>
           <div
