@@ -47,6 +47,7 @@ const ProductDetail = () => {
     const handleTiltEnter = () => {
         if (prefiereMenosMovimiento() || !photoRef.current) return;
         rectRef.current = photoRef.current.getBoundingClientRect();
+        photoRef.current.style.willChange = "transform";
     };
 
     const handleTilt = (e) => {
@@ -63,7 +64,10 @@ const ProductDetail = () => {
             rafRef.current = null;
         }
         rectRef.current = null;
-        if (photoRef.current) photoRef.current.style.transform = "";
+        if (photoRef.current) {
+            photoRef.current.style.transform = "";
+            photoRef.current.style.willChange = "";
+        }
     };
 
     const product = products?.find((p) => String(p.id) === id);

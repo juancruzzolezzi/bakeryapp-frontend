@@ -5,13 +5,6 @@ import { Link, useLocation } from "react-router-dom";
 import style from "./NavBarHome.module.css";
 import AccountButton from "../../Auth/AccountButton";
 import { NAV_LINKS } from "../../../constants/navLinks";
-//Dependencias de GSAP
-import gsap from "gsap";
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-//Esta funcion sirve para registrar el plugin "ScrollTrigger" y poder usar sus funciones a traves de gsap()
-gsap.registerPlugin( ScrollTrigger);
-
-
 
 const NavBarHome = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -114,35 +107,3 @@ const NavBarHome = () => {
 };
 
 export default NavBarHome;
-
-//Nombres con los que voy a manipular los elementos del DOM
-// const HomeRef = useRef(null)
-// const CocinaRef = useRef(null)
-// const NosotrosRef = useRef(null)
-
-
-// const AnimacionGSAP = (RefName, x, y ) => {
-// //AnimacionesGSAP recibe 3 paramentros:
-// //primer parametro: Referencia al elemento del DOM que se va a animar
-// //segundo parametro: valo del desplazamiento en el eje x
-// //tercer parametro: valor de desplazamiento en el eje y
-//   gsap.to(RefName.current, {
-//     scrollTrigger: {
-//       trigger: RefName.current,
-//       start: "top 0%",
-//       end: "bottom center",
-//       scrub: true,
-//     },
-//     x: x, 
-//     y: y,
-//   })
-
-// }
-
-// useEffect(() => {
-    
-//   AnimacionGSAP(HomeRef, -1080, -185);
-//   AnimacionGSAP(CocinaRef, -590, -275);
-//   AnimacionGSAP(NosotrosRef, -85, -365);
-
-// }, []);

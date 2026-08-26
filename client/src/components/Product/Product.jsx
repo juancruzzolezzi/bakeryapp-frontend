@@ -83,6 +83,10 @@ const Product = ({ product, featured }) => {
   const handleTiltEnter = () => {
     if (prefiereMenosMovimiento() || !cardRef.current) return;
     rectRef.current = cardRef.current.getBoundingClientRect();
+    //Le avisa al navegador que promueva la tarjeta a su propia capa recién
+    //ahora (no siempre, en las ~30 tarjetas de la grilla a la vez: eso
+    //gastaría memoria de más sin necesidad). Se saca en resetTilt.
+    cardRef.current.style.willChange = "transform";
   };
 
   const handleTilt = (e) => {
@@ -99,7 +103,10 @@ const Product = ({ product, featured }) => {
       rafRef.current = null;
     }
     rectRef.current = null;
-    if (cardRef.current) cardRef.current.style.transform = "";
+    if (cardRef.current) {
+      cardRef.current.style.transform = "";
+      cardRef.current.style.willChange = "";
+    }
   };
 
   const { tag: ventaTag, descripcionLimpia } = getVentaInfo(product.description);
