@@ -218,7 +218,7 @@
    arriba, pero un poco menos porque el cartel es más chico que la
    tarjeta del menú. */
 .cartFixedAccountOpen {
-    top: calc(38vh + 8rem);
+    top: calc(36vh + 8rem);
 }
 
 .cartBox {
@@ -447,7 +447,7 @@
     }
 
     .cartFixedAccountOpen {
-        top: 26rem;
+        top: 24.5rem;
     }
 
     .navOpen {
