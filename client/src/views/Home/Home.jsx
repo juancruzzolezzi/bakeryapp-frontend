@@ -6,7 +6,9 @@ import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
 import { playConfetti } from "../../utils/confetti";
 import { useAuthModal } from "../../context/AuthModalContext";
-import { isStandalone } from "../../utils/pwa";
+import { useToast } from "../../context/ToastContext";
+import { isStandalone, isIOS } from "../../utils/pwa";
+import { usePwaInstall } from "../../hooks/usePwaInstall";
 // import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
@@ -14,6 +16,28 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const user = useSelector((state) => state.authSlice.user);
   const openAuthModal = useAuthModal();
+  const showToast = useToast();
+  const { canInstall, promptInstall } = usePwaInstall();
+
+  //Al no haber una API que garantice mostrar el instalador nativo en
+  //cualquier navegador (ver usePwaInstall.js), esto siempre da algún tipo
+  //de respuesta al tocar en vez de quedarse callado si "canInstall" es
+  //falso: intenta instalar de verdad si el navegador lo permite, y si no,
+  //explica cómo hacerlo a mano.
+  const handleDescargarApp = async () => {
+    if (canInstall) {
+      const instalada = await promptInstall();
+      if (instalada) showToast("¡App instalada!", "🎉");
+      return;
+    }
+
+    showToast(
+      isIOS()
+        ? "Tocá compartir (⬆️) y elegí \"Agregar a inicio\""
+        : "Buscá \"Instalar app\" en el menú (⋮) de tu navegador",
+      "📲"
+    );
+  };
   //"success" | "failure" | "pending" | null: qué cartel mostrar al volver
   //de Mercado Pago.
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -187,16 +211,19 @@ function Home() {
 
           {/* En la web normal (no la app instalada) no tiene sentido
               ofrecer login: en cambio, invita a instalar la app, que es
-              donde vive esa función y el 10% OFF. Sin botón acá (ver
-              InstallAppBanner.jsx para el que sí instala de verdad, abajo
-              a la izquierda): el botón de instalar directo desde acá no
-              terminaba de funcionar. */}
+              donde vive esa función y el 10% OFF. Todo el texto es un link
+              clickeable (ver handleDescargarApp): si el navegador lo
+              permite, instala directo; si no, explica cómo hacerlo a mano
+              en vez de no responder nada. */}
           {!isStandalone() && (
-            <div className={style.installBanner} data-print-hide>
-              <p className={style.discountBannerText}>
-                📲 Descargá la app y llevate 10% OFF en toda la tienda
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={handleDescargarApp}
+              className={style.installBanner}
+              data-print-hide
+            >
+              📲 Descargá la app y llevate 10% OFF en toda la tienda
+            </button>
           )}
         </div>
       </div>

@@ -362,8 +362,7 @@
    sólido semitransparente (no borde punteado sobre fondo transparente):
    con eso, el puntillado del fondo general del sitio se colaba adentro
    del cuadro y quedaba "cuadrado con puntos", nada prolijo. */
-.discountBanner,
-.installBanner {
+.discountBanner {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -375,6 +374,29 @@
     border-radius: 18px;
     backdrop-filter: blur(6px);
     animation: heroFadeUp 0.6s 0.95s ease both;
+}
+
+/* Mismo look que .discountBanner, pero es un <button> clickeable entero
+   (ver handleDescargarApp en Home.jsx), no un contenedor con hijos. */
+.installBanner {
+    margin-top: 1.2rem;
+    padding: 1rem 1.4rem;
+    background: rgba(20, 14, 8, 0.55);
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    color: #e7c98a;
+    font-family: "Lexend", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    animation: heroFadeUp 0.6s 0.95s ease both;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.installBanner:hover {
+    background: rgba(20, 14, 8, 0.75);
+    border-color: #e7c98a;
 }
 
 .discountBannerText {
