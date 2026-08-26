@@ -142,7 +142,7 @@
     /* Mismo oscurecido que usan Nosotros/Contactanos/Preguntas Frecuentes
        sobre su fondo (antes 0.3, se veía bastante más clara que el resto
        de las pestañas). */
-    background-color: rgba(23, 16, 9, 0.55);
+    background-color: rgba(23, 16, 9, 0.7);
     height: 100%;
     width: 100%;
     display: flex;
