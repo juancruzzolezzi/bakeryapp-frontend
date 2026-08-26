@@ -6,11 +6,17 @@ import DeleteProductModal from '../Modals/DeleteProductModal';
 import style from "./ProductCart.module.css";
 
 const ProductCart = ({ product }) => {
-  const cart = useSelector((state) => state.homeSlice.cartList);
+  //"cartList.find(...).quantity" en vez de traer el array cartList entero
+  //con useSelector: al devolver un número (no el array), useSelector
+  //puede frenar el re-render solo con que ese número no haya cambiado,
+  //aunque cartList sí haya cambiado de referencia por otra fila del
+  //carrito (agregar/sacar/cambiar cantidad de OTRO producto).
+  const quantity = useSelector((state) => {
+    const item = state.homeSlice.cartList.find((p) => p.id === product.id);
+    return item ? item.quantity : 0;
+  });
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
 
-  const currentProduct = cart.find((item) => item.id === product.id);
-  const quantity = currentProduct ? currentProduct.quantity : 0;
   const amountAnimado = useAnimatedNumber(product.price * quantity);
 
   //Destello breve en la fila cada vez que suma cantidad (se agregó desde
@@ -105,4 +111,8 @@ const ProductCart = ({ product }) => {
   );
 };
 
-export default ProductCart;
+//React.memo: ahora que la suscripción de arriba está acotada a la
+//cantidad de ESTE producto (no todo cartList), esto evita además que
+//cambios ajenos a esta fila (ej: Cart.jsx re-renderizando por el
+//descuento o el total) la vuelvan a renderizar sin necesidad.
+export default React.memo(ProductCart);
