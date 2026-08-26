@@ -19,7 +19,14 @@ const AccountButton = () => {
     //golpe al tocar el botón de nuevo, ver handleClick más abajo).
     const [isOpen, setIsOpen] = useState(false);
     const [address, setAddress] = useState("");
+    //Posición calculada a mano (en vez de "position: absolute" anclado al
+    //botón): el navbar tiene "overflow: hidden" (ver NavBar.module.css /
+    //NavBarHome.module.css) y recortaba el cartel a la mitad. Con
+    //"position: fixed" + estas coordenadas, el cartel se posiciona
+    //relativo a toda la pantalla y ya no depende de ese contenedor.
+    const [panelPos, setPanelPos] = useState(null);
     const panelRef = useRef(null);
+    const buttonRef = useRef(null);
 
     //Precarga el campo de dirección con la que ya tenga guardada esta
     //cuenta cada vez que se abre el cartel.
@@ -42,6 +49,32 @@ const AccountButton = () => {
 
         document.addEventListener("click", handleClickOutside, true);
         return () => document.removeEventListener("click", handleClickOutside, true);
+    }, [isOpen]);
+
+    //Al abrirse, calcula dónde va el cartel según la posición real del
+    //botón. Si se scrollea o cambia el tamaño de ventana mientras está
+    //abierto, se cierra en vez de quedar desalineado del botón.
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const updatePos = () => {
+            const rect = buttonRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            setPanelPos({
+                top: rect.bottom + 8,
+                right: window.innerWidth - rect.right,
+            });
+        };
+
+        updatePos();
+
+        const cerrar = () => setIsOpen(false);
+        window.addEventListener("scroll", cerrar, true);
+        window.addEventListener("resize", cerrar);
+        return () => {
+            window.removeEventListener("scroll", cerrar, true);
+            window.removeEventListener("resize", cerrar);
+        };
     }, [isOpen]);
 
     // Registrarse/iniciar sesión (y el 10% OFF que viene con la cuenta) es
@@ -72,6 +105,7 @@ const AccountButton = () => {
     return (
         <div className={style.wrapper}>
             <button
+                ref={buttonRef}
                 type="button"
                 onClick={handleClick}
                 className={style.accountBtn}
@@ -82,8 +116,12 @@ const AccountButton = () => {
                 <span className={style.label}>{user ? user.username : "Ingresar"}</span>
             </button>
 
-            {isOpen && user && (
-                <div ref={panelRef} className={style.panel}>
+            {isOpen && user && panelPos && (
+                <div
+                    ref={panelRef}
+                    className={style.panel}
+                    style={{ top: panelPos.top, right: panelPos.right }}
+                >
                     <p className={style.panelName}>¡Hola, {user.username}!</p>
                     <p className={style.panelEmail}>{user.email}</p>
 

@@ -42,10 +42,12 @@
     }
 }
 
+/* "fixed" (no "absolute" anclado al botón): el navbar tiene "overflow:
+   hidden" y recortaba el cartel a la mitad. La posición (top/right) se
+   calcula a mano en AccountButton.jsx a partir del botón real, y se pasa
+   como estilo inline. */
 .panel {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    right: 0;
+    position: fixed;
     width: 15.5rem;
     box-sizing: border-box;
     background-color: #1c140c;
@@ -55,7 +57,9 @@
     padding: 1rem 1.1rem 1.1rem;
     display: flex;
     flex-direction: column;
-    z-index: 50;
+    /* Más alto que el navbar (z-index: 99) y el carrito, que son sus
+       hermanos más cercanos en el stacking context. */
+    z-index: 200;
     animation: panelDrop 0.18s ease both;
 }
 
