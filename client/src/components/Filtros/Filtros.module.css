@@ -9,10 +9,6 @@
     font-size: 1.2rem;
 }
 
-.filtrosNull {
-    display: none;
-}
-
 /* Copia invisible de los chips, solo para medir si entran en un renglón
    (ver Filtros.jsx). "height: 0" + "overflow: hidden" para que no ocupe
    espacio vertical ni se vea, pero conservando el ancho real disponible

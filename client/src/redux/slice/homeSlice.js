@@ -5,7 +5,6 @@ const savedCart = JSON.parse(localStorage.getItem("cart"));
 const homeSlice = createSlice({
   name: "home",
   initialState: {
-    allProducts: [],
     cartList: savedCart || [],
   },
   reducers: {
@@ -56,8 +55,6 @@ const homeSlice = createSlice({
 
 
 export const {
-    setSetectedProduct,
-    getProductById,
     addToCart,
     updateCart,
     updateQuantity,

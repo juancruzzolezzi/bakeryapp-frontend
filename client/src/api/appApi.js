@@ -9,10 +9,6 @@ export const appApi = createApi({
     }),
 
     endpoints: (builder) => ({
-        getCategories: builder.query({
-            query: () => "categories",
-        }),
-
         getProducts: builder.query({
             query: () => "products",
         }),
@@ -28,7 +24,6 @@ export const appApi = createApi({
 });
 
 export const {
-    useGetCategoriesQuery,
     useGetProductsQuery,
     useRegisterUserMutation,
     useLoginUserMutation,

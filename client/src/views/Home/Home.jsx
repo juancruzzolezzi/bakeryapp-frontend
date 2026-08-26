@@ -9,7 +9,6 @@ import { useAuthModal } from "../../context/AuthModalContext";
 import { useToast } from "../../context/ToastContext";
 import { isStandalone, isIOS } from "../../utils/pwa";
 import { usePwaInstall } from "../../hooks/usePwaInstall";
-// import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
   const dispatch = useDispatch();
@@ -227,7 +226,6 @@ function Home() {
           )}
         </div>
       </div>
-      {/* <ProductsHome/> */}
     </div>
   );
 }
