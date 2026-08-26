@@ -11,6 +11,11 @@ Modal.setAppElement("#root");
 // cobra de verdad; acá solo se usa para mostrarle el total al usuario antes de pagar).
 const DELIVERY_FEE = 2000;
 
+// A partir de este monto (sin contar el envío) el delivery sale gratis.
+// Tiene que coincidir con FREE_SHIPPING_THRESHOLD en Cart.jsx (la barra de
+// progreso) y en payment.controller.js (ahí es donde se cobra de verdad).
+const FREE_SHIPPING_THRESHOLD = 15000;
+
 const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const [contactMethod, setContactMethod] = useState("instagram");
   const [contactValue, setContactValue] = useState("");
@@ -30,8 +35,10 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
 
   const isAddressValid = deliveryType !== "delivery" || isValidAddress(address.trim());
 
+  const envioGratis = totalPrice >= FREE_SHIPPING_THRESHOLD;
+
   const finalTotal =
-    totalPrice + (deliveryType === "delivery" ? DELIVERY_FEE : 0);
+    totalPrice + (deliveryType === "delivery" && !envioGratis ? DELIVERY_FEE : 0);
 
   const handleMethodChange = (method) => {
     setContactMethod(method);
@@ -201,7 +208,9 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
                   </span>
                 )}
                 <span className={style.modalHintSpaced}>
-                  El delivery tiene un costo adicional de ${DELIVERY_FEE.toLocaleString("es-AR")}
+                  {envioGratis
+                    ? "¡Envío gratis por superar el mínimo!"
+                    : `El delivery tiene un costo adicional de $${DELIVERY_FEE.toLocaleString("es-AR")}`}
                 </span>
               </>
             )}
