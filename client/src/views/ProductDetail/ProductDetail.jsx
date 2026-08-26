@@ -21,22 +21,48 @@ const ProductDetail = () => {
     const [imgCargada, setImgCargada] = useState(false);
 
     //Mismo tilt 3D sutil que sigue al mouse que las tarjetas de la grilla
-    //(ver Product.jsx), acá sobre la foto grande.
+    //(ver Product.jsx, con la misma optimización: el rect se mide una sola
+    //vez al entrar, no en cada mousemove, y la escritura del transform se
+    //agrupa con requestAnimationFrame en vez de una vez por evento.
     const photoRef = useRef(null);
+    const rectRef = useRef(null);
+    const rafRef = useRef(null);
+    const pointerRef = useRef({ x: 0, y: 0 });
 
-    const handleTilt = (e) => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const prefiereMenosMovimiento = () =>
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const aplicarTilt = () => {
+        rafRef.current = null;
         const photo = photoRef.current;
-        if (!photo) return;
-        const rect = photo.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const rect = rectRef.current;
+        if (!photo || !rect) return;
+        const x = (pointerRef.current.x - rect.left) / rect.width - 0.5;
+        const y = (pointerRef.current.y - rect.top) / rect.height - 0.5;
         photo.style.transform = `scale(1.03) perspective(800px) rotateY(${
             x * 8
         }deg) rotateX(${-y * 8}deg)`;
     };
 
+    const handleTiltEnter = () => {
+        if (prefiereMenosMovimiento() || !photoRef.current) return;
+        rectRef.current = photoRef.current.getBoundingClientRect();
+    };
+
+    const handleTilt = (e) => {
+        if (prefiereMenosMovimiento() || !rectRef.current) return;
+        pointerRef.current = { x: e.clientX, y: e.clientY };
+        if (rafRef.current == null) {
+            rafRef.current = requestAnimationFrame(aplicarTilt);
+        }
+    };
+
     const resetTilt = () => {
+        if (rafRef.current != null) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+        }
+        rectRef.current = null;
         if (photoRef.current) photoRef.current.style.transform = "";
     };
 
@@ -104,6 +130,7 @@ const ProductDetail = () => {
                         <div
                             className={styles.photo}
                             ref={photoRef}
+                            onMouseEnter={handleTiltEnter}
                             onMouseMove={handleTilt}
                             onMouseLeave={resetTilt}
                         >

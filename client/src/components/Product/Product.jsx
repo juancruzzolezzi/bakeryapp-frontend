@@ -24,6 +24,11 @@ const AJUSTE_ENCUADRE = {
 //si algún encuadre queda mal con el zoom por defecto.
 const AJUSTE_SIN_ZOOM = new Set([]);
 
+//Se consulta una sola vez (no en cada mousemove, ver handleTilt): crear un
+//MediaQueryList por evento era puro desperdicio con el mouse en movimiento.
+const prefiereMenosMovimiento = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const Product = ({ product, featured }) => {
   const [quantity, setQuantity] = useState(1);
   const totalPrice = product.price * quantity;
@@ -51,19 +56,49 @@ const Product = ({ product, featured }) => {
   //combina con el lift que ya tiene la tarjeta al hover (ver
   //Product.module.css) en el mismo transform inline, para no perder ese
   //efecto al pisarlo con JS.
-  const handleTilt = (e) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  //
+  //El "mousemove" dispara hasta ~120 veces por segundo: antes, cada uno
+  //hacía un getBoundingClientRect() (fuerza un reflow) y escribía el
+  //transform al toque, sin límite. Con muchas tarjetas en la grilla (ver
+  //Products.jsx) eso es lo que se sentía "trabado" al mover el mouse. Acá
+  //el rect se mide una sola vez al entrar (no en cada movimiento) y la
+  //escritura del transform se agrupa con requestAnimationFrame, como mucho
+  //una vez por frame en vez de una vez por evento.
+  const rectRef = useRef(null);
+  const rafRef = useRef(null);
+  const pointerRef = useRef({ x: 0, y: 0 });
+
+  const aplicarTilt = () => {
+    rafRef.current = null;
     const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const rect = rectRef.current;
+    if (!card || !rect) return;
+    const x = (pointerRef.current.x - rect.left) / rect.width - 0.5;
+    const y = (pointerRef.current.y - rect.top) / rect.height - 0.5;
     card.style.transform = `translateY(-8px) scale(1.015) perspective(800px) rotateY(${
       x * 6
     }deg) rotateX(${-y * 6}deg)`;
   };
 
+  const handleTiltEnter = () => {
+    if (prefiereMenosMovimiento() || !cardRef.current) return;
+    rectRef.current = cardRef.current.getBoundingClientRect();
+  };
+
+  const handleTilt = (e) => {
+    if (prefiereMenosMovimiento() || !rectRef.current) return;
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+    if (rafRef.current == null) {
+      rafRef.current = requestAnimationFrame(aplicarTilt);
+    }
+  };
+
   const resetTilt = () => {
+    if (rafRef.current != null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    rectRef.current = null;
     if (cardRef.current) cardRef.current.style.transform = "";
   };
 
@@ -144,6 +179,7 @@ const Product = ({ product, featured }) => {
   return (
     <div
       ref={cardRef}
+      onMouseEnter={handleTiltEnter}
       onMouseMove={handleTilt}
       onMouseLeave={resetTilt}
       onClick={goToDetail}
@@ -235,4 +271,10 @@ const Product = ({ product, featured }) => {
   );
 };
 
-export default Product;
+//React.memo: sin esto, cada tecla en el buscador o cambio de filtro (ver
+//Products.jsx) volvía a renderizar TODAS las tarjetas de la grilla, no
+//solo las que cambiaron. Los productos vienen del cache de RTK Query, así
+//que el objeto "product" de uno que sigue en la lista mantiene la misma
+//referencia entre renders — memo puede saltearlo de verdad, no es un
+//memo de fachada.
+export default React.memo(Product);
