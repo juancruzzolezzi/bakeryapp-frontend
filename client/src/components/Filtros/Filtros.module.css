@@ -1,4 +1,5 @@
 .filtros {
+    position: relative;
     width: 100%;
     color: white;
     display: flex;
@@ -12,6 +13,20 @@
     display: none;
 }
 
+/* Copia invisible de los chips, solo para medir si entran en un renglón
+   (ver Filtros.jsx). "height: 0" + "overflow: hidden" para que no ocupe
+   espacio vertical ni se vea, pero conservando el ancho real disponible
+   (así el wrap se mide con las mismas condiciones que tendría visible). */
+.medicion {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ---- Chips, cuando entran en un renglón ---- */
 .filtrosGrupo {
     position: relative;
     display: inline-flex;
@@ -74,22 +89,100 @@
     }
 }
 
+/* ---- Mobile: menú desplegable (oculto en desktop, ver media query) ---- */
+.dropdown {
+    position: relative;
+    width: min(280px, 100%);
+    font-family: "Lexend", sans-serif;
+}
+
+.trigger {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2f2318;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    border-radius: 12px;
+    padding: 0.75rem 1.1rem;
+    color: #f6ecdb;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.trigger:hover {
+    border-color: #b69443;
+}
+
+.chevron {
+    color: #b69443;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+    transform: rotate(180deg);
+}
+
+.list {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background: #1c140c;
+    border: 1px solid rgba(230, 201, 138, 0.22);
+    border-radius: 14px;
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.listOpen {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.item {
+    padding: 0.65rem 0.8rem;
+    border-radius: 8px;
+    color: #c9bda9;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.item:hover {
+    background: rgba(230, 201, 138, 0.08);
+    color: #f6ecdb;
+}
+
+.itemActivo {
+    color: #e7c98a;
+    font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chevron,
+    .list {
+        transition: none;
+    }
+}
+
 @media screen and (max-width: 760px) {
     .filtros {
         width: 100%;
         padding: 1rem 0 0.75rem;
-    }
-
-    .filtrosGrupo {
-        width: 100%;
-        gap: 0.9rem 1.2rem;
-    }
-
-    .filtrosBtn {
-        width: auto;
-        padding: 0.4rem 0.1rem 0.7rem;
-        font-size: 0.95rem;
-        text-align: center;
-        white-space: normal;
     }
 }
