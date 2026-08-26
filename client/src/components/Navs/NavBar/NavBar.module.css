@@ -213,6 +213,14 @@
     top: calc(40vh + 8rem);
 }
 
+/* Mientras el cartel de cuenta está abierto (ver AccountButton.jsx): el
+   carrito baja para no quedar tapado por él, igual que con el menú
+   arriba, pero un poco menos porque el cartel es más chico que la
+   tarjeta del menú. */
+.cartFixedAccountOpen {
+    top: calc(30vh + 6rem);
+}
+
 .cartBox {
     width: fit-content;
     display: flex;
@@ -436,6 +444,10 @@
        ella (que arranca en top: 1rem). */
     .cartFixedMenuOpen {
         top: 26rem;
+    }
+
+    .cartFixedAccountOpen {
+        top: 20rem;
     }
 
     .navOpen {

@@ -9,7 +9,7 @@ import { isStandalone } from "../../utils/pwa";
 import { getSavedAddress, setSavedAddress } from "../../utils/savedAddress";
 import style from "./AccountButton.module.css";
 
-const AccountButton = () => {
+const AccountButton = ({ onOpenChange }) => {
     const user = useSelector((state) => state.authSlice.user);
     const dispatch = useDispatch();
     const openAuthModal = useAuthModal();
@@ -35,6 +35,13 @@ const AccountButton = () => {
             setAddress(getSavedAddress(user.id));
         }
     }, [isOpen, user]);
+
+    //Avisa al que lo use (NavBar.jsx) si el cartel está abierto o no, para
+    //que pueda correr el carrito hacia abajo mientras tanto y no se
+    //superpongan, igual que ya hace con el menú hamburguesa.
+    useEffect(() => {
+        onOpenChange?.(isOpen);
+    }, [isOpen, onOpenChange]);
 
     //Cierra el cartel al hacer click afuera, misma lógica de siempre
     //(Cart.jsx, NavBarHome.jsx).
