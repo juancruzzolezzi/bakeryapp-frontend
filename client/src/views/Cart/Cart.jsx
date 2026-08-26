@@ -12,6 +12,10 @@ import style from "./Cart.module.css";
 // TODO: ajustar al monto mínimo real que definan para envío gratis.
 const FREE_SHIPPING_THRESHOLD = 15000;
 
+// Más viejo que esto, "Repetir pedido" deja de ofrecerse: pasado un mes ya
+// no tiene mucho sentido (productos de temporada, precios desactualizados).
+const LAST_ORDER_MAX_AGE_DAYS = 30;
+
 function Cart({ isCartOpen, setIsCartOpen }) {
 
   const cartList = useSelector((state) => state.homeSlice.cartList);
@@ -19,10 +23,16 @@ function Cart({ isCartOpen, setIsCartOpen }) {
 
   //Último pedido confirmado (ver cartHandlers.js, se guarda justo antes de
   //ir a pagar a Mercado Pago), para ofrecer "repetir pedido" con el
-  //carrito vacío en vez de que el cliente arme todo de nuevo a mano.
+  //carrito vacío en vez de que el cliente arme todo de nuevo a mano. Si ya
+  //pasó demasiado tiempo, se ignora (no tiene sentido repetir algo viejo).
   const [lastOrder] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("lastOrder"));
+      const saved = JSON.parse(localStorage.getItem("lastOrder"));
+      if (!saved?.date) return saved;
+
+      const ageInDays =
+        (Date.now() - new Date(saved.date).getTime()) / (1000 * 60 * 60 * 24);
+      return ageInDays > LAST_ORDER_MAX_AGE_DAYS ? null : saved;
     } catch {
       return null;
     }

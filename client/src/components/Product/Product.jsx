@@ -35,6 +35,10 @@ const Product = ({ product, featured }) => {
   //volver a "Añadir", como refuerzo extra además del vuelo hacia el carrito.
   const [recienAgregado, setRecienAgregado] = useState(false);
 
+  //Confirmación local de "Compartir": muestra "¡Copiado!" un instante en
+  //vez del ícono, igual que "recienAgregado" arriba.
+  const [linkCopiado, setLinkCopiado] = useState(false);
+
   //"stock" todavía no lo devuelve la API (ver api/db/products.routes.js);
   //queda listo para cuando lo agreguen, sin inventar disponibilidad
   //mientras tanto (product.stock === undefined nunca marca "agotado").
@@ -52,8 +56,34 @@ const Product = ({ product, featured }) => {
     setTimeout(() => setRecienAgregado(false), 1200);
   };
 
+  //Comparte un link directo a este producto (con ?producto=<id>, ver el
+  //scroll-to en Products.jsx): usa el share nativo del celular si está
+  //disponible, y si no copia el link al portapapeles.
+  const shareUrl = `${window.location.origin}/products?producto=${product.id}`;
+
+  const shareProduct = async (e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.title, url: shareUrl });
+      } catch {
+        // El usuario canceló el share nativo: no hace falta avisar nada.
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setLinkCopiado(true);
+      setTimeout(() => setLinkCopiado(false), 1500);
+    } catch {
+      // Portapapeles no disponible (ej: sitio sin HTTPS): no hay fallback.
+    }
+  };
+
   return (
     <div
+      id={`producto-${product.id}`}
       className={`${style.productContainer} ${featured ? style.featured : ""} ${
         agotado ? style.agotado : ""
       }`}
@@ -97,7 +127,17 @@ const Product = ({ product, featured }) => {
       </div>
 
       <div className={style.body}>
-        <p className={style.name}>{product.title}</p>
+        <div className={style.nameRow}>
+          <p className={style.name}>{product.title}</p>
+          <button
+            type="button"
+            onClick={shareProduct}
+            className={style.shareBtn}
+            aria-label="Compartir producto"
+          >
+            {linkCopiado ? "✓" : "🔗"}
+          </button>
+        </div>
         <p className={style.desc}>{product.description}</p>
 
         <div className={style.footerRow}>

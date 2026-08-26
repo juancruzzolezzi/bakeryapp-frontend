@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
@@ -12,6 +12,22 @@ const ProductCart = ({ product }) => {
   const currentProduct = cart.find((item) => item.id === product.id);
   const quantity = currentProduct ? currentProduct.quantity : 0;
   const amountAnimado = useAnimatedNumber(product.price * quantity);
+
+  //Destello breve en la fila cada vez que suma cantidad (se agregó desde
+  //la tarjeta de producto, o con el "+" de acá mismo), además del pulso
+  //que ya tiene el botón "Añadir" en Product.jsx.
+  const [flashing, setFlashing] = useState(false);
+  const prevQuantityRef = useRef(quantity);
+
+  useEffect(() => {
+    if (quantity > prevQuantityRef.current) {
+      setFlashing(true);
+      const timeout = setTimeout(() => setFlashing(false), 900);
+      prevQuantityRef.current = quantity;
+      return () => clearTimeout(timeout);
+    }
+    prevQuantityRef.current = quantity;
+  }, [quantity]);
 
   const {
     handleIncrementCart,
@@ -35,7 +51,7 @@ const ProductCart = ({ product }) => {
   };
 
   return (
-    <div className={style.row}>
+    <div className={`${style.row} ${flashing ? style.rowFlash : ""}`}>
       <div className={style.thumb}>
         {product.images && product.images.length > 0 && (
           <img src={product.images[0]} alt={product.title} />

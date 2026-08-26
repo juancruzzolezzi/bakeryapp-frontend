@@ -3,7 +3,7 @@ import style from "./Filtros.module.css";
 
 const CATEGORIAS = ["Todo", "Favoritos", "Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
 
-const Filtros = ({ filtroActivo, setFiltroActivo }) => {
+const Filtros = ({ filtroActivo, setFiltroActivo, favoritosCount = 0 }) => {
   // Paso 1: Aplicar clase activa al filtro seleccionado (el estado en sí
   // vive en Products.jsx, así se mantiene sincronizado con localStorage)
   const obtenerClaseFiltro = (filtro) => {
@@ -48,6 +48,9 @@ const Filtros = ({ filtroActivo, setFiltroActivo }) => {
             onClick={() => setFiltroActivo(filtro)}
           >
             {filtro}
+            {filtro === "Favoritos" && favoritosCount > 0 && (
+              <span className={style.filtrosBadge}>{favoritosCount}</span>
+            )}
           </span>
         ))}
         <span className={style.filtrosIndicador} ref={indicatorRef} />

@@ -1,10 +1,40 @@
 .row {
+    position: relative;
     display: grid;
     grid-template-columns: 52px 1fr auto;
     gap: 0.85rem;
     align-items: center;
     padding: 0.85rem 0.2rem;
     border-bottom: 1px solid rgba(230, 201, 138, 0.16);
+}
+
+.row::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(231, 201, 138, 0.35);
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rowFlash::after {
+    animation: rowFlashFade 0.9s ease;
+}
+
+@keyframes rowFlashFade {
+    0% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rowFlash::after {
+        animation: none;
+    }
 }
 
 .row:last-child {

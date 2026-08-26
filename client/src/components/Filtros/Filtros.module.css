@@ -41,6 +41,21 @@
     font-weight: 600;
 }
 
+.filtrosBadge {
+    display: inline-block;
+    margin-left: 0.4rem;
+    background: #b69443;
+    color: #241a10;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.22rem 0.4rem;
+    border-radius: 999px;
+    min-width: 1.1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
 /* Rayita dorada compartida entre todos los botones (ver Filtros.jsx): se
    desliza hasta el filtro activo en vez de aparecer/desaparecer de golpe
    en cada uno. */

@@ -77,6 +77,20 @@ const Products = () => {
       : localStorage.getItem("filtroActivo") || "Todo"
   );
 
+  //Texto del buscador (no se guarda en localStorage: cada visita arranca
+  //sin filtrar por texto, a diferencia de la categoría elegida).
+  const [busqueda, setBusqueda] = useState("");
+
+  //Si se llega acá con ?producto=<id> (link de "Compartir producto", ver
+  //Product.jsx), se fuerza el filtro a "Todo" para que se vea sin importar
+  //en qué categoría esté, y más abajo se hace scroll hasta esa tarjeta.
+  useEffect(() => {
+    if (searchParams.get("producto")) {
+      setFiltroActivoState("Todo");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (yaSeMontoProductsEnEstaSesion) {
       localStorage.setItem("filtroActivo", "Todo");
@@ -106,7 +120,7 @@ const Products = () => {
   //"products" puede ser undefined mientras todavía no responde la API
   //(ej: recién refrescada la página con un filtro distinto de "Todo" ya
   //guardado en localStorage).
-  const productosFiltrados =
+  const productosPorCategoria =
     !products
       ? products
       : filtroActivo === "Todo"
@@ -118,6 +132,40 @@ const Products = () => {
       : [...products]
           .filter((product) => product.category === filtroActivo)
           .sort(compararProductos);
+
+  //El buscador filtra sobre el resultado de la categoría (no reemplaza el
+  //filtro elegido), y no distingue mayúsculas/acentos.
+  const normalizar = (texto) =>
+    texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+
+  const productosFiltrados =
+    !productosPorCategoria || !busqueda.trim()
+      ? productosPorCategoria
+      : productosPorCategoria.filter((product) =>
+          normalizar(product.title).includes(normalizar(busqueda))
+        );
+
+  //Deep-link de "Compartir producto" (?producto=<id>, ver Product.jsx):
+  //apenas está la lista pintada, se scrollea hasta esa tarjeta puntual y
+  //se la resalta un instante.
+  useEffect(() => {
+    const productoId = searchParams.get("producto");
+    if (!productoId || !productosFiltrados?.length) return;
+
+    const timeout = setTimeout(() => {
+      const el = document.getElementById(`producto-${productoId}`);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add(style.productoCompartidoDestacado);
+      setTimeout(() => el.classList.remove(style.productoCompartidoDestacado), 2000);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productosFiltrados?.length]);
 
   //Entrada escalonada de las tarjetas: cada vez que cambia el filtro (o
   //llegan los productos por primera vez), aparecen una tras otra en vez
@@ -185,8 +233,24 @@ const Products = () => {
         <p>Horneados frescos cada día, elegí una categoría o mirá todo.</p>
       </div>
 
+      <div className={style.searchBox}>
+        <span className={style.searchIcon} aria-hidden="true">🔍</span>
+        <input
+          type="text"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          placeholder="Buscar producto..."
+          className={style.searchInput}
+          aria-label="Buscar producto"
+        />
+      </div>
+
       <div className={style.filters}>
-        <Filtros filtroActivo={filtroActivo} setFiltroActivo={setFiltroActivo} />
+        <Filtros
+          filtroActivo={filtroActivo}
+          setFiltroActivo={setFiltroActivo}
+          favoritosCount={favorites.length}
+        />
       </div>
 
       <div className={style.productListWrapper}>
@@ -212,7 +276,9 @@ const Products = () => {
 
         {!isLoading && !isError && productosFiltrados && productosFiltrados.length === 0 && (
           <p className={style.stateMessage}>
-            {filtroActivo === "Favoritos"
+            {busqueda.trim()
+              ? `No encontramos productos que coincidan con "${busqueda}".`
+              : filtroActivo === "Favoritos"
               ? "Todavía no marcaste ningún producto como favorito. Tocá el ♡ en la tarjeta de un producto para guardarlo acá."
               : `No hay productos en "${filtroActivo}" por ahora.`}
           </p>

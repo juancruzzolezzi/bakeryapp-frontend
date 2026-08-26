@@ -216,6 +216,65 @@
     height: auto;
 }
 
+.searchBox {
+    position: relative;
+    width: min(340px, 90%);
+    margin: 1.4rem auto 0;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8a7f6d;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.searchInput {
+    width: 100%;
+    box-sizing: border-box;
+    background: #2f2318;
+    border: 1px solid rgba(230, 201, 138, 0.25);
+    border-radius: 999px;
+    padding: 0.65rem 1rem 0.65rem 2.3rem;
+    color: #f6ecdb;
+    font-size: 0.9rem;
+    font-family: "Lexend", sans-serif;
+}
+
+.searchInput::placeholder {
+    color: #8a7f6d;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #b69443;
+}
+
+/* Destello al llegar por un link de "Compartir producto" (ver Product.jsx
+   y el scroll en este archivo): resalta un instante la tarjeta puntual
+   entre todo el resto de la grilla. */
+.productoCompartidoDestacado {
+    animation: productoCompartidoPulso 2s ease;
+}
+
+@keyframes productoCompartidoPulso {
+    0%, 100% {
+        box-shadow: none;
+    }
+    20%, 60% {
+        box-shadow: 0 0 0 3px #b69443;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .productoCompartidoDestacado {
+        animation: none;
+    }
+}
+
 @media screen and (max-width: 1170px) {
     .mainContainer {
         padding-top: 0;
