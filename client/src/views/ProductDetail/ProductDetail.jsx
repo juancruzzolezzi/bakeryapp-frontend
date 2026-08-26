@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
+import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
 import { useGetProductsQuery } from "../../api/appApi";
 import { useProductHandlers } from "../../handlers/productHandlers";
@@ -65,7 +65,7 @@ const ProductDetail = () => {
 
     return (
         <div className={styles.container}>
-            <NavBarHome />
+            <NavBar />
 
             <div className={styles.sectionContainer}>
                 {isLoading && <p className={styles.stateMessage}>Cargando...</p>}
