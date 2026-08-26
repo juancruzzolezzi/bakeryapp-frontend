@@ -8,6 +8,7 @@ import Loading from "./components/Loading/Loading";
 import Nosotros from "./views/Nosotros/Nosotros";
 import Contactanos from "./views/Contactanos/Contactanos";
 import PreguntasFrecuentes from "./views/PreguntasFrecuentes/PreguntasFrecuentes";
+import NotFound from "./views/NotFound/NotFound";
 //Estilos
 import "./App.css";
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/contactanos" element={<Contactanos />} />
           <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
