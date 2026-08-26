@@ -6,6 +6,7 @@ import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
 import { playConfetti } from "../../utils/confetti";
 import { useAuthModal } from "../../context/AuthModalContext";
+import { isStandalone } from "../../utils/pwa";
 // import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
@@ -159,10 +160,10 @@ function Home() {
             Ver productos →
           </Link>
 
-          {/* A diferencia de AccountButton.jsx (que sigue siendo solo para
-              la app instalada), este aviso del home se ve también en la
-              web normal: sirve igual para invitar a loguearse desde ahí. */}
-          {!user && (
+          {/* Iniciar sesión (y el 10% OFF que viene con la cuenta) es una
+              función solo de la app instalada, no de la web normal: ver
+              AccountButton.jsx. */}
+          {!user && isStandalone() && (
             <div className={style.discountBanner} data-print-hide>
               <p className={style.discountBannerText}>
                 🔓 Iniciá sesión y llevate 10% OFF en toda la tienda
@@ -181,6 +182,17 @@ function Home() {
               >
                 ¿No tenés cuenta? Registrate
               </button>
+            </div>
+          )}
+
+          {/* En la web normal (no la app instalada) no tiene sentido
+              ofrecer login: en cambio, invita a instalar la app, que es
+              donde vive esa función y el 10% OFF. */}
+          {!isStandalone() && (
+            <div className={style.installBanner} data-print-hide>
+              <p className={style.discountBannerText}>
+                📲 Descargá la app y llevate 10% OFF en toda la tienda
+              </p>
             </div>
           )}
         </div>

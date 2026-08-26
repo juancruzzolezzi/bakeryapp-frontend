@@ -358,16 +358,22 @@
 }
 
 /* Invita a iniciar sesión (solo aparece en la app instalada, ver
-   Home.jsx) para llevarse el 10% OFF, debajo del CTA principal. */
-.discountBanner {
+   Home.jsx) para llevarse el 10% OFF, debajo del CTA principal. Fondo
+   sólido semitransparente (no borde punteado sobre fondo transparente):
+   con eso, el puntillado del fondo general del sitio se colaba adentro
+   del cuadro y quedaba "cuadrado con puntos", nada prolijo. */
+.discountBanner,
+.installBanner {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
     margin-top: 1.2rem;
     padding: 1rem 1.4rem;
-    border: 1px dashed rgba(230, 201, 138, 0.5);
+    background: rgba(20, 14, 8, 0.55);
+    border: 1px solid rgba(230, 201, 138, 0.3);
     border-radius: 18px;
+    backdrop-filter: blur(6px);
     animation: heroFadeUp 0.6s 0.95s ease both;
 }
 
