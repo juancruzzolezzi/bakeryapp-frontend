@@ -13,9 +13,12 @@
     cursor: pointer;
     background-color: #251b13;
     /* Puntillado casi imperceptible (5% de opacidad): le da un toque más
-       artesanal al panel liso, sin competir con el contenido. */
+       artesanal al panel liso, sin competir con el contenido. "32px" (no
+       "6px"): a 6px, el navegador tiene que pintar miles de círculos por
+       tarjeta (y hay muchas en la grilla), lo que se sentía en la fluidez
+       de toda la página. Mismo look a simple vista, ~28 veces menos puntos. */
     background-image: radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0);
-    background-size: 6px 6px;
+    background-size: 32px 32px;
     border: 1px solid rgba(230, 201, 138, 0.18);
     border-radius: 18px;
     overflow: hidden;

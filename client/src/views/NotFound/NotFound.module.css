@@ -3,11 +3,12 @@
     height: 100vh;
     overflow: hidden;
     /* Mismo tratamiento que Nosotros/Contactanos/Preguntas Frecuentes:
-       grano sutil + oscurecido sobre el fondo del sitio. */
+       grano sutil + oscurecido sobre el fondo del sitio. "32px" (no "6px"):
+       sobre pantalla completa, 6px pinta decenas de miles de círculos. */
     background-image:
         radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
         linear-gradient(rgba(23, 16, 9, 0.55), rgba(23, 16, 9, 0.55));
-    background-size: 6px 6px, cover;
+    background-size: 32px 32px, cover;
 }
 
 .sectionContainer {

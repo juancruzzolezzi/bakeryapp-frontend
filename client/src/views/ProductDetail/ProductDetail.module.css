@@ -1,10 +1,13 @@
 .container {
     min-width: 100vw;
     min-height: 100vh;
+    /* "32px" (no "6px"): sobre un fondo de pantalla completa, 6px significa
+       pintar decenas de miles de círculos — se sentía en la fluidez de
+       toda la página. Mismo look a simple vista, muchas menos veces. */
     background-image:
         radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
         linear-gradient(rgba(23, 16, 9, 0.55), rgba(23, 16, 9, 0.55));
-    background-size: 6px 6px, cover;
+    background-size: 32px 32px, cover;
 }
 
 .sectionContainer {
