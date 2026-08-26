@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyCart } from "../redux/slice/homeSlice";
-import axios from "axios";
 
 export const useCartHandlers = (
 
@@ -47,25 +46,42 @@ export const useCartHandlers = (
     setIsSubmitting(true);
     setSubmitError("");
 
+    //"fetch" no tiene timeout nativo (a diferencia de axios): se arma a
+    //mano con AbortController, mismo límite de 60s que antes (el backend
+    //gratuito puede tardar hasta ~50s en responder si estaba "dormido").
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
+
     try {
 
-      //Envia a la API (/createorder) los datos del pedido
-      //El backend gratuito puede tardar hasta ~50s si estaba "dormido" por inactividad
-      const response = await axios.post(`${apiURL}/create-order`, {
-        cartList,
-        clientContact,
-        contactMethod,
-        totalPrice,
-        deliveryType,
-        address,
-      }, {
-        timeout: 60000,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      //Envia a la API (/create-order) los datos del pedido
+      const response = await fetch(`${apiURL}/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          cartList,
+          clientContact,
+          contactMethod,
+          totalPrice,
+          deliveryType,
+          address,
+        }),
+        signal: controller.signal,
       });
 
+      //A diferencia de axios, "fetch" no tira error solo por una respuesta
+      //4xx/5xx: hay que chequearlo a mano para que el catch de abajo se
+      //entere igual que antes.
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       //Recibe la respuesta de la API y redirecciona al usuario al checkout real de Mercado Pago
-      const initPoint = response.data.init_point;
-      console.log("esta es la response.data", response.data);
+      const data = await response.json();
+      const initPoint = data.init_point;
 
       //Marca que se fue a Mercado Pago: si vuelve sin que MP haya agregado
       //?payment=success/failure/pending a la URL (ej: tocó "Volver al
@@ -89,12 +105,13 @@ export const useCartHandlers = (
     } catch (error) {
 
       //Se manejan eventuales errores y se muestran al usuario
-      console.log("soy el error", error); //jajaja "Hola! Soy el error y vengo a cagarte la vida :)"
       setSubmitError(
         "No se pudo iniciar el pago. Probá de nuevo en unos segundos."
       );
       setIsSubmitting(false);
 
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
