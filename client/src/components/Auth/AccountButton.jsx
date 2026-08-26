@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "../../redux/slice/authSlice";
@@ -14,6 +15,7 @@ const AccountButton = ({ onOpenChange }) => {
     const dispatch = useDispatch();
     const openAuthModal = useAuthModal();
     const showToast = useToast();
+    const navigate = useNavigate();
 
     //Mini cartel con el nombre + cerrar sesión (en vez de cerrar sesión de
     //golpe al tocar el botón de nuevo, ver handleClick más abajo).
@@ -102,6 +104,7 @@ const AccountButton = ({ onOpenChange }) => {
         dispatch(logout());
         showToast("Sesión cerrada", "👋");
         setIsOpen(false);
+        navigate("/");
     };
 
     const handleSaveAddress = () => {
