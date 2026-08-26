@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { isStandalone, isIOS } from "../../utils/pwa";
 import { usePwaInstall } from "../../hooks/usePwaInstall";
@@ -17,6 +17,7 @@ const InstallAppBanner = () => {
         () => localStorage.getItem(INSTALLED_KEY) === "1"
     );
     const user = useSelector((state) => state.authSlice.user);
+    const bannerRef = useRef(null);
 
     useEffect(() => {
         if (isStandalone()) return;
@@ -42,6 +43,21 @@ const InstallAppBanner = () => {
         if (canInstall) setVisible(true);
     }, [canInstall]);
 
+    //Se cierra igual que el resto de los paneles del sitio (Cart.jsx,
+    //NavBarHome.jsx): con un click en cualquier lado de afuera, no solo
+    //con la cruz.
+    useEffect(() => {
+        if (cerrado || (!visible && !yaInstalada)) return;
+
+        const handleClickOutside = (event) => {
+            if (bannerRef.current && bannerRef.current.contains(event.target)) return;
+            setCerrado(true);
+        };
+
+        document.addEventListener("click", handleClickOutside, true);
+        return () => document.removeEventListener("click", handleClickOutside, true);
+    }, [cerrado, visible, yaInstalada]);
+
     const cerrar = () => {
         setCerrado(true);
     };
@@ -62,7 +78,7 @@ const InstallAppBanner = () => {
     if (isStandalone()) return null;
 
     return (
-        <div className={styles.banner}>
+        <div className={styles.banner} ref={bannerRef}>
             {yaInstalada ? (
                 <>
                     <span className={styles.icon} aria-hidden="true">
