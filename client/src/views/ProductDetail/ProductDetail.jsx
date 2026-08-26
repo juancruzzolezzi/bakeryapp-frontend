@@ -145,6 +145,11 @@ const ProductDetail = () => {
                                     className={`${styles.image} ${
                                         imgCargada ? styles.imageCargada : ""
                                     }`}
+                                    //Es la imagen principal de la página (siempre
+                                    //visible, sin scroll): con prioridad alta el
+                                    //navegador la baja antes que el resto.
+                                    fetchpriority="high"
+                                    decoding="async"
                                     onLoad={() => setImgCargada(true)}
                                 />
                             )}

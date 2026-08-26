@@ -217,7 +217,12 @@ const Product = ({ product, featured }) => {
                 backgroundColor: "#2f2318",
               }),
             }}
-            loading="lazy"
+            /* Las "featured" (Recomendado) siempre están visibles apenas
+               carga la página, arriba de todo: con "lazy" el navegador las
+               posterga igual que a las de más abajo en la grilla, cuando
+               en realidad convendría bajarlas ya mismo y con prioridad. */
+            loading={featured ? "eager" : "lazy"}
+            fetchpriority={featured ? "high" : "auto"}
             decoding="async"
             onLoad={() => setImgCargada(true)}
           />

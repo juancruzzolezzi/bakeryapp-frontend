@@ -51,6 +51,10 @@ function App() {
         alt="fondo"
         className="background-image"
         data-print-hide
+        //Fondo de toda la app, siempre visible desde el primer momento:
+        //con prioridad alta el navegador la baja antes que el resto.
+        fetchpriority="high"
+        decoding="async"
       ></img>
 
       {isLoading && <Loading/>}
