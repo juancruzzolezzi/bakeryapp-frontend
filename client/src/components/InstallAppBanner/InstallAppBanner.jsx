@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { isStandalone } from "../../utils/pwa";
+import { isStandalone, isIOS } from "../../utils/pwa";
+import { usePwaInstall } from "../../hooks/usePwaInstall";
 import styles from "./InstallAppBanner.module.css";
 
 const INSTALLED_KEY = "appInstalada";
 
-const esIOS = () => /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-
 const InstallAppBanner = () => {
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const { canInstall, promptInstall } = usePwaInstall();
     const [visible, setVisible] = useState(false);
     // No se persiste: el pedido es que este aviso aparezca cada vez que se
     // abra la web, así que cerrarlo solo lo oculta para esta visita, no
@@ -22,46 +21,37 @@ const InstallAppBanner = () => {
     useEffect(() => {
         if (isStandalone()) return;
 
-        const handleBeforeInstall = (event) => {
-            event.preventDefault();
-            setDeferredPrompt(event);
-            setVisible(true);
-        };
-
         const handleInstalled = () => {
             localStorage.setItem(INSTALLED_KEY, "1");
             setYaInstalada(true);
-            setDeferredPrompt(null);
         };
 
-        window.addEventListener("beforeinstallprompt", handleBeforeInstall);
         window.addEventListener("appinstalled", handleInstalled);
 
-        // Chrome/Edge avisan con "beforeinstallprompt" (arriba). iOS Safari
-        // nunca dispara ese evento, así que ahí se muestran instrucciones
-        // manuales en vez de un botón que dependa de ese evento.
-        if (esIOS()) setVisible(true);
+        // Chrome/Edge avisan con "beforeinstallprompt" (ver usePwaInstall.js
+        // y "canInstall" más abajo). iOS Safari nunca dispara ese evento,
+        // así que ahí se muestran instrucciones manuales en vez de un botón.
+        if (isIOS()) setVisible(true);
 
-        return () => {
-            window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
-            window.removeEventListener("appinstalled", handleInstalled);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => window.removeEventListener("appinstalled", handleInstalled);
     }, []);
+
+    //Apenas el navegador ofrece el evento de instalación (ver "canInstall"),
+    //se muestra el aviso aunque no haya pasado nada más todavía.
+    useEffect(() => {
+        if (canInstall) setVisible(true);
+    }, [canInstall]);
 
     const cerrar = () => {
         setCerrado(true);
     };
 
     const instalar = async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === "accepted") {
+        const instalada = await promptInstall();
+        if (instalada) {
             localStorage.setItem(INSTALLED_KEY, "1");
             setYaInstalada(true);
         }
-        setDeferredPrompt(null);
     };
 
     // Registrarse/iniciar sesión es una función solo de la app instalada
@@ -99,12 +89,12 @@ const InstallAppBanner = () => {
                     <div className={styles.text}>
                         <p className={styles.title}>Instalá la app</p>
                         <p className={styles.subtitle}>
-                            {esIOS()
+                            {isIOS()
                                 ? "Tocá compartir (⬆️) y elegí \"Agregar a inicio\"."
                                 : "Se instala directo desde el navegador, sin tiendas de apps."}
                         </p>
                     </div>
-                    {!esIOS() && (
+                    {!isIOS() && (
                         <button onClick={instalar} className={styles.primaryBtn}>
                             Instalar
                         </button>

@@ -6,7 +6,8 @@ import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
 import { emptyCart } from "../../redux/slice/homeSlice";
 import { playConfetti } from "../../utils/confetti";
 import { useAuthModal } from "../../context/AuthModalContext";
-import { isStandalone } from "../../utils/pwa";
+import { isStandalone, isIOS } from "../../utils/pwa";
+import { usePwaInstall } from "../../hooks/usePwaInstall";
 // import ProductsHome from "../../components/ProductsHome/ProductsHome";
 
 function Home() {
@@ -14,6 +15,7 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const user = useSelector((state) => state.authSlice.user);
   const openAuthModal = useAuthModal();
+  const { canInstall, promptInstall } = usePwaInstall();
   //"success" | "failure" | "pending" | null: qué cartel mostrar al volver
   //de Mercado Pago.
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -193,6 +195,21 @@ function Home() {
               <p className={style.discountBannerText}>
                 📲 Descargá la app y llevate 10% OFF en toda la tienda
               </p>
+              {canInstall ? (
+                <button
+                  type="button"
+                  onClick={promptInstall}
+                  className={style.discountBannerBtn}
+                >
+                  Descargar app
+                </button>
+              ) : (
+                isIOS() && (
+                  <p className={style.discountBannerHint}>
+                    Tocá compartir (⬆️) y elegí "Agregar a inicio"
+                  </p>
+                )
+              )}
             </div>
           )}
         </div>

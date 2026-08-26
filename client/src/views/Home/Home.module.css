@@ -418,6 +418,14 @@
     color: #e7c98a;
 }
 
+/* iOS no dispara "beforeinstallprompt" (ver usePwaInstall.js): ahí no hay
+   botón posible, solo esta instrucción manual. */
+.discountBannerHint {
+    margin: 0;
+    color: #c9bda9;
+    font-size: 0.78rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .discountBanner {
         animation: none;
