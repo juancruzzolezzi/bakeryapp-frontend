@@ -219,8 +219,17 @@ function Cart({ isCartOpen, setIsCartOpen }) {
       ) : (
         <>
           <div className={style.items}>
-            {cartList.map((product, index) => (
-              <ProductCart product={product} key={index} />
+            {/* "product.id" (no "index"): ProductCart tiene su propio
+                estado local para la animación de salida al eliminar
+                (removiendo, ver ProductCart.jsx). Con la key por índice,
+                al sacar un producto React reciclaba la instancia de esa
+                posición para el que quedaba en su lugar, y esa reutilizaba
+                el estado "se está eliminando" — por eso el OTRO producto
+                (el que no se tocó) desaparecía junto con el que sí se
+                borró. Con la key por id, cada producto tiene siempre su
+                propia instancia, sin importar en qué posición quede. */}
+            {cartList.map((product) => (
+              <ProductCart product={product} key={product.id} />
             ))}
           </div>
 
