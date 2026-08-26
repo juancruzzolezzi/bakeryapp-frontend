@@ -18,9 +18,23 @@ const readFavorites = () => {
     }
 };
 
+const writeToggle = (id) => {
+    const current = readFavorites();
+    const next = current.includes(id)
+        ? current.filter((favId) => favId !== id)
+        : [...current, id];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event(FAVORITES_EVENT));
+};
+
 // Favoritos guardados solo en este navegador (localStorage), sin backend:
 // alcanza para que alguien marque lo que le gusta y lo encuentre después
 // con el filtro "Favoritos" en Productos.
+//
+// Este hook trae la lista COMPLETA: sirve para Products.jsx (necesita el
+// array entero para el contador y para filtrar por "Favoritos"). Para una
+// tarjeta individual (Product.jsx, ProductDetail.jsx) conviene "useIsFavorite"
+// de más abajo en vez de este.
 export const useFavorites = () => {
     const [favorites, setFavorites] = useState(readFavorites);
 
@@ -40,13 +54,36 @@ export const useFavorites = () => {
     );
 
     const toggleFavorite = useCallback((id) => {
-        const current = readFavorites();
-        const next = current.includes(id)
-            ? current.filter((favId) => favId !== id)
-            : [...current, id];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-        window.dispatchEvent(new Event(FAVORITES_EVENT));
+        writeToggle(id);
     }, []);
 
     return { favorites, isFavorite, toggleFavorite };
+};
+
+// Versión "escuchá solo lo mío" para una tarjeta puntual: en vez de guardar
+// el array completo (que cambia de referencia cada vez que CUALQUIER
+// producto se marca/desmarca, forzando a re-renderizar TODAS las tarjetas
+// que usan el hook), guarda un booleano ya resuelto para ESTE id. Cuando el
+// evento avisa un cambio, si el resultado para este id da igual que antes
+// (era otro producto el que cambió), React frena solo el re-render: pedirle
+// a setState el mismo valor que ya tenía no dispara una vuelta a renderizar.
+export const useIsFavorite = (id) => {
+    const [isFav, setIsFav] = useState(() => readFavorites().includes(id));
+
+    useEffect(() => {
+        const sync = () => setIsFav(readFavorites().includes(id));
+        sync();
+        window.addEventListener(FAVORITES_EVENT, sync);
+        window.addEventListener("storage", sync);
+        return () => {
+            window.removeEventListener(FAVORITES_EVENT, sync);
+            window.removeEventListener("storage", sync);
+        };
+    }, [id]);
+
+    const toggle = useCallback(() => {
+        writeToggle(id);
+    }, [id]);
+
+    return [isFav, toggle];
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
-import { useFavorites } from "../../hooks/useFavorites";
+import { useIsFavorite } from "../../hooks/useFavorites";
 import { useToast } from "../../context/ToastContext";
 import { flyToCart } from "../../utils/flyToCart";
 import { getVentaInfo } from "../../utils/ventaTag";
@@ -35,8 +35,7 @@ const Product = ({ product, featured }) => {
   const totalPriceAnimado = useAnimatedNumber(totalPrice);
   const totalPriceFormateado = totalPriceAnimado.toLocaleString("es-AR");
   const { handleAddToCart } = useProductHandlers();
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const esFavorito = isFavorite(product.id);
+  const [esFavorito, toggleFavorite] = useIsFavorite(product.id);
   const showToast = useToast();
   const photoRef = useRef(null);
   const cardRef = useRef(null);
@@ -150,7 +149,7 @@ const Product = ({ product, featured }) => {
 
   const handleToggleFavorite = (e) => {
     e.stopPropagation();
-    toggleFavorite(product.id);
+    toggleFavorite();
     showToast(
       esFavorito ? "Quitado de favoritos" : "Guardado en favoritos",
       esFavorito ? "♡" : "♥"

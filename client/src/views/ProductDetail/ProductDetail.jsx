@@ -4,7 +4,7 @@ import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
 import { useGetProductsQuery } from "../../api/appApi";
 import { useProductHandlers } from "../../handlers/productHandlers";
-import { useFavorites } from "../../hooks/useFavorites";
+import { useIsFavorite } from "../../hooks/useFavorites";
 import { useToast } from "../../context/ToastContext";
 import { getVentaInfo } from "../../utils/ventaTag";
 import styles from "./ProductDetail.module.css";
@@ -13,7 +13,10 @@ const ProductDetail = () => {
     const { id } = useParams();
     const { data: products, isLoading, isError } = useGetProductsQuery();
     const { handleAddToCart } = useProductHandlers();
-    const { isFavorite, toggleFavorite } = useFavorites();
+    //Se usa el "id" de la URL (mismo string que product.id, una vez que
+    //cargue) en vez de esperar a que "product" esté listo: los hooks no
+    //pueden llamarse condicionalmente.
+    const [esFavorito, toggleFavorite] = useIsFavorite(id);
     const showToast = useToast();
     const [quantity, setQuantity] = useState(1);
 
@@ -75,7 +78,6 @@ const ProductDetail = () => {
     const { tag: ventaTag, descripcionLimpia } = getVentaInfo(product?.description);
 
     const agotado = product?.stock === 0;
-    const esFavorito = product ? isFavorite(product.id) : false;
 
     const incrementQuantity = () => setQuantity((prev) => prev + 1);
     const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -87,7 +89,7 @@ const ProductDetail = () => {
     };
 
     const handleToggleFavorite = () => {
-        toggleFavorite(product.id);
+        toggleFavorite();
         showToast(
             esFavorito ? "Quitado de favoritos" : "Guardado en favoritos",
             esFavorito ? "♡" : "♥"
