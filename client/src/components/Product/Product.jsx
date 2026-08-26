@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -35,6 +35,17 @@ const Product = ({ product, featured }) => {
   const showToast = useToast();
   const photoRef = useRef(null);
   const cardRef = useRef(null);
+  const navigate = useNavigate();
+
+  //Cualquier parte "vacía" de la tarjeta (no solo la foto o el nombre)
+  //lleva al detalle del producto. Los botones y links propios (favorito,
+  //compartir, stepper, añadir, la foto) manejan su propio click y no
+  //deben disparar también esta navegación: closest("button, a") los
+  //excluye porque son justo esos los elementos interactivos de la tarjeta.
+  const goToDetail = (e) => {
+    if (e.target.closest("button, a")) return;
+    navigate(`/products/${product.id}`);
+  };
 
   //Tilt 3D sutil que sigue al mouse (solo desktop, con mouse real): se
   //combina con el lift que ya tiene la tarjeta al hover (ver
@@ -135,6 +146,7 @@ const Product = ({ product, featured }) => {
       ref={cardRef}
       onMouseMove={handleTilt}
       onMouseLeave={resetTilt}
+      onClick={goToDetail}
       className={`${style.productContainer} ${featured ? style.featured : ""} ${
         agotado ? style.agotado : ""
       }`}

@@ -5,6 +5,7 @@ import { useCartHandlers } from "../../handlers/cartHandlers";
 import style from "./Modal.module.css";
 import { validations } from "../../validations/validations";
 import { ACCOUNT_DISCOUNT_RATE } from "../../utils/discount";
+import { getSavedAddress } from "../../utils/savedAddress";
 
 Modal.setAppElement("#root");
 
@@ -27,11 +28,12 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const [touched, setTouched] = useState(false);
   const [deliveryType, setDeliveryType] = useState("delivery");
 
-  //Precarga con la última dirección usada (si hay), en vez de arrancar
-  //siempre vacío: la mayoría de los pedidos van a la misma dirección. Sigue
-  //siendo editable por si cambió.
+  //Precarga con la dirección guardada en la cuenta (si está logueado y
+  //tiene una) o, si no, con la última usada en este dispositivo: la
+  //mayoría de los pedidos van a la misma dirección. Sigue siendo editable
+  //por si cambió.
   const [address, setAddress] = useState(
-    () => localStorage.getItem("lastAddress") || ""
+    () => getSavedAddress(user?.id) || localStorage.getItem("lastAddress") || ""
   );
   const [addressTouched, setAddressTouched] = useState(false);
   const direccionRecordada = Boolean(address) && !addressTouched;
@@ -67,9 +69,13 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
 
   const handleDeliveryTypeChange = (type) => {
     setDeliveryType(type);
-    // Al volver a "delivery" se recupera la última dirección guardada en
-    // vez de dejarlo vacío otra vez.
-    setAddress(type === "delivery" ? localStorage.getItem("lastAddress") || "" : "");
+    // Al volver a "delivery" se recupera la dirección guardada/última en
+    // vez de dejarlo vacío otra vez (misma prioridad que al abrir el modal).
+    setAddress(
+      type === "delivery"
+        ? getSavedAddress(user?.id) || localStorage.getItem("lastAddress") || ""
+        : ""
+    );
     setAddressTouched(false);
   };
 
@@ -273,7 +279,9 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
                 />
                 {direccionRecordada && (
                   <span className={style.modalHintOk}>
-                    ✓ Autocompletada con tu última dirección
+                    {isLoggedIn && getSavedAddress(user.id)
+                      ? "✓ Autocompletada con tu dirección guardada"
+                      : "✓ Autocompletada con tu última dirección"}
                   </span>
                 )}
                 <span className={style.modalHint}>

@@ -8,6 +8,9 @@
     width: 100%;
     max-width: 520px;
     margin: 0 auto;
+    /* Toda la tarjeta lleva al detalle del producto (ver goToDetail en
+       Product.jsx), no solo la foto o el nombre. */
+    cursor: pointer;
     background-color: #251b13;
     /* Puntillado casi imperceptible (5% de opacidad): le da un toque más
        artesanal al panel liso, sin competir con el contenido. */

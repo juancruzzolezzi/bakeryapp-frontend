@@ -81,9 +81,10 @@ const InstallAppBanner = () => {
                     <div className={styles.text}>
                         <p className={styles.title}>¡Gracias por instalar la app!</p>
                         <p className={styles.subtitle}>
-                            {/* No hay forma de abrir desde acá una app ya instalada
-                                (los navegadores no dejan que una página lance otra
-                                app): hay que abrirla desde su propio ícono. */}
+                            {/* No hay una forma confiable de abrir desde la web
+                                una app ya instalada (los navegadores no dejan
+                                que una página lance otra app): hay que
+                                abrirla desde su propio ícono. */}
                             {user
                                 ? "Abrila desde su ícono (pantalla de inicio o menú de apps) para seguir comprando con tu 10% OFF."
                                 : "Abrila desde su ícono (pantalla de inicio o menú de apps) e iniciá sesión para tener 10% OFF en toda la tienda."}
