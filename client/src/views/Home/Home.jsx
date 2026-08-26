@@ -39,9 +39,24 @@ function Home() {
     }
   }, [paymentStatus]);
 
+  //Comprobante imprimible: usa el pedido guardado justo antes de ir a
+  //pagar (ver cartHandlers.js) para poder mostrar el detalle acá, ya que
+  //el carrito real ya se vació (dispatch(emptyCart()) más arriba).
+  const [lastOrder] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("lastOrder"));
+    } catch {
+      return null;
+    }
+  });
+
+  const imprimirComprobante = () => window.print();
+
   return (
     <div className={style.mainContainer}>
-      <NavBarHome />
+      <div data-print-hide>
+        <NavBarHome />
+      </div>
 
       {paymentStatus && (
         <div
@@ -61,6 +76,7 @@ function Home() {
               onClick={() => setPaymentStatus(null)}
               className={style.paymentBannerClose}
               aria-label="Cerrar aviso"
+              data-print-hide
             >
               ✕
             </button>
@@ -75,6 +91,46 @@ function Home() {
                 <p className={style.paymentBannerText}>
                   En breve nos vamos a comunicar con vos para coordinar la entrega.
                 </p>
+
+                {lastOrder?.items?.length > 0 && (
+                  <div className={style.receipt}>
+                    <p className={style.receiptTitle}>Comprobante de tu pedido</p>
+                    {lastOrder.date && (
+                      <p className={style.receiptDate}>
+                        {new Date(lastOrder.date).toLocaleString("es-AR")}
+                      </p>
+                    )}
+                    <div className={style.receiptItems}>
+                      {lastOrder.items.map((item) => (
+                        <div key={item.id} className={style.receiptRow}>
+                          <span>
+                            {item.quantity}x {item.title}
+                          </span>
+                          <span>
+                            ${(item.price * item.quantity).toLocaleString("es-AR")}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className={style.receiptTotal}>
+                      <span>Total</span>
+                      <span>
+                        $
+                        {lastOrder.items
+                          .reduce((sum, item) => sum + item.price * item.quantity, 0)
+                          .toLocaleString("es-AR")}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={imprimirComprobante}
+                      className={style.printBtn}
+                      data-print-hide
+                    >
+                      Imprimir comprobante
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -89,7 +145,7 @@ function Home() {
         </div>
       )}
 
-      <div className={style.design}>
+      <div className={style.design} data-print-hide>
         <div className={style.presentacion}>
           <h1>BakeryApp</h1>
           <svg className={style.brushStroke} viewBox="0 0 220 24" aria-hidden="true">

@@ -54,3 +54,12 @@
     transform: none;
   }
 }
+
+/* Vista de impresión (ver botón "Imprimir comprobante" en Home.jsx): oculta
+   todo lo decorativo/interactivo (nav, fondo, botones) para que solo
+   quede el comprobante en la hoja impresa. */
+@media print {
+  [data-print-hide] {
+    display: none !important;
+  }
+}

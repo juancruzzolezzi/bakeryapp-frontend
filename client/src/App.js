@@ -38,7 +38,12 @@ function App() {
 
   return (
     <div className="App">
-      <img src="/Portada.jpg" alt="fondo" className="background-image"></img>
+      <img
+        src="/Portada.jpg"
+        alt="fondo"
+        className="background-image"
+        data-print-hide
+      ></img>
 
       {isLoading && <Loading/>}
       <div className={`fadeRoutes ${isLoading ? "fadeRoutesOut" : "fadeRoutesIn"}`}>

@@ -7,6 +7,9 @@ import style from "./NavBar.module.css";
 import Cart from "../../../views/Cart/Cart";
 import { NAV_LINKS } from "../../../constants/navLinks";
 
+// TODO: ajustar cuánto tiempo sin abrir el carrito cuenta como "se olvidó".
+const CART_REMINDER_THRESHOLD_MS = 30 * 60 * 1000; // 30 minutos
+
 const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -21,8 +24,33 @@ const NavBar = () => {
     0
   );
 
+  //Recordatorio de "carrito abandonado": si hay productos y pasó bastante
+  //tiempo desde la última vez que se abrió el carrito (ej: volvió al otro
+  //día y se había olvidado), un anillo pulsante llama la atención sobre el
+  //ícono hasta que lo abra. La primera vez que hay algo en el carrito en
+  //este navegador no cuenta como "olvidado" (recién se agregó).
+  const [showCartReminder, setShowCartReminder] = useState(false);
+
+  useEffect(() => {
+    if (cartItemsCount === 0) {
+      setShowCartReminder(false);
+      return;
+    }
+
+    const lastOpened = Number(localStorage.getItem("cartLastOpened"));
+    if (!lastOpened) {
+      localStorage.setItem("cartLastOpened", String(Date.now()));
+      return;
+    }
+
+    setShowCartReminder(Date.now() - lastOpened > CART_REMINDER_THRESHOLD_MS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleOpenCartModal = () => {
     setIsCartOpen(true); // Abre el modal del carrito
+    setShowCartReminder(false);
+    localStorage.setItem("cartLastOpened", String(Date.now()));
   };
 
   // Cierra el menú "MENÚ" al hacer click en cualquier lugar que no sea el
@@ -115,7 +143,7 @@ const NavBar = () => {
       >
         <div className={style.cartBox}>
           <div
-            className={style.cart}
+            className={`${style.cart} ${showCartReminder ? style.cartReminder : ""}`}
             onClick={handleOpenCartModal}
             data-cart-toggle="true"
           >

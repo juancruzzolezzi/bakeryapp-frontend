@@ -138,6 +138,105 @@
     line-height: 1.5;
 }
 
+.receipt {
+    margin-top: 1.2rem;
+    padding-top: 1.1rem;
+    border-top: 1px dashed rgba(230, 201, 138, 0.3);
+    text-align: left;
+}
+
+.receiptTitle {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 0.95rem;
+    color: #f6ecdb;
+    margin: 0 0 0.2rem;
+}
+
+.receiptDate {
+    font-size: 0.75rem;
+    color: #8a7f6d;
+    margin: 0 0 0.7rem;
+}
+
+.receiptItems {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.6rem;
+}
+
+.receiptRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #c9bda9;
+}
+
+.receiptTotal {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    color: #e7c98a;
+    font-size: 0.95rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(230, 201, 138, 0.16);
+}
+
+.printBtn {
+    width: 100%;
+    margin-top: 1rem;
+    background: transparent;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    color: #e7c98a;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.6rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.printBtn:hover {
+    border-color: #e7c98a;
+    color: #f6ecdb;
+}
+
+/* Al imprimir, el cartel deja de ser un overlay oscuro a pantalla
+   completa: se imprime como un comprobante normal, en negro sobre
+   blanco, sin gastar tinta de fondo. */
+@media print {
+    .paymentOverlay {
+        position: static;
+        background: none;
+        padding: 0;
+    }
+
+    .paymentBanner {
+        width: 100%;
+        max-width: none;
+        background: #fff;
+        color: #000;
+        border: none;
+        box-shadow: none;
+    }
+
+    .paymentBannerTitle,
+    .receiptTitle {
+        color: #000;
+    }
+
+    .paymentBannerText,
+    .receiptDate,
+    .receiptRow,
+    .receiptTotal {
+        color: #000;
+    }
+
+    .successCheck {
+        display: none;
+    }
+}
+
 .design {
     /* Mismo oscurecido que usan Nosotros/Contactanos/Preguntas Frecuentes
        sobre su fondo (antes 0.3, se veía bastante más clara que el resto
@@ -161,12 +260,26 @@
     padding: 0 1rem;
 }
 
+/* Entrada escalonada: título, pincelada (ver .brushPath), subtítulo y
+   botón aparecen uno tras otro en vez de todos de golpe. */
+@keyframes heroFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .presentacion h1 {
     color: #d9b767;
     text-shadow: none;
     font-size: 5rem;
     margin: 0;
     text-shadow: 2px 1px 20px black;
+    animation: heroFadeUp 0.6s ease both;
 }
 
 /* Pincelada dorada bajo el título: se dibuja sola al cargar la página
@@ -200,6 +313,12 @@
         animation: none;
         stroke-dashoffset: 0;
     }
+
+    .presentacion h1,
+    .presentacion h2,
+    .heroCta {
+        animation: none;
+    }
 }
 
 .presentacion h2 {
@@ -208,6 +327,7 @@
     font-weight: 500;
     font-size: 1.5rem;
     text-shadow: 3px 1px 20px black;
+    animation: heroFadeUp 0.6s 0.5s ease both;
 }
 
 .heroCta {
@@ -223,6 +343,7 @@
     padding: 0.7rem 1.5rem;
     border-radius: 999px;
     text-decoration: none;
+    animation: heroFadeUp 0.6s 0.75s ease both;
     box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.6);
     transition: background 0.15s ease, transform 0.15s ease;
 }
