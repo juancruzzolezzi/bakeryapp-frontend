@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import gsap from "gsap";
 import Product from "../../components/Product/Product";
@@ -88,10 +88,16 @@ const Products = () => {
     yaSeMontoProductsEnEstaSesion = true;
   }, []);
 
-  const setFiltroActivo = (filtro) => {
+  //useCallback (no una función nueva en cada render): Filtros.jsx está
+  //envuelto en React.memo, pero eso no sirve de nada si uno de sus props
+  //(esta función) cambia de referencia en CADA render de Products —por
+  //ejemplo, en cada letra tipeada en el buscador, que no tiene nada que
+  //ver con el filtro—. Con useCallback, la referencia se mantiene estable
+  //y memo puede de verdad saltear el re-render de Filtros en esos casos.
+  const setFiltroActivo = useCallback((filtro) => {
     setFiltroActivoState(filtro);
     localStorage.setItem("filtroActivo", filtro);
-  };
+  }, []);
 
   //Orden fijo de categorías para cuando se muestran todos los productos
   //(filtro "Todo"): las que no estén en esta lista van al final, en el

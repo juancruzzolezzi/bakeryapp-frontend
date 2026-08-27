@@ -153,4 +153,8 @@ const Filtros = ({ filtroActivo, setFiltroActivo, favoritosCount = 0 }) => {
   );
 };
 
-export default Filtros;
+//React.memo: sin esto, cada letra tipeada en el buscador de Products.jsx
+//(que no tiene nada que ver con el filtro elegido) volvía a renderizar
+//todo esto de nuevo. Para que sirva de algo, "setFiltroActivo" tiene que
+//llegar con la misma referencia siempre (ver useCallback en Products.jsx).
+export default React.memo(Filtros);

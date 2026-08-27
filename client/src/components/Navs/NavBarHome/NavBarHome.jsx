@@ -106,4 +106,6 @@ const NavBarHome = () => {
   );
 };
 
-export default NavBarHome;
+//React.memo: mismo motivo que NavBar.jsx (no recibe props, así que un
+//re-render de la página que lo use nunca debería afectarlo).
+export default React.memo(NavBarHome);

@@ -177,4 +177,9 @@ const NavBar = () => {
 };
 
 
-export default NavBar;
+//React.memo: NavBar no recibe props (se usa como <NavBar />), así que
+//esto le permite a React saltear por completo cualquier intento de
+//re-render que venga de la página que lo contiene (ej: cada letra en el
+//buscador de Products.jsx) — solo se actualiza por sus propios cambios
+//internos (carrito, cuenta, menú), no por los de quien lo use.
+export default React.memo(NavBar);
