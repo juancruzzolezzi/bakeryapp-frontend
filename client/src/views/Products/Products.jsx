@@ -154,6 +154,37 @@ const Products = () => {
     );
   }, [filtroActivo, productosFiltrados?.length]);
 
+  //Al bajar rápido con el mouse quieto, las tarjetas que van pasando por
+  //debajo del cursor disparan mouseenter/mouseleave en cadena (el
+  //navegador los emite igual, aunque el mouse en sí no se mueva) — cada
+  //uno dispara el hover de la tarjeta (sombra, tilt) sin que el usuario
+  //esté "hovereando" nada de verdad. Mientras se está scrolleando, esto
+  //desactiva el hit-testing de toda la grilla (pointer-events: none), así
+  //ninguna tarjeta puede recibir esos eventos fantasma; apenas el scroll
+  //se frena un toque, se reactiva. El hover real (mouse quieto sobre una
+  //tarjeta) no se ve afectado en absoluto.
+  const productListWrapperRef = useRef(null);
+
+  useEffect(() => {
+    const wrapper = productListWrapperRef.current;
+    if (!wrapper) return;
+
+    let scrollTimeout = null;
+    const handleScroll = () => {
+      wrapper.classList.add(style.scrolling);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        wrapper.classList.remove(style.scrolling);
+      }, 150);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
     <div className={style.mainContainer}>
       <NavBar />
@@ -224,7 +255,7 @@ const Products = () => {
         />
       </div>
 
-      <div className={style.productListWrapper}>
+      <div className={style.productListWrapper} ref={productListWrapperRef}>
         {isLoading && (
           <div className={style.productList}>
             {Array.from({ length: 4 }).map((_, i) => (

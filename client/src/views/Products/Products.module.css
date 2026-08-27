@@ -88,6 +88,16 @@
     margin-top: 1rem;
 }
 
+/* Mientras se scrollea rápido (ver Products.jsx): desactiva el
+   hit-testing de toda la grilla, así ninguna tarjeta recibe
+   mouseenter/mouseleave "fantasma" (los dispara el navegador igual,
+   aunque el mouse no se mueva, cuando el elemento debajo de un cursor
+   quieto cambia por el scroll). El hover real no se ve afectado: esto
+   se saca apenas el scroll se frena un toque. */
+.scrolling {
+    pointer-events: none;
+}
+
 /* Fila propia para los productos destacados (ver Products.jsx), separada
    de la grilla de abajo para que nunca terminen compartiendo fila con
    una tarjeta normal por cómo acomoda el auto-ajuste de la grilla. */
