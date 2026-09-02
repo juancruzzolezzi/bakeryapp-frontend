@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useLoginUserMutation, useRegisterUserMutation } from "../../api/appApi";
+import {
+    useGoogleLoginMutation,
+    useLoginUserMutation,
+    useRegisterUserMutation,
+} from "../../api/appApi";
 import { setCredentials } from "../../redux/slice/authSlice";
 import { useToast } from "../../context/ToastContext";
+import GoogleButton from "./GoogleButton";
 import style from "../Modals/Modal.module.css";
 
 Modal.setAppElement("#root");
@@ -28,10 +33,28 @@ const AuthModal = ({ isOpen, initialTab, onClose }) => {
 
     const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
     const [registerUser, { isLoading: registerLoading }] = useRegisterUserMutation();
+    const [googleLogin, { isLoading: googleLoading }] = useGoogleLoginMutation();
     const [error, setError] = useState("");
 
     const dispatch = useDispatch();
     const showToast = useToast();
+
+    // Ingreso con Google: recibimos el "credential" del botón de Google, lo
+    // canjeamos en el backend por nuestro token y cerramos el modal.
+    const handleGoogleCredential = useCallback(
+        async (credential) => {
+            setError("");
+            try {
+                const result = await googleLogin({ credential }).unwrap();
+                dispatch(setCredentials(result));
+                showToast(`¡Hola, ${result.user.username}!`, "👋");
+                onClose();
+            } catch (err) {
+                setError(err?.data?.error || "No se pudo ingresar con Google.");
+            }
+        },
+        [googleLogin, dispatch, showToast, onClose]
+    );
 
     //Al abrirse, siempre arranca en la pestaña que pidieron (login o
     //registro). Si hay credenciales recordadas, precarga el formulario con
@@ -64,7 +87,7 @@ const AuthModal = ({ isOpen, initialTab, onClose }) => {
         }
     }, [isOpen, initialTab]);
 
-    const isLoading = loginLoading || registerLoading;
+    const isLoading = loginLoading || registerLoading || googleLoading;
     const passwordsMatch = tab !== "register" || password === confirmPassword;
 
     const handleSubmit = async (e) => {
@@ -264,6 +287,11 @@ const AuthModal = ({ isOpen, initialTab, onClose }) => {
                             : "Crear cuenta"}
                     </button>
                 </form>
+
+                <GoogleButton
+                    onCredential={handleGoogleCredential}
+                    onError={(msg) => setError(msg)}
+                />
             </div>
         </Modal>
     );
