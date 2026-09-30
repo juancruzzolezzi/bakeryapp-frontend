@@ -54,6 +54,18 @@ const NavBar = () => {
     localStorage.setItem("cartLastOpened", String(Date.now()));
   };
 
+  //La barra flotante de Productos (que no tiene acceso a este estado)
+  //pide abrir el carrito disparando el evento "abrir-carrito".
+  useEffect(() => {
+    const abrir = () => {
+      setIsCartOpen(true);
+      setShowCartReminder(false);
+      localStorage.setItem("cartLastOpened", String(Date.now()));
+    };
+    window.addEventListener("abrir-carrito", abrir);
+    return () => window.removeEventListener("abrir-carrito", abrir);
+  }, []);
+
   // Cierra el menú "MENÚ" al hacer click en cualquier lugar que no sea el
   // menú en sí ni el botón que lo abre. Fase de captura (igual que en
   // Cart.jsx) para no depender del orden en que React procese el click.
@@ -75,6 +87,10 @@ const NavBar = () => {
       {/* Menú: NO es fixed, scrollea con la página (solo se ve arriba
           de todo, no se queda flotando encima de los productos). */}
       <nav className={style.navbar}>
+        <Link to="/" className={style.logo} aria-label="Bakery, ir al inicio">
+          Bakery
+        </Link>
+
         {/* Solo visible en pantallas grandes (ver media query): en mobile
             queda oculta y se usa el botón "MENÚ" con el panel de abajo. */}
         <div className={style.desktopLinks}>

@@ -34,13 +34,14 @@ export const useCartHandlers = (
   //Submit Carrito
   const handleSubmitModal = async (
 
-    //Recibe 6 parametros:
+    //Recibe 7 parametros:
     cartList, //Productos en el carrito
     clientContact, //Instagram o WhatsApp del cliente, según contactMethod
     contactMethod, //"instagram" o "whatsapp"
     totalPrice, // Precio total del carrito
     deliveryType, //"delivery" o "takeaway"
-    address // Dirección de entrega (solo si deliveryType es "delivery")
+    address, // Dirección de entrega (solo si deliveryType es "delivery")
+    deliveryZone // Barrio de entrega (solo si deliveryType es "delivery")
 
   ) => {
     setIsSubmitting(true);
@@ -68,6 +69,7 @@ export const useCartHandlers = (
           totalPrice,
           deliveryType,
           address,
+          deliveryZone,
         }),
         signal: controller.signal,
       });
@@ -75,8 +77,14 @@ export const useCartHandlers = (
       //A diferencia de axios, "fetch" no tira error solo por una respuesta
       //4xx/5xx: hay que chequearlo a mano para que el catch de abajo se
       //entere igual que antes.
+      //Los 400 traen un mensaje pensado para el usuario (ej: zona sin
+      //cobertura, producto que ya no existe): se muestra ese en vez del
+      //genérico.
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const body = await response.json().catch(() => null);
+        const error = new Error(`HTTP ${response.status}`);
+        error.userMessage = response.status === 400 ? body?.error : undefined;
+        throw error;
       }
 
       //Recibe la respuesta de la API y redirecciona al usuario al checkout real de Mercado Pago
@@ -106,7 +114,8 @@ export const useCartHandlers = (
 
       //Se manejan eventuales errores y se muestran al usuario
       setSubmitError(
-        "No se pudo iniciar el pago. Probá de nuevo en unos segundos."
+        error.userMessage ||
+          "No se pudo iniciar el pago. Probá de nuevo en unos segundos."
       );
       setIsSubmitting(false);
 

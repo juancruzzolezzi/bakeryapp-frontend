@@ -1,7 +1,6 @@
 .container {
     min-width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
     /* Mismo tratamiento que Nosotros/Contactanos/Preguntas Frecuentes:
        grano sutil + oscurecido sobre el fondo del sitio. "32px" (no "6px"):
        sobre pantalla completa, 6px pinta decenas de miles de círculos. */
@@ -13,12 +12,12 @@
 
 .sectionContainer {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 3rem;
     max-width: 100vw;
     margin-top: 22vh;
-    height: calc(100vh - 22vh);
-    padding: 0 1.5rem 3rem;
+    padding: 0 1.5rem 1rem;
     box-sizing: border-box;
     font-family: "Lexend", sans-serif;
 }
@@ -91,11 +90,32 @@
     color: #f6ecdb;
 }
 
+/* Jueguito con la flauta debajo del mensaje de error (ver FlautaGame). */
+.game {
+    width: min(640px, 100%);
+    text-align: center;
+}
+
+.gameTitle {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: #e7c98a;
+    margin: 0 0 1rem;
+}
+
+/* ".game" adelante: gana sobre la altura por defecto de FlautaGame sin
+   depender del orden en que se carguen los CSS. */
+.game .gameStage {
+    height: clamp(300px, 50vw, 380px);
+}
+
 @media screen and (max-width: 760px) {
     .sectionContainer {
         margin-top: 20vh;
-        height: calc(100vh - 20vh);
-        padding: 0 1rem 2rem;
+        padding: 0 1rem 1rem;
+        gap: 2.2rem;
     }
 
     .content h1 {

@@ -1,31 +1,64 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import gsap from "gsap";
-import Product from "../../components/Product/Product";
-import Filtros from "../../components/Filtros/Filtros";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useSearchParams, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+//Mismo orden de imports que ProductDetail.jsx (NavBar, BackToTop, Footer,
+//Product): si difiere, el build de producción avisa "Conflicting order"
+//en el CSS y con CI=true (Vercel) falla.
 import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
+import Footer from "../../components/Footer/Footer";
+import Product from "../../components/Product/Product";
 import { useGetProductsQuery } from "../../api/appApi";
 import { useFavorites } from "../../hooks/useFavorites";
+import { FREE_SHIPPING_THRESHOLD } from "../../constants/deliveryZones";
 import style from "./Products.module.css";
 
 //Variable de módulo (no useState): sobrevive mientras dure la sesión del
-//navegador (navegar a Home y volver a Cocina con el router de React NO la
-//reinicia), pero SÍ se reinicia a false en un refresh real de la página
-//(F5), porque ahí se vuelve a cargar todo el JS desde cero. Así se puede
-//distinguir "volviste navegando" (debe resetear a Todo) de "refrescaste
-//la página" (debe mantener el filtro guardado en localStorage).
+//navegador (navegar a Home y volver NO la reinicia), pero SÍ se reinicia
+//en un refresh real (F5). Así se distingue "volviste navegando" (vuelve a
+//"Todo") de "refrescaste la página" (mantiene el filtro guardado).
 let yaSeMontoProductsEnEstaSesion = false;
 
+//Orden fijo de categorías: las que no estén acá van al final, en el orden
+//en que las devuelva la API.
+const ORDEN_CATEGORIAS = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
+
+//Opciones del selector "Ordenar por". "recomendado" es el orden de
+//siempre (por categoría y alfabético).
+const ORDENES = [
+  { value: "recomendado", label: "Recomendados" },
+  { value: "vendidos", label: "Más vendidos" },
+  { value: "precioAsc", label: "Precio: menor a mayor" },
+  { value: "precioDesc", label: "Precio: mayor a menor" },
+];
+
+//Con "Todo" (y sin buscar ni ordenar distinto), cada categoría muestra
+//solo estos primeros productos y un "Ver todas" para el resto.
+const POR_CATEGORIA_EN_TODO = 4;
+
+const indiceCategoria = (categoria) => {
+  const i = ORDEN_CATEGORIAS.indexOf(categoria);
+  return i === -1 ? ORDEN_CATEGORIAS.length : i;
+};
+
+const compararRecomendado = (a, b) =>
+  indiceCategoria(a.category) - indiceCategoria(b.category) ||
+  a.title.localeCompare(b.title, "es");
+
+//El buscador no distingue mayúsculas ni acentos.
+const normalizar = (texto) =>
+  texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+
 const Products = () => {
-  const { data, isLoading, isError } = useGetProductsQuery();
+  const { data: products, isLoading, isError } = useGetProductsQuery();
   const { favorites } = useFavorites();
-  const products = data;
+  const cartList = useSelector((state) => state.homeSlice.cartList);
 
   //Si volvemos acá desde Mercado Pago sin haber pagado (falló o quedó
-  //pendiente), mostramos el cartel de error en primer plano. El carrito
-  //queda cerrado (los productos siguen ahí adentro, solo no se abre
-  //solo) para que el cartel sea lo único que se vea al volver.
+  //pendiente), mostramos el cartel en primer plano.
   const [searchParams, setSearchParams] = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState(null);
 
@@ -36,160 +69,122 @@ const Products = () => {
       setSearchParams({}, { replace: true });
       sessionStorage.removeItem("mpCheckoutIniciado");
     } else if (sessionStorage.getItem("mpCheckoutIniciado")) {
-      // Se fue a Mercado Pago (ver cartHandlers.js) pero volvió sin que MP
-      // agregara ?payment=... a la URL: no hubo un resultado definitivo
-      // (ej: tocó "Volver al sitio" o el botón atrás antes de pagar), así
-      // que avisamos con un tono neutro, no de error.
+      // Se fue a Mercado Pago (ver cartHandlers.js) pero volvió sin
+      // resultado definitivo (ej: "Volver al sitio" antes de pagar).
       setPaymentStatus("abandoned");
       sessionStorage.removeItem("mpCheckoutIniciado");
     }
   }, [searchParams, setSearchParams]);
 
-  //Si volvés acá con el botón "atrás" del navegador (en vez de un link),
-  //algunos navegadores (sobre todo en celular) no vuelven a cargar la
-  //página: la restauran tal cual quedó en memoria (bfcache) — con el
-  //modal de pago todavía en "Procesando..." y sin correr el chequeo de
-  //arriba. "pageshow" con persisted=true detecta justo ese caso, y
-  //forzamos un reload real para que todo arranque de cero.
+  //Volver con "atrás" puede restaurar la página congelada (bfcache), con
+  //el modal de pago todavía en "Procesando...": se fuerza un reload real.
   useEffect(() => {
     const handlePageShow = (event) => {
-      if (event.persisted) {
-        window.location.reload();
-      }
+      if (event.persisted) window.location.reload();
     };
     window.addEventListener("pageshow", handlePageShow);
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
-  //Se guarda el filtro elegido en localStorage para que, si se refresca la
-  //página, se mantenga seleccionado en vez de volver a "Todo". Pero si se
-  //vuelve navegando (Home -> Cocina) en la misma sesión, se resetea a "Todo".
-  //
-  //El inicializador de useState tiene que ser una función PURA (sin efectos
-  //secundarios): en desarrollo, React la llama dos veces para detectar
-  //justamente este tipo de bug, así que escribir en localStorage acá adentro
-  //hacía que la segunda llamada pisara el valor de la primera. Por eso solo
-  //lee acá, y la escritura/actualización del flag se hace en el useEffect
-  //de abajo (que si se ejecuta de más, no rompe nada por ser idempotente).
+  //El filtro elegido se guarda en localStorage para mantenerlo en un F5,
+  //pero si se vuelve navegando en la misma sesión arranca en "Todo". El
+  //inicializador solo lee (tiene que ser puro); la escritura va en el
+  //useEffect de abajo.
+  //Si se llega desde el link de categoría del detalle de un producto
+  //(state.categoria), arranca con esa categoría elegida.
+  const location = useLocation();
   const [filtroActivo, setFiltroActivoState] = useState(() =>
-    yaSeMontoProductsEnEstaSesion
-      ? "Todo"
-      : localStorage.getItem("filtroActivo") || "Todo"
+    location.state?.categoria ||
+    (yaSeMontoProductsEnEstaSesion ? "Todo" : localStorage.getItem("filtroActivo") || "Todo")
   );
-
-  //Texto del buscador (no se guarda en localStorage: cada visita arranca
-  //sin filtrar por texto, a diferencia de la categoría elegida).
   const [busqueda, setBusqueda] = useState("");
+  const [orden, setOrden] = useState("recomendado");
 
   useEffect(() => {
-    if (yaSeMontoProductsEnEstaSesion) {
-      localStorage.setItem("filtroActivo", "Todo");
-    }
+    if (yaSeMontoProductsEnEstaSesion) localStorage.setItem("filtroActivo", "Todo");
     yaSeMontoProductsEnEstaSesion = true;
   }, []);
 
-  //useCallback (no una función nueva en cada render): Filtros.jsx está
-  //envuelto en React.memo, pero eso no sirve de nada si uno de sus props
-  //(esta función) cambia de referencia en CADA render de Products —por
-  //ejemplo, en cada letra tipeada en el buscador, que no tiene nada que
-  //ver con el filtro—. Con useCallback, la referencia se mantiene estable
-  //y memo puede de verdad saltear el re-render de Filtros en esos casos.
+  const toolbarRef = useRef(null);
+
   const setFiltroActivo = useCallback((filtro) => {
     setFiltroActivoState(filtro);
     localStorage.setItem("filtroActivo", filtro);
   }, []);
 
-  //Orden fijo de categorías para cuando se muestran todos los productos
-  //(filtro "Todo"): las que no estén en esta lista van al final, en el
-  //orden en que las devuelva la API.
-  const ordenCategorias = ["Facturas", "Tortas", "Cookies", "Alfajores", "Sin TACC", "Vegano", "Infusiones"];
-
-  //Dentro de cada categoría, los productos van alfabéticamente (con
-  //localeCompare para que los acentos ordenen bien en español).
-  const compararProductos = (a, b) => {
-    const categoriaDiff =
-      ordenCategorias.indexOf(a.category) - ordenCategorias.indexOf(b.category);
-    if (categoriaDiff !== 0) return categoriaDiff;
-    return a.title.localeCompare(b.title, "es");
+  //"Ver todas" de una categoría: filtra y sube hasta la barra de
+  //búsqueda, para que se vea el resultado desde arriba.
+  const verCategoria = (categoria) => {
+    setFiltroActivo(categoria);
+    toolbarRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  //"products" puede ser undefined mientras todavía no responde la API
-  //(ej: recién refrescada la página con un filtro distinto de "Todo" ya
-  //guardado en localStorage).
-  const productosPorCategoria =
-    !products
-      ? products
-      : filtroActivo === "Todo"
-      ? [...products].sort(compararProductos)
-      : filtroActivo === "Favoritos"
-      ? [...products]
-          .filter((product) => favorites.includes(product.id))
-          .sort(compararProductos)
-      : [...products]
-          .filter((product) => product.category === filtroActivo)
-          .sort(compararProductos);
+  //Categorías para los círculos de arriba, cada una con la foto de su
+  //primer producto (así se actualizan solas si cambia el catálogo).
+  const categorias = useMemo(() => {
+    if (!products) return [];
+    const porCategoria = new Map();
+    [...products].sort(compararRecomendado).forEach((p) => {
+      if (!porCategoria.has(p.category)) porCategoria.set(p.category, p.images?.[0]);
+    });
+    return [...porCategoria.entries()].map(([nombre, imagen]) => ({ nombre, imagen }));
+  }, [products]);
 
-  //El buscador filtra sobre el resultado de la categoría (no reemplaza el
-  //filtro elegido), y no distingue mayúsculas/acentos.
-  const normalizar = (texto) =>
-    texto
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "");
+  //Los demás órdenes desempatan con el recomendado, así dos productos con
+  //el mismo precio (o las mismas ventas) no cambian de lugar entre renders.
+  const compararProductos = useCallback(
+    (a, b) => {
+      const diff =
+        orden === "vendidos"
+          ? (b.sold || 0) - (a.sold || 0)
+          : orden === "precioAsc"
+          ? a.price - b.price
+          : orden === "precioDesc"
+          ? b.price - a.price
+          : 0;
+      return diff || compararRecomendado(a, b);
+    },
+    [orden]
+  );
 
-  const productosFiltrados =
-    !productosPorCategoria || !busqueda.trim()
-      ? productosPorCategoria
-      : productosPorCategoria.filter((product) =>
-          normalizar(product.title).includes(normalizar(busqueda))
-        );
+  const productosFiltrados = useMemo(() => {
+    if (!products) return [];
+    const texto = normalizar(busqueda.trim());
+    return products
+      .filter((p) =>
+        filtroActivo === "Todo"
+          ? true
+          : filtroActivo === "Favoritos"
+          ? favorites.includes(p.id)
+          : p.category === filtroActivo
+      )
+      .filter((p) => !texto || normalizar(p.title).includes(texto))
+      .sort(compararProductos);
+  }, [products, filtroActivo, favorites, busqueda, compararProductos]);
 
-  //Entrada escalonada de las tarjetas: cada vez que cambia el filtro (o
-  //llegan los productos por primera vez), aparecen una tras otra en vez
-  //de todas de golpe.
-  const productListRef = useRef(null);
+  //Vista "vitrina": agrupada por categoría con títulos. Solo tiene sentido
+  //con "Todo", sin búsqueda y en el orden recomendado; en cualquier otro
+  //caso se muestra una sola grilla con el resultado tal cual.
+  const agrupado = filtroActivo === "Todo" && orden === "recomendado" && !busqueda.trim();
 
-  useEffect(() => {
-    if (!productListRef.current) return;
-    const cards = productListRef.current.children;
-    if (!cards.length) return;
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.05 }
-    );
-  }, [filtroActivo, productosFiltrados?.length]);
+  const grupos = useMemo(() => {
+    if (!agrupado) return [];
+    const map = new Map();
+    productosFiltrados.forEach((p) => {
+      if (!map.has(p.category)) map.set(p.category, []);
+      map.get(p.category).push(p);
+    });
+    return [...map.entries()];
+  }, [agrupado, productosFiltrados]);
 
-  //Al bajar rápido con el mouse quieto, las tarjetas que van pasando por
-  //debajo del cursor disparan mouseenter/mouseleave en cadena (el
-  //navegador los emite igual, aunque el mouse en sí no se mueva) — cada
-  //uno dispara el hover de la tarjeta (sombra, tilt) sin que el usuario
-  //esté "hovereando" nada de verdad. Mientras se está scrolleando, esto
-  //desactiva el hit-testing de toda la grilla (pointer-events: none), así
-  //ninguna tarjeta puede recibir esos eventos fantasma; apenas el scroll
-  //se frena un toque, se reactiva. El hover real (mouse quieto sobre una
-  //tarjeta) no se ve afectado en absoluto.
-  const productListWrapperRef = useRef(null);
+  //Barra flotante del pedido (abajo): cantidad, total y cuánto falta para
+  //el envío gratis. Abre el carrito de NavBar con el evento "abrir-carrito".
+  const unidades = cartList.reduce((sum, p) => sum + p.quantity, 0);
+  const subtotal = cartList.reduce((sum, p) => sum + p.price * p.quantity, 0);
+  const faltaEnvioGratis = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
 
-  useEffect(() => {
-    const wrapper = productListWrapperRef.current;
-    if (!wrapper) return;
-
-    let scrollTimeout = null;
-    const handleScroll = () => {
-      wrapper.classList.add(style.scrolling);
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        wrapper.classList.remove(style.scrolling);
-      }, 150);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
+  const tituloResultado =
+    filtroActivo === "Todo" ? "Todos los productos" : filtroActivo;
 
   return (
     <div className={style.mainContainer}>
@@ -203,9 +198,7 @@ const Products = () => {
         >
           <div
             className={`${style.paymentBanner} ${
-              paymentStatus === "abandoned"
-                ? style.paymentBannerNeutral
-                : style.paymentBannerError
+              paymentStatus === "abandoned" ? style.paymentBannerNeutral : style.paymentBannerError
             }`}
           >
             <button
@@ -219,16 +212,15 @@ const Products = () => {
               <>
                 <p className={style.paymentBannerTitle}>No completaste el pago</p>
                 <p className={style.paymentBannerText}>
-                  Tu carrito sigue igual que lo dejaste, podés retomarlo
-                  cuando quieras.
+                  Tu carrito sigue igual que lo dejaste, podés retomarlo cuando quieras.
                 </p>
               </>
             ) : (
               <>
                 <p className={style.paymentBannerTitle}>Algo salió mal</p>
                 <p className={style.paymentBannerText}>
-                  No pudimos confirmar tu pago. Tu carrito sigue igual que lo
-                  dejaste, podés intentar de nuevo cuando quieras.
+                  No pudimos confirmar tu pago. Tu carrito sigue igual que lo dejaste,
+                  podés intentar de nuevo cuando quieras.
                 </p>
               </>
             )}
@@ -236,42 +228,104 @@ const Products = () => {
         </div>
       )}
 
-      <div className={style.intro}>
-        <h1>Nuestros productos</h1>
-        <p>Horneados frescos cada día, elegí una categoría o mirá todo.</p>
-      </div>
+      <header className={style.hero}>
+        <div className={style.heroInner}>
+          <p className={style.eyebrow}>Catálogo</p>
+          <h1 className={style.heroTitle}>
+            Horneado hoy, <em>elegí el tuyo</em>
+          </h1>
+          <ul className={style.heroPills}>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z" /><path d="M14 10h4l3 3v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></svg>
+              Delivery en Belgrano y alrededores
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z" /><path d="M3 8l9 5 9-5M12 13v8" /></svg>
+              Envío gratis desde ${FREE_SHIPPING_THRESHOLD.toLocaleString("es-AR")}
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+              Tortas con 48 hs de anticipación
+            </li>
+          </ul>
+        </div>
+      </header>
 
-      <div className={style.searchBox}>
-        <span className={style.searchIcon} aria-hidden="true">🔍</span>
-        <input
-          type="text"
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-          placeholder="Buscar producto..."
-          className={style.searchInput}
-          aria-label="Buscar producto"
-        />
-      </div>
+      <div className={style.content}>
+        {/* Categorías: círculos con foto. En celular se desliza de costado. */}
+        <nav className={style.categoryRail} aria-label="Categorías">
+          <button
+            type="button"
+            className={`${style.category} ${filtroActivo === "Todo" ? style.categoryOn : ""}`}
+            onClick={() => setFiltroActivo("Todo")}
+            aria-pressed={filtroActivo === "Todo"}
+          >
+            <span className={style.categoryRing}>
+              <img src="/Portada.jpg" alt="" className={style.categoryImg} />
+            </span>
+            Todo
+          </button>
+          {categorias.map((c) => (
+            <button
+              type="button"
+              key={c.nombre}
+              className={`${style.category} ${filtroActivo === c.nombre ? style.categoryOn : ""}`}
+              onClick={() => setFiltroActivo(c.nombre)}
+              aria-pressed={filtroActivo === c.nombre}
+            >
+              <span className={style.categoryRing}>
+                {c.imagen && <img src={c.imagen} alt="" className={style.categoryImg} loading="lazy" />}
+              </span>
+              {c.nombre}
+            </button>
+          ))}
+        </nav>
 
-      <div className={style.filters}>
-        <Filtros
-          filtroActivo={filtroActivo}
-          setFiltroActivo={setFiltroActivo}
-          favoritosCount={favorites.length}
-        />
-      </div>
+        <div className={style.toolbar} ref={toolbarRef}>
+          <label className={style.search}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+            <input
+              type="search"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Buscar medialunas, tortas, cookies…"
+              aria-label="Buscar producto"
+            />
+          </label>
 
-      <div className={style.productListWrapper} ref={productListWrapperRef}>
+          <button
+            type="button"
+            className={`${style.favToggle} ${filtroActivo === "Favoritos" ? style.favToggleOn : ""}`}
+            onClick={() => setFiltroActivo(filtroActivo === "Favoritos" ? "Todo" : "Favoritos")}
+            aria-pressed={filtroActivo === "Favoritos"}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill={filtroActivo === "Favoritos" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z" /></svg>
+            Favoritos
+            {favorites.length > 0 && <span className={style.favCount}>{favorites.length}</span>}
+          </button>
+
+          <label className={style.sort}>
+            <span>Ordenar</span>
+            <select value={orden} onChange={(e) => setOrden(e.target.value)}>
+              {ORDENES.map((opcion) => (
+                <option key={opcion.value} value={opcion.value}>
+                  {opcion.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {!isLoading && !isError && (
+            <span className={style.count}>
+              {productosFiltrados.length} producto{productosFiltrados.length === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+
         {isLoading && (
-          <div className={style.productList}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className={style.skeletonCard}>
-                <div className={style.skeletonPhoto} />
-                <div className={style.skeletonBody}>
-                  <div className={style.skeletonLine} style={{ width: "70%" }} />
-                  <div className={style.skeletonLine} style={{ width: "45%" }} />
-                </div>
-              </div>
+          <div className={style.grid}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className={style.skeletonCard} />
             ))}
           </div>
         )}
@@ -282,46 +336,98 @@ const Products = () => {
           </p>
         )}
 
-        {!isLoading && !isError && productosFiltrados && productosFiltrados.length === 0 && (
+        {!isLoading && !isError && productosFiltrados.length === 0 && (
           <p className={style.stateMessage}>
             {busqueda.trim()
               ? `No encontramos productos que coincidan con "${busqueda}".`
               : filtroActivo === "Favoritos"
-              ? "Todavía no marcaste ningún producto como favorito. Tocá el ♡ en la tarjeta de un producto para guardarlo acá."
+              ? "Todavía no marcaste ningún favorito. Tocá el corazón de un producto para guardarlo acá."
               : `No hay productos en "${filtroActivo}" por ahora.`}
           </p>
         )}
 
-        {!isLoading && !isError && productosFiltrados && productosFiltrados.length > 0 && (
-          <>
-            {/* Los primeros dos se muestran destacados (más grandes) solo
-                con el filtro "Todo" — con una categoría puntual ya elegida
-                no aporta destacar entre pocos. Van en su propia fila,
-                AFUERA de la grilla de abajo: adentro de la grilla, según
-                cuántas columnas entraran, el acomodo automático a veces
-                los separaba en dos filas distintas y metía una tarjeta
-                normal angosta al lado de uno de ellos. */}
-            {filtroActivo === "Todo" && (
-              <div className={style.featuredRow}>
-                {productosFiltrados.slice(0, 2).map((product) => (
-                  <Product key={product.id} product={product} featured />
+        {!isLoading && !isError && productosFiltrados.length > 0 && agrupado &&
+          grupos.map(([categoria, lista]) => (
+            <section key={categoria} className={style.group} aria-labelledby={`cat-${categoria}`}>
+              <div className={style.groupHeader}>
+                <h2 id={`cat-${categoria}`} className={style.groupTitle}>
+                  {categoria}
+                  <span className={style.groupCount}>
+                    {lista.length} producto{lista.length === 1 ? "" : "s"}
+                  </span>
+                </h2>
+                {lista.length > POR_CATEGORIA_EN_TODO && (
+                  <button type="button" className={style.seeAll} onClick={() => verCategoria(categoria)}>
+                    Ver todas →
+                  </button>
+                )}
+              </div>
+              <div className={style.grid}>
+                {lista.slice(0, POR_CATEGORIA_EN_TODO).map((product) => (
+                  <Product key={product.id} product={product} />
                 ))}
               </div>
-            )}
+            </section>
+          ))}
 
-            <div className={style.productList} ref={productListRef}>
-              {(filtroActivo === "Todo"
-                ? productosFiltrados.slice(2)
-                : productosFiltrados
-              ).map((product) => (
+        {!isLoading && !isError && productosFiltrados.length > 0 && !agrupado && (
+          <section className={style.group} aria-labelledby="resultado">
+            <div className={style.groupHeader}>
+              <h2 id="resultado" className={style.groupTitle}>
+                {busqueda.trim() ? `Resultados para "${busqueda.trim()}"` : tituloResultado}
+              </h2>
+              {filtroActivo !== "Todo" && (
+                <button type="button" className={style.seeAll} onClick={() => setFiltroActivo("Todo")}>
+                  Ver todo el catálogo →
+                </button>
+              )}
+            </div>
+            <div className={style.grid}>
+              {productosFiltrados.map((product) => (
                 <Product key={product.id} product={product} />
               ))}
             </div>
-          </>
+          </section>
         )}
       </div>
 
+      {unidades > 0 && (
+        <div className={style.cartBar} role="region" aria-label="Tu pedido">
+          <div className={style.cartBarInfo}>
+            <div className={style.cartBarTop}>
+              <strong>
+                {unidades} producto{unidades === 1 ? "" : "s"} en tu pedido
+              </strong>
+              <span>
+                {faltaEnvioGratis > 0
+                  ? `Te faltan $${faltaEnvioGratis.toLocaleString("es-AR")} para envío gratis`
+                  : "¡Envío gratis!"}
+              </span>
+            </div>
+            <div className={style.cartBarTrack} aria-hidden="true">
+              <div
+                className={style.cartBarFill}
+                style={{ width: `${Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%` }}
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            className={style.cartBarBtn}
+            onClick={() => window.dispatchEvent(new Event("abrir-carrito"))}
+            data-cart-toggle="true"
+          >
+            Ver pedido · ${subtotal.toLocaleString("es-AR")}
+          </button>
+        </div>
+      )}
+
+      <Footer />
+
       <BackToTop />
+
+      {/* Deja lugar abajo para que la barra flotante no tape el footer. */}
+      {unidades > 0 && <div className={style.cartBarSpacer} aria-hidden="true" />}
     </div>
   );
 };

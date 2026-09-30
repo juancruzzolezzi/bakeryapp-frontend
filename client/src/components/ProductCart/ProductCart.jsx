@@ -21,7 +21,7 @@ const ProductCart = ({ product }) => {
 
   //Destello breve en la fila cada vez que suma cantidad (se agregó desde
   //la tarjeta de producto, o con el "+" de acá mismo), además del pulso
-  //que ya tiene el botón "Añadir" en Product.jsx.
+  //que ya tiene el botón "Agregar" en Product.jsx.
   const [flashing, setFlashing] = useState(false);
   const prevQuantityRef = useRef(quantity);
 

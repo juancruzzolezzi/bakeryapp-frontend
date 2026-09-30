@@ -158,6 +158,123 @@
     color: #f6ecdb;
 }
 
+/* Resumen editable del pedido (ver PaymentModal.jsx): cantidades y
+   quitar productos sin tener que cerrar el modal y volver al carrito. */
+.orderReview {
+    background: #2f2318;
+    border-radius: 12px;
+    padding: 0.8rem 0.9rem;
+    margin-bottom: 1.4rem;
+    text-align: left;
+}
+
+.orderReviewTitle {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #b69443;
+}
+
+.orderRow {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    font-size: 0.85rem;
+    color: #f6ecdb;
+}
+
+.orderRow + .orderRow {
+    border-top: 1px solid rgba(230, 201, 138, 0.1);
+}
+
+.orderName {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.orderStepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(230, 201, 138, 0.2);
+    border-radius: 999px;
+}
+
+.orderStepper button {
+    width: 1.7rem;
+    height: 1.7rem;
+    border: none;
+    background: transparent;
+    color: #e7c98a;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.orderStepper button:disabled {
+    color: #5c5245;
+    cursor: default;
+}
+
+.orderStepper span {
+    min-width: 1.3rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.orderPrice {
+    min-width: 4.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #e7c98a;
+}
+
+.orderRemove {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #8a7f6d;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.orderRemove:hover {
+    color: #d97b64;
+    border-color: rgba(217, 123, 100, 0.4);
+}
+
+/* Aviso de "fuera de zona" en el paso de entrega. */
+.zoneWarning {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: -10px 0 18px;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(217, 123, 100, 0.45);
+    background: rgba(217, 123, 100, 0.08);
+    color: #e9b3a5;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.zoneWarningBtn {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid #e7c98a;
+    color: #e7c98a;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 .modalTotalBox {
     background: #2f2318;
     border-radius: 12px;

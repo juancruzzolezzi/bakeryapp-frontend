@@ -30,6 +30,10 @@ const NavBarHome = () => {
   return (
     <>
     <nav className={style.navbar}>
+      <Link to="/" className={style.logo} aria-label="Bakery, ir al inicio">
+        Bakery
+      </Link>
+
       {/* Solo visible en pantallas grandes (ver media query): en mobile
           queda oculta y se usa el botón "MENÚ" con el panel de abajo. A la
           misma altura que los links (dentro de la misma fila), en vez de

@@ -24,6 +24,10 @@ export const appApi = createApi({
         googleLogin: builder.mutation({
             query: (body) => ({ url: "auth/google", method: "POST", body }),
         }),
+
+        solicitarArrepentimiento: builder.mutation({
+            query: (body) => ({ url: "arrepentimiento", method: "POST", body }),
+        }),
     }),
 });
 
@@ -32,4 +36,5 @@ export const {
     useRegisterUserMutation,
     useLoginUserMutation,
     useGoogleLoginMutation,
+    useSolicitarArrepentimientoMutation,
 } = appApi;

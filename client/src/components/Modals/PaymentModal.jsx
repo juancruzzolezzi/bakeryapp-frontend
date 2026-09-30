@@ -1,27 +1,43 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-modal";
 import { useCartHandlers } from "../../handlers/cartHandlers";
 import style from "./Modal.module.css";
 import { validations } from "../../validations/validations";
 import { ACCOUNT_DISCOUNT_RATE } from "../../utils/discount";
 import { getSavedAddress } from "../../utils/savedAddress";
+import { updateQuantity, removeFromCart } from "../../redux/slice/homeSlice";
+import {
+  DELIVERY_ZONES,
+  DELIVERY_FEE,
+  FREE_SHIPPING_THRESHOLD,
+} from "../../constants/deliveryZones";
 
 Modal.setAppElement("#root");
 
-// Costo fijo de envío a domicilio. Tiene que coincidir con DELIVERY_FEE en
-// api/mercadoPago/src/controllers/payment.controller.js (ahí es donde se
-// cobra de verdad; acá solo se usa para mostrarle el total al usuario antes de pagar).
-const DELIVERY_FEE = 2000;
-
-// A partir de este monto (sin contar el envío) el delivery sale gratis.
-// Tiene que coincidir con FREE_SHIPPING_THRESHOLD en Cart.jsx (la barra de
-// progreso) y en payment.controller.js (ahí es donde se cobra de verdad).
-const FREE_SHIPPING_THRESHOLD = 15000;
+// Valor del selector de barrio para "no está en la lista": no es una zona
+// de cobertura, así que bloquea el pago con delivery (ver isZoneValid).
+const OTRA_ZONA = "otra";
 
 const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const user = useSelector((state) => state.authSlice.user);
   const isLoggedIn = Boolean(user);
+  const dispatch = useDispatch();
+
+  //Edición del pedido sin salir del modal: mismos reducers que usa el
+  //carrito (ver ProductCart.jsx), así que el carrito de atrás y el total
+  //de acá se actualizan solos. Si se saca el último producto, no queda
+  //nada para pagar: se cierra el modal (y el carrito se cierra solo al
+  //quedar vacío, ver Cart.jsx).
+  const cambiarCantidad = (product, quantity) => {
+    if (quantity < 1 || quantity > 100) return;
+    dispatch(updateQuantity({ productId: product.id, quantity }));
+  };
+
+  const quitarProducto = (product) => {
+    if (cartList.length === 1) onClose();
+    dispatch(removeFromCart({ id: product.id }));
+  };
 
   const [contactMethod, setContactMethod] = useState("instagram");
   const [contactValue, setContactValue] = useState("");
@@ -38,6 +54,15 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
   const [addressTouched, setAddressTouched] = useState(false);
   const direccionRecordada = Boolean(address) && !addressTouched;
 
+  //Barrio de entrega: se elige de la lista de cobertura (en vez de
+  //adivinarlo de la dirección escrita), así se sabe ANTES de pagar si
+  //llegamos. También se recuerda el último usado en este dispositivo.
+  const [deliveryZone, setDeliveryZone] = useState(() => {
+    const last = localStorage.getItem("lastZone");
+    return DELIVERY_ZONES.includes(last) ? last : "";
+  });
+  const fueraDeZona = deliveryZone === OTRA_ZONA;
+
   const { handleSubmitModal, isSubmitting, submitError } = useCartHandlers();
 
   const { isValidInstagramUsername, isValidWhatsAppNumber, isValidAddress } = validations();
@@ -47,7 +72,9 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
       ? isValidInstagramUsername(contactValue)
       : isValidWhatsAppNumber(contactValue);
 
-  const isAddressValid = deliveryType !== "delivery" || isValidAddress(address.trim());
+  const isZoneValid = deliveryType !== "delivery" || DELIVERY_ZONES.includes(deliveryZone);
+  const isAddressValid =
+    deliveryType !== "delivery" || (isValidAddress(address.trim()) && isZoneValid);
 
   const envioGratis = totalPrice >= FREE_SHIPPING_THRESHOLD;
 
@@ -91,6 +118,7 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
     if (canSubmit) {
       if (deliveryType === "delivery" && address.trim()) {
         localStorage.setItem("lastAddress", address.trim());
+        localStorage.setItem("lastZone", deliveryZone);
       }
 
       handleSubmitModal(
@@ -99,7 +127,8 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
         contactMethod,
         totalPrice,
         deliveryType,
-        deliveryType === "delivery" ? address.trim() : ""
+        deliveryType === "delivery" ? address.trim() : "",
+        deliveryType === "delivery" ? deliveryZone : ""
       );
     }
   };
@@ -175,6 +204,44 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
             ? "Paso 2 de 3 — Cómo lo recibís"
             : "Paso 3 de 3 — Confirmar y pagar"}
         </p>
+
+        <div className={style.orderReview}>
+          <p className={style.orderReviewTitle}>Tu pedido</p>
+          {cartList.map((product) => (
+            <div key={product.id} className={style.orderRow}>
+              <span className={style.orderName}>{product.title}</span>
+              <div className={style.orderStepper}>
+                <button
+                  type="button"
+                  onClick={() => cambiarCantidad(product, product.quantity - 1)}
+                  disabled={product.quantity <= 1}
+                  aria-label={`Restar una unidad de ${product.title}`}
+                >
+                  –
+                </button>
+                <span>{product.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => cambiarCantidad(product, product.quantity + 1)}
+                  aria-label={`Sumar una unidad de ${product.title}`}
+                >
+                  +
+                </button>
+              </div>
+              <span className={style.orderPrice}>
+                ${(product.price * product.quantity).toLocaleString("es-AR")}
+              </span>
+              <button
+                type="button"
+                onClick={() => quitarProducto(product)}
+                className={style.orderRemove}
+                aria-label={`Quitar ${product.title} del pedido`}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
 
         <div className={style.modalStep}>
           <span className={style.modalStepNum}>1</span>
@@ -263,10 +330,50 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
 
             {deliveryType === "delivery" && (
               <>
-                <label className={style.modalLabel} style={{ marginTop: "0.9rem" }}>
+                <label
+                  className={style.modalLabel}
+                  style={{ marginTop: "0.9rem" }}
+                  htmlFor="payment-zone"
+                >
+                  Barrio:
+                </label>
+                <select
+                  id="payment-zone"
+                  value={deliveryZone}
+                  onChange={(e) => setDeliveryZone(e.target.value)}
+                  className={style.modalInput}
+                >
+                  <option value="" disabled>
+                    Elegí tu barrio
+                  </option>
+                  {DELIVERY_ZONES.map((zona) => (
+                    <option key={zona} value={zona}>
+                      {zona}
+                    </option>
+                  ))}
+                  <option value={OTRA_ZONA}>Otro barrio</option>
+                </select>
+                {fueraDeZona && (
+                  <div className={style.zoneWarning}>
+                    <span>
+                      Todavía no hacemos delivery a tu zona. Podés retirar tu
+                      pedido en el local sin costo.
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeliveryTypeChange("takeaway")}
+                      className={style.zoneWarningBtn}
+                    >
+                      Cambiar a Take Away
+                    </button>
+                  </div>
+                )}
+
+                <label className={style.modalLabel} htmlFor="payment-address">
                   Dirección de entrega:
                 </label>
                 <input
+                  id="payment-address"
                   type="text"
                   value={address}
                   onChange={(e) => {
@@ -287,7 +394,7 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
                 <span className={style.modalHint}>
                   Tiene que incluir calle y altura, ej: Zavalía 2026
                 </span>
-                {addressTouched && !isAddressValid && (
+                {addressTouched && !isValidAddress(address.trim()) && (
                   <span className={style.modalError}>
                     Ingresá una dirección válida con calle y número
                   </span>

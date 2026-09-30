@@ -578,3 +578,64 @@
     }
 }
 
+
+
+/* Logo a la izquierda, a la misma altura que los links. */
+.logo {
+    position: absolute;
+    top: 50%;
+    left: clamp(1.2rem, 3vw, 3rem);
+    transform: translateY(-50%);
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 1.75rem;
+    color: #e7c98a;
+    text-decoration: none;
+    pointer-events: auto;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.logo:focus-visible {
+    outline: 2px solid #e7c98a;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* Pantallas medianas: logo + links + botones no entran en una fila sin
+   pisarse, así que se usa el mismo menú hamburguesa que en celular. */
+@media screen and (min-width: 761px) and (max-width: 1100px) {
+    .desktopLinks,
+    .accountSlot {
+        display: none;
+    }
+
+    .nav {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        right: 1.2rem;
+        transform: translateY(-50%);
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .logo {
+        top: 7.5vh;
+        font-size: 1.45rem;
+    }
+}
+
+
+/* Celular: el botón del menú (y "Ingresar") centrado a la misma altura
+   que el logo (7.5vh, ver .logo), en vez de donde lo dejaba el flujo de
+   la barra, que quedaba más abajo. */
+@media screen and (max-width: 760px) {
+    .nav {
+        position: absolute;
+        top: 7.5vh;
+        right: 0.4rem;
+        transform: translateY(-50%);
+        height: auto;
+    }
+}

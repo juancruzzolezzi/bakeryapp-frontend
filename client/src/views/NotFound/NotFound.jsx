@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import NavBarHome from "../../components/Navs/NavBarHome/NavBarHome";
+import Footer from "../../components/Footer/Footer";
+import FlautaGame from "../../components/FlautaGame/FlautaGame";
 import styles from "./NotFound.module.css";
 
 const NotFound = () => {
@@ -25,7 +27,16 @@ const NotFound = () => {
                         </Link>
                     </div>
                 </div>
+
+                <div className={styles.game}>
+                    <p className={styles.gameTitle}>
+                        Ya que estás acá, hacé jueguito con la flauta
+                    </p>
+                    <FlautaGame className={styles.gameStage} />
+                </div>
             </div>
+
+            <Footer />
         </div>
     );
 };

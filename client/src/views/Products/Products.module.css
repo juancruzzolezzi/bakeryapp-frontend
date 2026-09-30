@@ -83,214 +83,487 @@
     line-height: 1.5;
 }
 
-.productListWrapper {
+
+/* ---- Portada del catálogo: foto de fondo con degradé, el menú (que es
+   "absolute") queda encima de la foto. ---- */
+/* Título del catálogo, debajo del menú (20vh, ver NavBar.module.css),
+   sobre la misma foto de fondo que el resto del sitio. */
+.hero {
     width: 100%;
-    margin-top: 1rem;
+    box-sizing: border-box;
+    margin-top: 20vh;
+    padding: 1.5rem clamp(1.1rem, 5vw, 3.5rem) 0.5rem;
+    font-family: "Lexend", sans-serif;
 }
 
-/* Mientras se scrollea rápido (ver Products.jsx): desactiva el
-   hit-testing de toda la grilla, así ninguna tarjeta recibe
-   mouseenter/mouseleave "fantasma" (los dispara el navegador igual,
-   aunque el mouse no se mueva, cuando el elemento debajo de un cursor
-   quieto cambia por el scroll). El hover real no se ve afectado: esto
-   se saca apenas el scroll se frena un toque. */
-.scrolling {
-    pointer-events: none;
+.heroInner {
+    position: relative;
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
 }
 
-/* Fila propia para los productos destacados (ver Products.jsx), separada
-   de la grilla de abajo para que nunca terminen compartiendo fila con
-   una tarjeta normal por cómo acomoda el auto-ajuste de la grilla. */
-.featuredRow {
+.eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #e7c98a;
+    font-weight: 600;
+}
+
+.heroTitle {
+    margin: 0;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    color: #f6ecdb;
+    text-wrap: balance;
+}
+
+.heroTitle em {
+    font-style: italic;
+    font-weight: 500;
+    color: #e7c98a;
+}
+
+.heroPills {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
-    padding: 0 5vw 2rem;
-    box-sizing: border-box;
-    max-width: 1400px;
-    margin: 0 auto;
+    gap: 0.6rem;
 }
 
-.productList {
-    display: grid;
-    /* Auto-ajustable: cada tarjeta pide un mínimo de 280px y el grid
-       decide sola cuántas entran por fila (2, 3, hasta 4+ en monitores
-       grandes), en vez de forzar siempre 2 columnas y dejar espacio
-       muerto a los costados de cada tarjeta en pantallas anchas. */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-    padding: 0 5vw 3rem;
+.heroPills li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(20, 14, 8, 0.55);
+    backdrop-filter: blur(4px);
+    color: #f6ecdb;
+    font-size: 0.82rem;
+}
+
+.heroPills svg {
+    color: #e7c98a;
+    flex-shrink: 0;
+}
+
+/* ---- Contenido ---- */
+.content {
+    width: 100%;
+    max-width: 1240px;
     box-sizing: border-box;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 0 clamp(1.1rem, 5vw, 3.5rem);
+    font-family: "Lexend", sans-serif;
+}
+
+.categoryRail {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.6rem 0 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.categoryRail::-webkit-scrollbar {
+    display: none;
+}
+
+.category {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #c9bda9;
+    font: 500 0.82rem "Lexend", sans-serif;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.category:hover {
+    color: #f6ecdb;
+}
+
+.categoryRing {
+    display: block;
+    padding: 3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.category:hover .categoryRing {
+    transform: translateY(-3px);
+}
+
+.categoryOn {
+    color: #e7c98a;
+    font-weight: 700;
+}
+
+.categoryOn .categoryRing {
+    border-color: #e7c98a;
+}
+
+.category:focus-visible {
+    outline: none;
+}
+
+.category:focus-visible .categoryRing {
+    border-color: #f6ecdb;
+}
+
+.categoryImg {
+    display: block;
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #2f2318;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+    padding: 0.8rem;
+    background: #251a11;
+    border: 1px solid rgba(230, 201, 138, 0.14);
+    border-radius: 18px;
+    scroll-margin-top: 1rem;
+}
+
+.search {
+    flex: 1 1 260px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 2.8rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: #1b130c;
+    color: #8a7f6d;
+}
+
+.search:focus-within {
+    outline: 2px solid rgba(231, 201, 138, 0.6);
+}
+
+.search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: #f6ecdb;
+    font: 400 0.9rem "Lexend", sans-serif;
+    outline: none;
+}
+
+.search input::placeholder {
+    color: #8a7f6d;
+}
+
+.favToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 2.8rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    background: transparent;
+    color: #f6ecdb;
+    font: 600 0.85rem "Lexend", sans-serif;
+    cursor: pointer;
+}
+
+.favToggle:hover {
+    border-color: #e7c98a;
+}
+
+.favToggleOn {
+    background: #e7c98a;
+    border-color: #e7c98a;
+    color: #241a10;
+}
+
+.favCount {
+    min-width: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.3rem;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: rgba(231, 201, 138, 0.2);
+    font-size: 0.7rem;
+    line-height: 1.2rem;
+    text-align: center;
+}
+
+.favToggleOn .favCount {
+    background: #241a10;
+    color: #e7c98a;
+}
+
+.sort {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: #c9bda9;
+}
+
+.sort select {
+    height: 2.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    background: #1b130c;
+    color: #f6ecdb;
+    padding: 0 0.9rem;
+    font: 500 0.85rem "Lexend", sans-serif;
+    cursor: pointer;
+}
+
+.favToggle:focus-visible,
+.sort select:focus-visible,
+.seeAll:focus-visible,
+.cartBarBtn:focus-visible {
+    outline: 2px solid #e7c98a;
+    outline-offset: 2px;
+}
+
+.count {
+    margin-left: auto;
+    padding-right: 0.4rem;
+    font-size: 0.82rem;
+    color: #8a7f6d;
+    white-space: nowrap;
+}
+
+.group {
+    padding-top: 2.6rem;
+}
+
+.groupHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+}
+
+.groupTitle {
+    margin: 0;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    color: #f6ecdb;
+}
+
+.groupCount {
+    margin-left: 0.7rem;
+    font-family: "Lexend", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #8a7f6d;
+}
+
+.seeAll {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #e7c98a;
+    font: 600 0.88rem "Lexend", sans-serif;
+    cursor: pointer;
+}
+
+.seeAll:hover {
+    color: #f6ecdb;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.3rem;
+}
+
+.skeletonCard {
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+    background: linear-gradient(110deg, #251a11 30%, #33251a 50%, #251a11 70%);
+    background-size: 200% 100%;
+    animation: skeleton 1.3s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+    to {
+        background-position: -200% 0;
+    }
 }
 
 .stateMessage {
-    width: 100%;
     text-align: center;
     color: #c9bda9;
     font-size: 1rem;
     padding: 3rem 1rem;
 }
 
-/* Esqueleto de carga: misma forma que .productContainer/.photo/.body de
-   Product.module.css, para que no "salte" el layout cuando llegan los
-   productos reales. */
-.skeletonCard {
+/* ---- Barra flotante del pedido ---- */
+.cartBar {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 90;
+    width: min(760px, calc(100vw - 2rem));
+    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-    background: #251b13;
-    border: 1px solid rgba(230, 201, 138, 0.18);
-    border-radius: 18px;
-    overflow: hidden;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0.8rem 0.8rem 0.8rem 1.3rem;
+    background: #f4e9d6;
+    color: #2b1d12;
+    border-radius: 20px;
+    box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.85);
+    font-family: "Lexend", sans-serif;
+    animation: cartBarIn 0.3s ease both;
 }
 
-.skeletonPhoto {
-    position: relative;
-    overflow: hidden;
-    height: 190px;
-    width: 100%;
-    background: #2f2318;
-}
-
-.skeletonBody {
-    padding: 1rem 1.1rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.skeletonLine {
-    position: relative;
-    overflow: hidden;
-    height: 0.9rem;
-    border-radius: 6px;
-    background: #2f2318;
-}
-
-/* Brillo recorriendo de izquierda a derecha (mismo lenguaje que el botón
-   "Pagar", ver Cart.module.css) en vez de un pulso de opacidad parejo. */
-.skeletonPhoto::after,
-.skeletonLine::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(231, 201, 138, 0.14), transparent);
-    animation: skeletonSweep 1.6s ease-in-out infinite;
-}
-
-@keyframes skeletonSweep {
-    to {
-        transform: translateX(100%);
+@keyframes cartBarIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
     }
 }
 
+.cartBarInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.cartBarTop {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    font-size: 0.85rem;
+}
+
+.cartBarTop span {
+    color: #6b5641;
+    text-align: right;
+}
+
+.cartBarTrack {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(43, 29, 18, 0.12);
+    overflow: hidden;
+}
+
+.cartBarFill {
+    height: 100%;
+    border-radius: 999px;
+    background: #9a6b22;
+    transition: width 0.3s ease;
+}
+
+.cartBarBtn {
+    flex-shrink: 0;
+    height: 2.9rem;
+    padding: 0 1.2rem;
+    border: none;
+    border-radius: 999px;
+    background: #2b1d12;
+    color: #f6ecdb;
+    font: 700 0.88rem "Lexend", sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.cartBarBtn:hover {
+    background: #3d2a1a;
+}
+
+.cartBarSpacer {
+    height: 6rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .skeletonPhoto::after,
-    .skeletonLine::after {
+    .skeletonCard,
+    .cartBar {
         animation: none;
     }
 }
 
-.intro {
-    max-width: 60ch;
-    text-align: center;
-    margin: 20vh auto 0;
-    padding: 0 1.5rem;
-}
-
-.intro h1 {
-    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-weight: 600;
-    font-size: 2.2rem;
-    color: #f6ecdb;
-    margin: 0 0 0.6rem;
-}
-
-.intro p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #c9bda9;
-    margin: 0;
-}
-
-.filters {
-    /* El margin-top que despegaba esto del navbar (20vh) ahora lo pone
-       .intro, que pasó a ser lo primero debajo del navbar. */
-    margin-top: 1.5rem;
-    width: 95%;
-    height: auto;
-}
-
-.searchBox {
-    position: relative;
-    width: min(340px, 90%);
-    margin: 1.4rem auto 0;
-}
-
-.searchIcon {
-    position: absolute;
-    left: 0.9rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #8a7f6d;
-    font-size: 0.9rem;
-    pointer-events: none;
-}
-
-.searchInput {
-    width: 100%;
-    box-sizing: border-box;
-    background: #2f2318;
-    border: 1px solid rgba(230, 201, 138, 0.25);
-    border-radius: 999px;
-    padding: 0.65rem 1rem 0.65rem 2.3rem;
-    color: #f6ecdb;
-    font-size: 0.9rem;
-    font-family: "Lexend", sans-serif;
-}
-
-.searchInput::placeholder {
-    color: #8a7f6d;
-}
-
-.searchInput:focus {
-    outline: none;
-    border-color: #b69443;
-}
-
-@media screen and (max-width: 1170px) {
-    .mainContainer {
-        padding-top: 0;
-        min-height: 100vh;
-        padding: 0.8rem;
-    }
-
-    .productListWrapper {
-        margin-top: 2rem;
-    }
-
-    /* El grid auto-ajustable (ver .productList) ya resuelve solo cuántas
-       columnas entran en pantallas angostas — acá solo achicamos
-       padding/gap, sin forzar una sola columna a la fuerza. */
-    .productList {
-        gap: 1.5rem;
-        padding: 0 1rem 2rem;
-    }
-}
-
-/* El navbar achica su altura (de 20vh a 18vh) recién en este breakpoint
-   (ver NavBar.module.css). */
 @media screen and (max-width: 760px) {
-    .intro {
-        margin-top: 19vh;
+    .hero {
+        margin-top: 18vh;
+        padding-top: 1rem;
     }
 
-    .intro h1 {
-        font-size: 1.7rem;
+    .heroPills li {
+        font-size: 0.76rem;
+    }
+
+    .categoryRail {
+        justify-content: flex-start;
+        gap: 1.1rem;
+    }
+
+    .categoryImg {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .search {
+        flex-basis: 100%;
+    }
+
+    .count {
+        display: none;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+    }
+
+    .cartBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.7rem;
+        padding: 0.9rem;
+    }
+
+    .cartBarTop {
+        flex-direction: column;
+        gap: 0.1rem;
+    }
+
+    .cartBarTop span {
+        text-align: left;
+    }
+
+    .cartBarSpacer {
+        height: 9rem;
     }
 }

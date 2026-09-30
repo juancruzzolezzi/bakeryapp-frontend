@@ -2,14 +2,18 @@
     width: 100%;
     max-width: 1100px;
     margin: 3rem auto 0;
-    padding-top: 2rem;
+    /* Padding lateral propio: así se ve bien tanto en páginas que ya
+       tienen margen a los costados (Nosotros, FAQ) como en las que no
+       (Productos, Home). */
+    padding: 2rem 1rem 1.5rem;
+    box-sizing: border-box;
     border-top: 1px solid rgba(230, 201, 138, 0.18);
     font-family: "Lexend", sans-serif;
 }
 
 .inner {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     text-align: left;
 }
@@ -49,13 +53,65 @@
     color: #e7c98a;
 }
 
+/* ".col" adelante: gana sobre ".col a" (tamaño, color y margen de los
+   links comunes de la columna). */
+.col .arrepentimientoBtn {
+    align-self: flex-start;
+    margin-top: 0.6rem;
+    border: 1px solid #e7c98a;
+    color: #e7c98a;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.col .arrepentimientoBtn:hover {
+    background: #e7c98a;
+    color: #241a10;
+}
+
+/* Va al final de la columna "Legal", alineado con sus links. */
+.col .defensaLink {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+    line-height: 1.35;
+    text-decoration: none;
+}
+
+.defensaLabel {
+    font-size: 0.68rem;
+    color: #8a7f6d;
+}
+
+.defensaAction {
+    font-size: 0.75rem;
+    color: #c9bda9;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.defensaLink:hover .defensaAction {
+    color: #e7c98a;
+}
+
 .bottom {
-    margin-top: 1.8rem;
+    margin-top: 1.4rem;
     padding-top: 1.2rem;
     border-top: 1px solid rgba(230, 201, 138, 0.1);
     text-align: center;
     font-size: 0.75rem;
     color: #8a7f6d;
+}
+
+@media screen and (max-width: 960px) {
+    .inner {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media screen and (max-width: 760px) {
@@ -73,9 +129,17 @@
         align-items: center;
     }
 
+    .col .defensaLink,
+    .col .arrepentimientoBtn {
+        align-self: center;
+        align-items: center;
+    }
+
     /* Deja lugar para el botón flotante de "volver arriba" (fixed, abajo
-       a la derecha) para que no quede tapando el texto. */
+       a la derecha) para que no tape el texto. El mismo margen de los dos
+       lados, así el texto sigue centrado. */
     .bottom {
+        padding-left: 3.25rem;
         padding-right: 3.25rem;
     }
 }

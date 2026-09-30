@@ -9,10 +9,8 @@ import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import { CONTACTO } from "../../constants/contacto";
 import { ACCOUNT_DISCOUNT_RATE } from "../../utils/discount";
+import { FREE_SHIPPING_THRESHOLD } from "../../constants/deliveryZones";
 import style from "./Cart.module.css";
-
-// TODO: ajustar al monto mínimo real que definan para envío gratis.
-const FREE_SHIPPING_THRESHOLD = 15000;
 
 // Más viejo que esto, "Repetir pedido" deja de ofrecerse: pasado un mes ya
 // no tiene mucho sentido (productos de temporada, precios desactualizados).
@@ -128,7 +126,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   }, [cartList, setIsCartOpen]);
 
   //Cierra el carrito al hacer click en cualquier lugar de la pantalla que no
-  //sea el carrito en sí ni el botón "Añadir al Carrito" (ese lo mantiene
+  //sea el carrito en sí ni el botón "Agregar" de un producto (ese lo mantiene
   //abierto vía el useEffect de arriba). Se ignora mientras haya CUALQUIER
   //modal abierto (Pagar, Limpiar carrito, Eliminar producto, etc.): todos
   //se renderizan en un portal fuera del div del carrito, y react-modal
@@ -234,7 +232,6 @@ function Cart({ isCartOpen, setIsCartOpen }) {
           </div>
 
           <div className={style.summary}>
-            {/* TODO: reemplazar FREE_SHIPPING_THRESHOLD por el monto real */}
             <div className={style.shipping}>
               {totalPrice >= FREE_SHIPPING_THRESHOLD ? (
                 <span className={style.shippingUnlocked}>

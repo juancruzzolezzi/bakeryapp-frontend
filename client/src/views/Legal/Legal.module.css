@@ -1,0 +1,343 @@
+.container {
+    min-height: 100vh;
+    width: 100%;
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
+        linear-gradient(rgba(23, 16, 9, 0.85), rgba(23, 16, 9, 0.85));
+    background-size: 32px 32px, cover;
+}
+
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: calc(20vh + 0.5rem) clamp(1.1rem, 4vw, 2.5rem) 1.5rem;
+    box-sizing: border-box;
+    font-family: "Lexend", sans-serif;
+    color: #f6ecdb;
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #e7c98a;
+    font-weight: 600;
+}
+
+.title {
+    margin: 0.5rem 0 1.2rem;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.05;
+    text-wrap: balance;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.3rem;
+    border-bottom: 1px solid rgba(230, 201, 138, 0.16);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #c9bda9;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+}
+
+.tab:hover {
+    color: #f6ecdb;
+}
+
+.tabOn,
+.tabOn:hover {
+    color: #e7c98a;
+    border-bottom-color: #e7c98a;
+}
+
+.tab:focus-visible,
+.tocLink:focus-visible {
+    outline: 2px solid #e7c98a;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.layout {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.layoutSolo {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 820px;
+}
+
+/* ---- Índice ---- */
+.toc {
+    position: sticky;
+    top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tocTitle {
+    padding: 0 0.75rem 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a7f6d;
+    font-weight: 600;
+}
+
+.tocLink {
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    color: #c9bda9;
+    text-decoration: none;
+}
+
+.tocLink:hover {
+    color: #f6ecdb;
+}
+
+.tocLinkOn,
+.tocLinkOn:hover {
+    background: rgba(231, 201, 138, 0.12);
+    color: #e7c98a;
+    font-weight: 600;
+}
+
+.updated {
+    margin-top: 0.9rem;
+    padding: 0 0.75rem;
+    font-size: 0.75rem;
+    color: #8a7f6d;
+}
+
+/* ---- Texto: hoja clara, más cómoda para leer texto largo ---- */
+.article {
+    background: #fffaf1;
+    color: #4f3a24;
+    border-radius: 24px;
+    padding: clamp(1.4rem, 4vw, 2.4rem) clamp(1.2rem, 4vw, 2.6rem);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    box-shadow: 0 30px 60px -36px rgba(0, 0, 0, 0.9);
+}
+
+.article h2 {
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #2b1d12;
+    margin: 1.9rem 0 0.5rem;
+    scroll-margin-top: 1.5rem;
+}
+
+.article p,
+.article ul {
+    margin: 0 0 0.8rem;
+}
+
+.article ul {
+    padding-left: 1.2rem;
+}
+
+.article li {
+    margin-bottom: 0.35rem;
+}
+
+.article a {
+    color: #9a6b22;
+    text-decoration: underline;
+}
+
+.article a:hover {
+    color: #2b1d12;
+}
+
+.article strong {
+    color: #2b1d12;
+}
+
+.updatedInline {
+    font-size: 0.8rem;
+    color: #8a7a64;
+}
+
+.intro {
+    font-size: 1.02rem;
+    color: #2b1d12;
+}
+
+.summary {
+    margin: 1rem 0 0.5rem;
+    padding: 1.1rem 1.3rem;
+    border-radius: 16px;
+    background: #f4e9d6;
+}
+
+.summary strong {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.1rem;
+}
+
+.summary ul {
+    margin: 0;
+}
+
+/* Aviso destacado (ej: texto obligatorio de la AAIP). */
+.notice {
+    border-left: 3px solid #9a6b22;
+    background: #f4e9d6;
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+}
+
+/* ---- Formulario de arrepentimiento ---- */
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.2rem;
+    margin-top: 1.4rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2b1d12;
+}
+
+.fieldFull {
+    grid-column: 1 / -1;
+}
+
+.field input,
+.field textarea {
+    background: #fff;
+    border: 1px solid rgba(43, 29, 18, 0.25);
+    border-radius: 10px;
+    padding: 0.65rem 0.8rem;
+    color: #2b1d12;
+    /* 16px: por debajo, el celular hace zoom al enfocar. */
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 400;
+}
+
+.field textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+    outline: 2px solid #9a6b22;
+    outline-offset: 1px;
+}
+
+.optional {
+    color: #8a7a64;
+    font-weight: 400;
+}
+
+.submitBtn {
+    grid-column: 1 / -1;
+    justify-self: start;
+    background: #2b1d12;
+    border: 1px solid #2b1d12;
+    color: #f6ecdb;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.6rem;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background: #3d2a1a;
+}
+
+.submitBtn:focus-visible {
+    outline: 2px solid #9a6b22;
+    outline-offset: 2px;
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.error {
+    grid-column: 1 / -1;
+    color: #a8412b;
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+.success {
+    margin-top: 1.4rem;
+    padding: 1.2rem 1.3rem;
+    border-radius: 14px;
+    border: 1px solid rgba(47, 122, 69, 0.4);
+    background: rgba(47, 122, 69, 0.08);
+    color: #2b1d12;
+}
+
+.code {
+    display: inline-block;
+    margin: 0.3rem 0 0.6rem;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #2f7a45;
+}
+
+@media screen and (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* En pantallas chicas el índice ocuparía toda la pantalla antes del
+       texto: se oculta (las pestañas de arriba siguen estando). */
+    .toc {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .page {
+        padding-top: calc(18vh + 0.5rem);
+    }
+
+    .form {
+        grid-template-columns: 1fr;
+    }
+}
