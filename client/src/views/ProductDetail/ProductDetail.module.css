@@ -36,6 +36,32 @@
     font-weight: 600;
 }
 
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 2.5rem;
+    padding: 0 1rem 0 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(230, 201, 138, 0.3);
+    border-radius: 999px;
+    background: transparent;
+    color: #e7c98a;
+    font: 600 0.88rem "Lexend", sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.backBtn:hover {
+    border-color: #e7c98a;
+    background: rgba(231, 201, 138, 0.1);
+}
+
+.backBtn:focus-visible {
+    outline: 2px solid #f6ecdb;
+    outline-offset: 2px;
+}
+
 .breadcrumb {
     display: flex;
     flex-wrap: wrap;

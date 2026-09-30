@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../../components/Navs/NavBar/NavBar";
 import BackToTop from "../../components/BackToTop/BackToTop";
 import Footer from "../../components/Footer/Footer";
@@ -53,6 +53,15 @@ const ProductDetail = () => {
   const showToast = useToast();
   const [quantity, setQuantity] = useState(1);
   const [imgCargada, setImgCargada] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //Vuelve a la página anterior (conserva filtros y scroll del listado).
+  //Si se entró directo por link, no hay historial propio: va a productos.
+  const volver = () => {
+    if (location.key === "default") navigate("/products");
+    else navigate(-1);
+  };
 
   //Al pasar de un producto a otro (desde "También te puede gustar"), la
   //cantidad y la foto arrancan de cero.
@@ -147,6 +156,11 @@ const ProductDetail = () => {
 
         {!isLoading && product && (
           <>
+            <button type="button" onClick={volver} className={styles.backBtn}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+              Volver
+            </button>
+
             <nav className={styles.breadcrumb} aria-label="Ubicación">
               <Link to="/products">Productos</Link>
               <span aria-hidden="true">/</span>
