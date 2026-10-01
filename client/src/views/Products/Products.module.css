@@ -4,6 +4,18 @@
     align-items: center;
     width: 100%;
     min-height: 100vh;
+    /* Fondo crema propio: tapa la foto oscura de fondo del resto del
+       sitio (ver .background-image en App.css). Los colores --cat-* vienen
+       de .catalogoClaro (index.css). */
+    background: var(--cat-area);
+}
+
+/* Franja oscura a todo lo ancho para el footer (que tiene texto claro). */
+.footerBand {
+    width: 100%;
+    /* Aire en crema entre los últimos productos y el footer. */
+    margin-top: 5rem;
+    background: var(--cat-footer);
 }
 
 /* Fondo oscuro detrás del cartel: lo saca del flujo normal de la página
@@ -84,26 +96,57 @@
 }
 
 
-/* ---- Portada del catálogo: foto de fondo con degradé, el menú (que es
-   "absolute") queda encima de la foto. ---- */
-/* Título del catálogo, debajo del menú (20vh, ver NavBar.module.css),
-   sobre la misma foto de fondo que el resto del sitio. */
-.hero {
+/* ---- Portada del catálogo: texto a la izquierda y la foto enmarcada a
+   la derecha, debajo del menú (20vh, ver NavBar.module.css). ---- */
+/* Franja marrón clarito a todo lo ancho detrás del menú (20vh, ver
+   NavBar.module.css) y la portada. El acento se oscurece acá para que
+   el texto chico (ej: "Catálogo") se lea bien sobre este fondo. */
+.heroBand {
     width: 100%;
     box-sizing: border-box;
-    margin-top: 20vh;
-    padding: 1.5rem clamp(1.1rem, 5vw, 3.5rem) 0.5rem;
+    display: flex;
+    justify-content: center;
+    padding: 20vh 0 2.6rem;
+    background: var(--cat-band);
+    border-radius: 0 0 32px 32px;
+    --cat-accent: var(--cat-band-accent);
+}
+
+/* Mismo ancho y márgenes que .content, para que el título y la foto
+   queden alineados con las tarjetas. */
+.hero {
+    width: 100%;
+    max-width: 1240px;
+    box-sizing: border-box;
+    padding: 0 clamp(1.1rem, 5vw, 3.5rem);
     font-family: "Lexend", sans-serif;
 }
 
 .heroInner {
-    position: relative;
-    width: 100%;
-    max-width: 1240px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+}
+
+.heroText {
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
+}
+
+.heroPhoto {
+    height: 17rem;
+    border-radius: 28px;
+    overflow: hidden;
+    background: var(--cat-surface-2);
+}
+
+.heroPhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .eyebrow {
@@ -111,7 +154,7 @@
     font-size: 0.75rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #e7c98a;
+    color: var(--cat-accent);
     font-weight: 600;
 }
 
@@ -121,14 +164,14 @@
     font-weight: 600;
     font-size: clamp(2.2rem, 5vw, 3.6rem);
     line-height: 1.05;
-    color: #f6ecdb;
+    color: var(--cat-text);
     text-wrap: balance;
 }
 
 .heroTitle em {
     font-style: italic;
     font-weight: 500;
-    color: #e7c98a;
+    color: var(--cat-accent);
 }
 
 .heroPills {
@@ -146,14 +189,13 @@
     gap: 0.5rem;
     padding: 0.5rem 0.9rem;
     border-radius: 999px;
-    background: rgba(20, 14, 8, 0.55);
-    backdrop-filter: blur(4px);
-    color: #f6ecdb;
+    background: var(--cat-surface);
+    color: var(--cat-text);
     font-size: 0.82rem;
 }
 
 .heroPills svg {
-    color: #e7c98a;
+    color: var(--cat-accent);
     flex-shrink: 0;
 }
 
@@ -166,74 +208,60 @@
     font-family: "Lexend", sans-serif;
 }
 
+/* Categorías: botones horizontales con la foto chiquita. En celular van
+   en una sola fila que se desliza de costado. */
 .categoryRail {
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.6rem 0 0.4rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.categoryRail::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 2rem 0 0.4rem;
 }
 
 .category {
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-    background: none;
-    border: none;
-    padding: 0;
-    color: #c9bda9;
-    font: 500 0.82rem "Lexend", sans-serif;
+    gap: 0.6rem;
+    height: 3rem;
+    padding: 0 1.1rem 0 0.3rem;
+    box-sizing: border-box;
+    border-radius: 999px;
+    border: 1px solid var(--cat-border-strong);
+    background: var(--cat-surface);
+    color: var(--cat-text);
+    font: 600 0.88rem "Lexend", sans-serif;
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .category:hover {
-    color: #f6ecdb;
+    border-color: var(--cat-text);
+}
+
+.categoryOn,
+.categoryOn:hover {
+    background: var(--cat-btn-bg);
+    border-color: var(--cat-btn-bg);
+    color: var(--cat-btn-text);
+}
+
+.category:focus-visible {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 2px;
 }
 
 .categoryRing {
     display: block;
-    padding: 3px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.category:hover .categoryRing {
-    transform: translateY(-3px);
-}
-
-.categoryOn {
-    color: #e7c98a;
-    font-weight: 700;
-}
-
-.categoryOn .categoryRing {
-    border-color: #e7c98a;
-}
-
-.category:focus-visible {
-    outline: none;
-}
-
-.category:focus-visible .categoryRing {
-    border-color: #f6ecdb;
+    flex-shrink: 0;
 }
 
 .categoryImg {
     display: block;
-    width: 4.6rem;
-    height: 4.6rem;
+    width: 2.4rem;
+    height: 2.4rem;
     border-radius: 50%;
     object-fit: cover;
-    background: #2f2318;
+    background: var(--cat-surface-2);
 }
 
 .toolbar {
@@ -243,8 +271,8 @@
     gap: 0.8rem;
     margin-top: 1.4rem;
     padding: 0.8rem;
-    background: #251a11;
-    border: 1px solid rgba(230, 201, 138, 0.14);
+    background: var(--cat-surface);
+    border: 1px solid var(--cat-border);
     border-radius: 18px;
     scroll-margin-top: 1rem;
 }
@@ -257,12 +285,12 @@
     height: 2.8rem;
     padding: 0 1rem;
     border-radius: 999px;
-    background: #1b130c;
-    color: #8a7f6d;
+    background: var(--cat-surface-2);
+    color: var(--cat-faint);
 }
 
 .search:focus-within {
-    outline: 2px solid rgba(231, 201, 138, 0.6);
+    outline: 2px solid var(--cat-accent);
 }
 
 .search input {
@@ -270,13 +298,13 @@
     min-width: 0;
     border: none;
     background: transparent;
-    color: #f6ecdb;
+    color: var(--cat-text);
     font: 400 0.9rem "Lexend", sans-serif;
     outline: none;
 }
 
 .search input::placeholder {
-    color: #8a7f6d;
+    color: var(--cat-faint);
 }
 
 .favToggle {
@@ -286,21 +314,21 @@
     height: 2.8rem;
     padding: 0 1rem;
     border-radius: 999px;
-    border: 1px solid rgba(230, 201, 138, 0.3);
+    border: 1px solid var(--cat-border-strong);
     background: transparent;
-    color: #f6ecdb;
+    color: var(--cat-text);
     font: 600 0.85rem "Lexend", sans-serif;
     cursor: pointer;
 }
 
 .favToggle:hover {
-    border-color: #e7c98a;
+    border-color: var(--cat-accent);
 }
 
 .favToggleOn {
-    background: #e7c98a;
-    border-color: #e7c98a;
-    color: #241a10;
+    background: var(--cat-btn-hover);
+    border-color: var(--cat-btn-hover);
+    color: var(--cat-btn-hover-text);
 }
 
 .favCount {
@@ -309,15 +337,15 @@
     padding: 0 0.3rem;
     box-sizing: border-box;
     border-radius: 999px;
-    background: rgba(231, 201, 138, 0.2);
+    background: var(--cat-border-strong);
     font-size: 0.7rem;
     line-height: 1.2rem;
     text-align: center;
 }
 
 .favToggleOn .favCount {
-    background: #241a10;
-    color: #e7c98a;
+    background: var(--cat-btn-hover-text);
+    color: var(--cat-btn-hover);
 }
 
 .sort {
@@ -325,15 +353,15 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.82rem;
-    color: #c9bda9;
+    color: var(--cat-muted);
 }
 
 .sort select {
     height: 2.8rem;
     border-radius: 999px;
-    border: 1px solid rgba(230, 201, 138, 0.3);
-    background: #1b130c;
-    color: #f6ecdb;
+    border: 1px solid var(--cat-border-strong);
+    background: var(--cat-surface-2);
+    color: var(--cat-text);
     padding: 0 0.9rem;
     font: 500 0.85rem "Lexend", sans-serif;
     cursor: pointer;
@@ -343,7 +371,7 @@
 .sort select:focus-visible,
 .seeAll:focus-visible,
 .cartBarBtn:focus-visible {
-    outline: 2px solid #e7c98a;
+    outline: 2px solid var(--cat-focus);
     outline-offset: 2px;
 }
 
@@ -351,7 +379,7 @@
     margin-left: auto;
     padding-right: 0.4rem;
     font-size: 0.82rem;
-    color: #8a7f6d;
+    color: var(--cat-faint);
     white-space: nowrap;
 }
 
@@ -372,7 +400,7 @@
     font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-weight: 600;
     font-size: clamp(1.6rem, 3vw, 2rem);
-    color: #f6ecdb;
+    color: var(--cat-text);
 }
 
 .groupCount {
@@ -380,7 +408,7 @@
     font-family: "Lexend", sans-serif;
     font-size: 0.85rem;
     font-weight: 400;
-    color: #8a7f6d;
+    color: var(--cat-faint);
 }
 
 .seeAll {
@@ -388,13 +416,13 @@
     background: none;
     border: none;
     padding: 0;
-    color: #e7c98a;
+    color: var(--cat-accent);
     font: 600 0.88rem "Lexend", sans-serif;
     cursor: pointer;
 }
 
 .seeAll:hover {
-    color: #f6ecdb;
+    color: var(--cat-text);
 }
 
 .grid {
@@ -406,7 +434,7 @@
 .skeletonCard {
     aspect-ratio: 3 / 4;
     border-radius: 20px;
-    background: linear-gradient(110deg, #251a11 30%, #33251a 50%, #251a11 70%);
+    background: linear-gradient(110deg, var(--cat-skeleton-a) 30%, var(--cat-skeleton-b) 50%, var(--cat-skeleton-a) 70%);
     background-size: 200% 100%;
     animation: skeleton 1.3s ease-in-out infinite;
 }
@@ -419,7 +447,7 @@
 
 .stateMessage {
     text-align: center;
-    color: #c9bda9;
+    color: var(--cat-muted);
     font-size: 1rem;
     padding: 3rem 1rem;
 }
@@ -440,7 +468,7 @@
     background: #f4e9d6;
     color: #2b1d12;
     border-radius: 20px;
-    box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.85);
+    box-shadow: var(--cat-bar-shadow);
     font-family: "Lexend", sans-serif;
     animation: cartBarIn 0.3s ease both;
 }
@@ -515,23 +543,37 @@
 }
 
 @media screen and (max-width: 760px) {
-    .hero {
-        margin-top: 18vh;
-        padding-top: 1rem;
+    .heroBand {
+        padding: calc(18vh + 1rem) 0 1.8rem;
+        border-radius: 0 0 24px 24px;
+    }
+
+    .footerBand {
+        margin-top: 3.5rem;
+    }
+
+    .heroInner {
+        grid-template-columns: 1fr;
+    }
+
+    .heroPhoto {
+        height: 11rem;
+        border-radius: 22px;
     }
 
     .heroPills li {
         font-size: 0.76rem;
     }
 
+    /* Una sola fila que se desliza de costado (sin barra visible). */
     .categoryRail {
-        justify-content: flex-start;
-        gap: 1.1rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
     }
 
-    .categoryImg {
-        width: 4rem;
-        height: 4rem;
+    .categoryRail::-webkit-scrollbar {
+        display: none;
     }
 
     .search {

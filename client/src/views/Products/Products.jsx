@@ -187,8 +187,8 @@ const Products = () => {
     filtroActivo === "Todo" ? "Todos los productos" : filtroActivo;
 
   return (
-    <div className={style.mainContainer}>
-      <NavBar />
+    <div className={`catalogoClaro ${style.mainContainer}`}>
+      <NavBar claro />
 
       {paymentStatus && (
         <div
@@ -228,28 +228,35 @@ const Products = () => {
         </div>
       )}
 
-      <header className={style.hero}>
-        <div className={style.heroInner}>
-          <p className={style.eyebrow}>Catálogo</p>
-          <h1 className={style.heroTitle}>
-            Horneado hoy, <em>elegí el tuyo</em>
-          </h1>
-          <ul className={style.heroPills}>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z" /><path d="M14 10h4l3 3v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></svg>
-              Delivery en Belgrano y alrededores
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z" /><path d="M3 8l9 5 9-5M12 13v8" /></svg>
-              Envío gratis desde ${FREE_SHIPPING_THRESHOLD.toLocaleString("es-AR")}
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
-              Tortas con 48 hs de anticipación
-            </li>
-          </ul>
-        </div>
-      </header>
+      <div className={style.heroBand}>
+        <header className={style.hero}>
+          <div className={style.heroInner}>
+            <div className={style.heroText}>
+              <p className={style.eyebrow}>Catálogo</p>
+              <h1 className={style.heroTitle}>
+                Horneado hoy, <em>elegí el tuyo</em>
+              </h1>
+              <ul className={style.heroPills}>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z" /><path d="M14 10h4l3 3v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></svg>
+                  Delivery en Belgrano y alrededores
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z" /><path d="M3 8l9 5 9-5M12 13v8" /></svg>
+                  Envío gratis desde ${FREE_SHIPPING_THRESHOLD.toLocaleString("es-AR")}
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                  Tortas con 48 hs de anticipación
+                </li>
+              </ul>
+            </div>
+            <div className={style.heroPhoto}>
+              <img src="/Portada.jpg" alt="Panes y facturas recién horneados" fetchpriority="high" />
+            </div>
+          </div>
+        </header>
+      </div>
 
       <div className={style.content}>
         {/* Categorías: círculos con foto. En celular se desliza de costado. */}
@@ -422,12 +429,14 @@ const Products = () => {
         </div>
       )}
 
-      <Footer />
+      <div className={style.footerBand}>
+        <Footer />
+
+        {/* Deja lugar abajo para que la barra flotante no tape el footer. */}
+        {unidades > 0 && <div className={style.cartBarSpacer} aria-hidden="true" />}
+      </div>
 
       <BackToTop />
-
-      {/* Deja lugar abajo para que la barra flotante no tape el footer. */}
-      {unidades > 0 && <div className={style.cartBarSpacer} aria-hidden="true" />}
     </div>
   );
 };

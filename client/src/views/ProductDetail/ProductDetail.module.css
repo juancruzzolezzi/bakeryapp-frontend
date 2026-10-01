@@ -1,23 +1,39 @@
+/* Mismo formato claro que Productos: los colores --cat-* vienen de
+   .catalogoClaro (index.css). */
 .container {
     min-height: 100vh;
     width: 100%;
-    background-image:
-        radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0),
-        linear-gradient(rgba(23, 16, 9, 0.8), rgba(23, 16, 9, 0.8));
-    background-size: 32px 32px, cover;
+    display: flex;
+    flex-direction: column;
+    background: var(--cat-area);
+}
+
+/* Franja marrón clarito detrás del menú (20vh, ver NavBar.module.css),
+   igual a la de arriba de Productos. */
+.topBand {
+    height: 20vh;
+    background: var(--cat-band);
+    border-radius: 0 0 32px 32px;
+}
+
+/* Franja oscura a todo lo ancho para el footer (que tiene texto claro). */
+.footerBand {
+    margin-top: 5rem;
+    background: var(--cat-footer);
 }
 
 .page {
     max-width: 1180px;
     margin: 0 auto;
-    padding: calc(20vh + 0.5rem) clamp(1.1rem, 4vw, 2.5rem) 1rem;
+    width: 100%;
+    padding: 1.8rem clamp(1.1rem, 4vw, 2.5rem) 0;
     box-sizing: border-box;
     font-family: "Lexend", sans-serif;
-    color: #f6ecdb;
+    color: var(--cat-text);
 }
 
 .stateMessage {
-    color: #c9bda9;
+    color: var(--cat-muted);
     font-size: 1rem;
     text-align: center;
     padding: 3rem 1rem;
@@ -31,7 +47,7 @@
 }
 
 .backLink {
-    color: #e7c98a;
+    color: var(--cat-accent);
     text-decoration: none;
     font-weight: 600;
 }
@@ -43,22 +59,22 @@
     height: 2.5rem;
     padding: 0 1rem 0 0.8rem;
     margin-bottom: 1rem;
-    border: 1px solid rgba(230, 201, 138, 0.3);
+    border: 1px solid var(--cat-border-strong);
     border-radius: 999px;
-    background: transparent;
-    color: #e7c98a;
+    background: var(--cat-surface);
+    color: var(--cat-text);
     font: 600 0.88rem "Lexend", sans-serif;
     cursor: pointer;
     transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .backBtn:hover {
-    border-color: #e7c98a;
-    background: rgba(231, 201, 138, 0.1);
+    border-color: var(--cat-text);
+    background: var(--cat-surface);
 }
 
 .backBtn:focus-visible {
-    outline: 2px solid #f6ecdb;
+    outline: 2px solid var(--cat-focus);
     outline-offset: 2px;
 }
 
@@ -67,21 +83,21 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     font-size: 0.82rem;
-    color: #8a7f6d;
+    color: var(--cat-faint);
     margin-bottom: 1.4rem;
 }
 
 .breadcrumb a {
-    color: #c9bda9;
+    color: var(--cat-muted);
     text-decoration: none;
 }
 
 .breadcrumb a:hover {
-    color: #e7c98a;
+    color: var(--cat-accent);
 }
 
 .breadcrumb [aria-current] {
-    color: #f6ecdb;
+    color: var(--cat-text);
 }
 
 .detail {
@@ -96,8 +112,8 @@
     aspect-ratio: 1 / 1;
     border-radius: 24px;
     overflow: hidden;
-    background: #2a1e14;
-    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+    background: var(--cat-surface-2);
+    box-shadow: 0 30px 60px -34px rgba(90, 60, 25, 0.5);
 }
 
 .image {
@@ -152,8 +168,9 @@
 .chip {
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
-    background: rgba(246, 236, 219, 0.08);
-    color: #c9bda9;
+    background: var(--cat-surface);
+    border: 1px solid var(--cat-border);
+    color: var(--cat-muted);
     font-size: 0.78rem;
 }
 
@@ -170,7 +187,7 @@
     margin: 0;
     font-size: 1.6rem;
     font-weight: 700;
-    color: #e7c98a;
+    color: var(--cat-accent);
     font-variant-numeric: tabular-nums;
 }
 
@@ -178,7 +195,7 @@
     margin: 0;
     font-size: 1rem;
     line-height: 1.65;
-    color: #c9bda9;
+    color: var(--cat-muted);
 }
 
 .actionsRow {
@@ -193,7 +210,8 @@
     display: flex;
     align-items: center;
     height: 3.2rem;
-    border: 1px solid rgba(230, 201, 138, 0.3);
+    border: 1px solid var(--cat-border-strong);
+    background: var(--cat-surface);
     border-radius: 999px;
 }
 
@@ -202,14 +220,14 @@
     height: 100%;
     border: none;
     background: transparent;
-    color: #e7c98a;
+    color: var(--cat-text);
     font-size: 1.25rem;
     cursor: pointer;
     border-radius: 999px;
 }
 
 .stepper button:hover {
-    background: rgba(231, 201, 138, 0.1);
+    background: var(--cat-surface-2);
 }
 
 .qty {
@@ -224,15 +242,15 @@
     height: 3.2rem;
     border: none;
     border-radius: 999px;
-    background: #e7c98a;
-    color: #241a10;
+    background: var(--cat-btn-bg);
+    color: var(--cat-btn-text);
     font: 700 1rem "Lexend", sans-serif;
     cursor: pointer;
     transition: background 0.15s ease, transform 0.12s ease;
 }
 
 .addBtn:hover:not(:disabled) {
-    background: #f6ecdb;
+    background: var(--cat-btn-hover);
 }
 
 .addBtn:active:not(:disabled) {
@@ -241,8 +259,8 @@
 
 .addBtn:disabled {
     background: transparent;
-    border: 1px solid rgba(230, 201, 138, 0.25);
-    color: #8a7f6d;
+    border: 1px solid var(--cat-border-strong);
+    color: var(--cat-faint);
     cursor: not-allowed;
 }
 
@@ -250,9 +268,9 @@
     width: 3.2rem;
     height: 3.2rem;
     border-radius: 50%;
-    border: 1px solid rgba(230, 201, 138, 0.3);
-    background: transparent;
-    color: #f6ecdb;
+    border: 1px solid var(--cat-border-strong);
+    background: var(--cat-surface);
+    color: var(--cat-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -261,19 +279,19 @@
 }
 
 .iconBtn:hover {
-    border-color: #e7c98a;
+    border-color: var(--cat-text);
 }
 
 .iconBtnOn {
-    color: #e7c98a;
-    border-color: #e7c98a;
+    color: var(--cat-accent);
+    border-color: var(--cat-accent);
 }
 
 .stepper button:focus-visible,
 .addBtn:focus-visible,
 .iconBtn:focus-visible,
 .pairingBtn:focus-visible {
-    outline: 2px solid #f6ecdb;
+    outline: 2px solid var(--cat-focus);
     outline-offset: 2px;
 }
 
@@ -285,7 +303,7 @@
     display: flex;
     gap: 1rem;
     padding: 0.95rem 0;
-    border-top: 1px solid rgba(230, 201, 138, 0.14);
+    border-top: 1px solid var(--cat-border-strong);
 }
 
 .infoRow dt {
@@ -295,7 +313,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #e7c98a;
+    color: var(--cat-accent);
     font-weight: 600;
 }
 
@@ -303,7 +321,7 @@
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.55;
-    color: #c9bda9;
+    color: var(--cat-muted);
 }
 
 /* ---- "Ideal con" ---- */
@@ -314,8 +332,10 @@
     gap: 1.3rem;
     padding: 1.1rem;
     border-radius: 22px;
-    background: #f4e9d6;
-    color: #2b1d12;
+    background: var(--cat-surface);
+    border: 1px solid var(--cat-card-border);
+    box-shadow: var(--cat-card-shadow);
+    color: var(--cat-text);
 }
 
 .pairingImg {
@@ -338,7 +358,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #9a6b22;
+    color: var(--cat-accent);
     font-weight: 600;
 }
 
@@ -346,7 +366,7 @@
     font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     font-size: 1.3rem;
     font-weight: 600;
-    color: #2b1d12;
+    color: var(--cat-text);
     text-decoration: none;
 }
 
@@ -356,7 +376,7 @@
 
 .pairingPrice {
     font-size: 0.9rem;
-    color: #6b5641;
+    color: var(--cat-muted);
 }
 
 .pairingBtn {
@@ -365,14 +385,14 @@
     padding: 0 1.3rem;
     border: none;
     border-radius: 999px;
-    background: #2b1d12;
-    color: #f6ecdb;
+    background: var(--cat-btn-bg);
+    color: var(--cat-btn-text);
     font: 700 0.88rem "Lexend", sans-serif;
     cursor: pointer;
 }
 
 .pairingBtn:hover:not(:disabled) {
-    background: #3d2a1a;
+    background: var(--cat-btn-hover);
 }
 
 .pairingBtn:disabled {
@@ -413,8 +433,8 @@
 }
 
 @media screen and (max-width: 560px) {
-    .page {
-        padding-top: calc(18vh + 0.5rem);
+    .footerBand {
+        margin-top: 3.5rem;
     }
 
     .pairing {
@@ -427,5 +447,12 @@
 
     .relatedGrid {
         gap: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .topBand {
+        height: 18vh;
+        border-radius: 0 0 24px 24px;
     }
 }

@@ -11,7 +11,8 @@ import { NAV_LINKS } from "../../../constants/navLinks";
 // TODO: ajustar cuánto tiempo sin abrir el carrito cuenta como "se olvidó".
 const CART_REMINDER_THRESHOLD_MS = 30 * 60 * 1000; // 30 minutos
 
-const NavBar = () => {
+//"claro": textos oscuros, para páginas con fondo claro (ej: Productos).
+const NavBar = ({ claro = false }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
@@ -86,7 +87,7 @@ const NavBar = () => {
     <>
       {/* Menú: NO es fixed, scrollea con la página (solo se ve arriba
           de todo, no se queda flotando encima de los productos). */}
-      <nav className={style.navbar}>
+      <nav className={`${style.navbar} ${claro ? style.claro : ""}`}>
         <Link to="/" className={style.logo} aria-label="Bakery, ir al inicio">
           Bakery
         </Link>
@@ -193,8 +194,8 @@ const NavBar = () => {
 };
 
 
-//React.memo: NavBar no recibe props (se usa como <NavBar />), así que
-//esto le permite a React saltear por completo cualquier intento de
+//React.memo: NavBar solo recibe "claro" (un booleano que no cambia), así
+//que esto le permite a React saltear por completo cualquier intento de
 //re-render que venga de la página que lo contiene (ej: cada letra en el
 //buscador de Products.jsx) — solo se actualiza por sus propios cambios
 //internos (carrito, cuenta, menú), no por los de quien lo use.

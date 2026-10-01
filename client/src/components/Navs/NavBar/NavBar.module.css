@@ -63,9 +63,28 @@
     pointer-events: auto;
 }
 
+/* Variante para páginas con fondo claro (ver prop "claro" en NavBar.jsx).
+   Las variables también las toma el botón "Ingresar" (AccountButton). */
+.claro {
+    --nav-text: #3f2d1f;
+    --nav-accent: #74490f;
+    --nav-border: rgba(43, 29, 18, 0.3);
+}
+
+.claro .logo {
+    color: #2b1d12;
+    text-shadow: none;
+}
+
+.claro .btnMenu,
+.claro .btnMenu:hover {
+    background: #2b1d12;
+    border-color: #2b1d12;
+}
+
 .desktopLink {
     position: relative;
-    color: #f5f5f5;
+    color: var(--nav-text, #f5f5f5);
     text-decoration: none;
     font-size: clamp(0.95rem, 1vw, 1.05rem);
     letter-spacing: 0.04em;
@@ -80,14 +99,14 @@
     right: 0;
     bottom: 0;
     height: 2px;
-    background: #d9b767;
+    background: var(--nav-accent, #d9b767);
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.25s ease;
 }
 
 .desktopLink:hover {
-    color: #d9b767;
+    color: var(--nav-accent, #d9b767);
 }
 
 .desktopLink:hover::after {
@@ -95,7 +114,7 @@
 }
 
 .desktopLinkActive {
-    color: #d9b767;
+    color: var(--nav-accent, #d9b767);
     font-weight: 600;
 }
 
@@ -238,17 +257,22 @@
 .cart {
     position: relative;
     border: 3px solid #d9b767;
-    height: clamp(2.4rem, 5vw, 3rem);
-    width: clamp(2.4rem, 5vw, 3rem);
+    /* Mismo tamaño que el botón del menú (.btnMenu), para que queden
+       alineados uno debajo del otro. */
+    height: 3.3rem;
+    width: 3.3rem;
     flex-shrink: 0;
     border-radius: 50px;
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     display:flex;
     align-items: center;
     justify-content: center;
     margin-left: auto;
     transition: 0.5s;
     box-shadow: 4px 4px 10px black;
+    /* Relleno oscuro: sin él, el ícono claro desaparecía al pasar sobre
+       fondos claros (ej: el catálogo de Productos). */
+    background: rgba(27, 19, 12, 0.88);
     color: #f5f5f5;
     cursor: pointer;
 }
@@ -320,8 +344,8 @@
 }
 
 .btnMenu {
-    width: clamp(2.6rem, 7vw, 3.2rem);
-    height: clamp(2.6rem, 7vw, 3.2rem);
+    width: 3.3rem;
+    height: 3.3rem;
     border-radius: 50%;
     border: 1px solid rgba(217, 183, 103, 0.35);
     /* Relleno oscuro semitransparente: sin fondo, el ícono se veía muy
@@ -446,16 +470,16 @@
         display: flex;
         height: 8vh;
         width:fit-content;
-        /* Alineado con el carrito y la flecha de "volver arriba", que
-           también quedan a 0.4rem del borde en mobile. */
-        padding-right: 0.4rem;
+        /* Sin margen propio: el borde (0.4rem) lo da "right" más abajo,
+           el mismo que el carrito y la flecha de "volver arriba". */
+        padding-right: 0;
     }
 
-    /* Mismo tamaño que el ícono del carrito (2.75rem, ver .cart más abajo)
+    /* Mismo tamaño que el ícono del carrito (3.1rem, ver .cart más abajo)
        para que ambos queden alineados. */
     .btnMenu {
-        width: 2.75rem;
-        height: 2.75rem;
+        width: 3.1rem;
+        height: 3.1rem;
     }
 
     .desktopLinks {
@@ -563,8 +587,8 @@
 
     .cart {
         border: 3px solid #d9b767;
-        height: 2.75rem;
-        width: 2.75rem;
+        height: 3.1rem;
+        width: 3.1rem;
         flex-shrink: 0;
         border-radius: 50px;
         font-size: 1.2rem;
@@ -593,12 +617,34 @@
     text-decoration: none;
     pointer-events: auto;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Al pasar el mouse cambia de color y crece un poco, para que se note
+   que es un link (lleva al inicio). */
+.logo:hover {
+    color: #f6ecdb;
+    transform: translateY(-50%) scale(1.06);
+}
+
+.claro .logo:hover {
+    color: #74490f;
 }
 
 .logo:focus-visible {
     outline: 2px solid #e7c98a;
     outline-offset: 4px;
     border-radius: 4px;
+}
+
+.claro .logo:focus-visible {
+    outline-color: #2b1d12;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo:hover {
+        transform: translateY(-50%);
+    }
 }
 
 /* Pantallas medianas: logo + links + botones no entran en una fila sin
@@ -613,7 +659,8 @@
         display: flex;
         position: absolute;
         top: 50%;
-        right: 1.2rem;
+        right: 1rem;
+        padding-right: 0;
         transform: translateY(-50%);
         height: auto;
     }

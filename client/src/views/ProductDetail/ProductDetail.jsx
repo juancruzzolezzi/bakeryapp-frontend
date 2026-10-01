@@ -139,8 +139,9 @@ const ProductDetail = () => {
   const alergenos = product ? alergenosPara(product.category) : null;
 
   return (
-    <div className={styles.container}>
-      <NavBar />
+    <div className={`catalogoClaro ${styles.container}`}>
+      <NavBar claro />
+      <div className={styles.topBand} aria-hidden="true" />
 
       <div className={styles.page}>
         {isLoading && <p className={styles.stateMessage}>Cargando...</p>}
@@ -313,7 +314,9 @@ const ProductDetail = () => {
         )}
       </div>
 
-      <Footer />
+      <div className={styles.footerBand}>
+        <Footer />
+      </div>
 
       <BackToTop />
     </div>

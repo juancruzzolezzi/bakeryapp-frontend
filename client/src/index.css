@@ -32,3 +32,42 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Paleta clara del catálogo (Productos y detalle de producto): crema,
+   tarjetas blancas y botones marrón café. Va en una clase global (no en
+   un CSS module) para que las dos páginas, que se cargan por separado,
+   compartan exactamente los mismos colores. La tarjeta de producto
+   (Product.module.css) lee estas variables. */
+.catalogoClaro {
+  --cat-area: #f4ede2;
+  --cat-text: #2b1d12;
+  --cat-muted: #65513e;
+  --cat-faint: #7a6752;
+  --cat-accent: #8a5e1a;
+  --cat-surface: #ffffff;
+  --cat-surface-2: #f4ede2;
+  --cat-border: rgba(43, 29, 18, 0.08);
+  --cat-border-strong: rgba(43, 29, 18, 0.2);
+  --cat-card: #ffffff;
+  --cat-card-border: rgba(43, 29, 18, 0.07);
+  --cat-card-border-hover: rgba(138, 94, 26, 0.45);
+  --cat-card-shadow: 0 12px 26px -20px rgba(90, 60, 25, 0.4);
+  --cat-price: #2b1d12;
+  --cat-btn-bg: #2b1d12;
+  --cat-btn-text: #f6ecdb;
+  --cat-btn-border: #2b1d12;
+  --cat-btn-hover: #4a3322;
+  --cat-btn-hover-text: #f6ecdb;
+  --cat-photo-btn-bg: rgba(255, 255, 255, 0.92);
+  --cat-photo-btn-text: #2b1d12;
+  --cat-focus: #2b1d12;
+  --cat-skeleton-a: #ebe2d4;
+  --cat-skeleton-b: #f7f2ea;
+  --cat-bar-shadow: 0 18px 40px -16px rgba(60, 40, 20, 0.45);
+  /* Franja marrón clarito de arriba (detrás del menú) y su acento, más
+     oscuro para que el texto chico se lea bien sobre ella. */
+  --cat-band: #e6d3b8;
+  --cat-band-accent: #74490f;
+  /* Franja oscura del footer (que tiene texto claro). */
+  --cat-footer: #1b130c;
+}

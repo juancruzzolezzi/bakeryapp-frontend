@@ -4,19 +4,19 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #251a11;
-    border: 1px solid rgba(230, 201, 138, 0.12);
+    background: var(--cat-card, #251a11);
+    border: 1px solid var(--cat-card-border, rgba(230, 201, 138, 0.12));
     border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
     font-family: "Lexend", sans-serif;
-    box-shadow: 0 18px 36px -24px rgba(0, 0, 0, 0.8);
+    box-shadow: var(--cat-card-shadow, 0 18px 36px -24px rgba(0, 0, 0, 0.8));
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .card:hover {
     transform: translateY(-4px);
-    border-color: rgba(230, 201, 138, 0.35);
+    border-color: var(--cat-card-border-hover, rgba(230, 201, 138, 0.35));
 }
 
 .photo {
@@ -24,7 +24,7 @@
     aspect-ratio: 4 / 3;
     overflow: hidden;
     /* Skeleton mientras carga la foto (ver imgCargada en Product.jsx). */
-    background: linear-gradient(110deg, #2a1e14 30%, #3a2a1c 50%, #2a1e14 70%);
+    background: linear-gradient(110deg, var(--cat-skeleton-a, #2a1e14) 30%, var(--cat-skeleton-b, #3a2a1c) 50%, var(--cat-skeleton-a, #2a1e14) 70%);
     background-size: 200% 100%;
     animation: skeleton 1.3s ease-in-out infinite;
 }
@@ -71,8 +71,8 @@
     height: 2.3rem;
     border-radius: 50%;
     border: none;
-    background: rgba(27, 19, 12, 0.72);
-    color: #f6ecdb;
+    background: var(--cat-photo-btn-bg, rgba(27, 19, 12, 0.72));
+    color: var(--cat-photo-btn-text, #f6ecdb);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,7 +85,7 @@
 }
 
 .favBtnOn {
-    color: #e7c98a;
+    color: var(--cat-accent, #e7c98a);
 }
 
 .favBtn:focus-visible,
@@ -100,8 +100,8 @@
     left: 0.75rem;
     bottom: 0.75rem;
     z-index: 2;
-    background: rgba(27, 19, 12, 0.78);
-    color: #e7c98a;
+    background: var(--cat-photo-btn-bg, rgba(27, 19, 12, 0.78));
+    color: var(--cat-photo-btn-text, #e7c98a);
     font-size: 0.64rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -131,19 +131,19 @@
     font-size: 1.15rem;
     font-weight: 600;
     line-height: 1.2;
-    color: #f6ecdb;
+    color: var(--cat-text, #f6ecdb);
     text-decoration: none;
 }
 
 .name:hover {
-    color: #e7c98a;
+    color: var(--cat-accent, #e7c98a);
 }
 
 .desc {
     margin: 0;
     font-size: 0.82rem;
     line-height: 1.45;
-    color: #c9bda9;
+    color: var(--cat-muted, #c9bda9);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -162,7 +162,7 @@
 .price {
     font-size: 1.15rem;
     font-weight: 700;
-    color: #e7c98a;
+    color: var(--cat-price, #e7c98a);
     font-variant-numeric: tabular-nums;
 }
 
@@ -170,19 +170,20 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    border: none;
+    border: 1px solid var(--cat-btn-border, transparent);
     border-radius: 999px;
-    background: #e7c98a;
-    color: #241a10;
+    background: var(--cat-btn-bg, #e7c98a);
+    color: var(--cat-btn-text, #241a10);
     font: 700 0.8rem "Lexend", sans-serif;
     padding: 0.55rem 0.9rem;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.15s ease, transform 0.12s ease;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
 }
 
 .addBtn:hover:not(:disabled) {
-    background: #f6ecdb;
+    background: var(--cat-btn-hover, #f6ecdb);
+    color: var(--cat-btn-hover-text, #241a10);
 }
 
 .addBtn:active:not(:disabled) {
@@ -192,6 +193,7 @@
 /* Ya está en el pedido: verde, y cada toque suma otro. */
 .addBtnIn {
     background: #2f7a45;
+    border-color: #2f7a45;
     color: #f6ecdb;
 }
 
@@ -201,8 +203,8 @@
 
 .addBtn:disabled {
     background: transparent;
-    border: 1px solid rgba(230, 201, 138, 0.25);
-    color: #8a7f6d;
+    border: 1px solid var(--cat-border-strong, rgba(230, 201, 138, 0.25));
+    color: var(--cat-faint, #8a7f6d);
     cursor: not-allowed;
 }
 

@@ -436,12 +436,26 @@
     text-decoration: none;
     pointer-events: auto;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Mismo efecto que en NavBar: cambia de color y crece un poco al pasar
+   el mouse, para que se note que es un link. */
+.logo:hover {
+    color: #f6ecdb;
+    transform: translateY(-50%) scale(1.06);
 }
 
 .logo:focus-visible {
     outline: 2px solid #e7c98a;
     outline-offset: 4px;
     border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo:hover {
+        transform: translateY(-50%);
+    }
 }
 
 /* Pantallas medianas: logo + links + botones no entran en una fila sin
