@@ -116,8 +116,8 @@ const normalizar = (texto) =>
         .replace(/[̀-ͯ]/g, "");
 
 const PreguntasFrecuentes = () => {
-    //La primera pregunta arranca abierta, como ejemplo de cómo se ve una respuesta.
-    const [abierta, setAbierta] = useState(FAQS[0].pregunta);
+    //Todas las preguntas arrancan cerradas.
+    const [abierta, setAbierta] = useState(null);
     const [categoria, setCategoria] = useState("Todas");
     const [busqueda, setBusqueda] = useState("");
 
