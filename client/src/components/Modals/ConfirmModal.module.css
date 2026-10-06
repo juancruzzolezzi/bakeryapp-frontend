@@ -131,8 +131,8 @@
     outline-offset: 2px;
 }
 
-/* Celular: hoja desde abajo, como el carrito. "Sacar"/"Vaciar" arriba,
-   más cerca del pulgar, y "Cancelar" abajo. */
+/* Celular: hoja desde abajo, como el carrito. "Sacar"/"Vaciar" arriba y
+   "Cancelar" abajo (en escritorio, "Sacar"/"Vaciar" va a la izquierda). */
 @media screen and (max-width: 600px) {
     .modal {
         top: auto;
@@ -165,7 +165,7 @@
 
     .actions {
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
     }
 }
 

@@ -37,11 +37,11 @@ const ConfirmModal = ({ isOpen, onCancel, onConfirm, title, text, confirmLabel }
         <h2 className={style.title}>{title}</h2>
         <p className={style.text}>{text}</p>
         <div className={style.actions}>
-            <button type="button" onClick={onCancel} className={style.cancelBtn}>
-                Cancelar
-            </button>
             <button type="button" onClick={onConfirm} className={style.confirmBtn}>
                 {confirmLabel}
+            </button>
+            <button type="button" onClick={onCancel} className={style.cancelBtn}>
+                Cancelar
             </button>
         </div>
     </Modal>
