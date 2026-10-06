@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyCart } from "../redux/slice/homeSlice";
+import { logout } from "../redux/slice/authSlice";
+import { base_URL } from "../api/base_URL";
 
 export const useCartHandlers = (
 
@@ -14,10 +16,6 @@ export const useCartHandlers = (
   //Estado de carga y error de la petición de pago (feedback visual en el modal)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-
-  //URL de la API: toma REACT_APP_API_URL (Vercel) o cae a localhost en desarrollo
-  const apiURL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-
 
   //Se declara la constante "dispatch" la cual ejecuta el Hook de React "useDispatch()"
   const dispatch = useDispatch();
@@ -34,11 +32,10 @@ export const useCartHandlers = (
   //Submit Carrito
   const handleSubmitModal = async (
 
-    //Recibe 7 parametros:
+    //Recibe 6 parametros (el total lo calcula el backend, no hace falta mandarlo):
     cartList, //Productos en el carrito
     clientContact, //Instagram o WhatsApp del cliente, según contactMethod
     contactMethod, //"instagram" o "whatsapp"
-    totalPrice, // Precio total del carrito
     deliveryType, //"delivery" o "takeaway"
     address, // Dirección de entrega (solo si deliveryType es "delivery")
     deliveryZone // Barrio de entrega (solo si deliveryType es "delivery")
@@ -56,7 +53,7 @@ export const useCartHandlers = (
     try {
 
       //Envia a la API (/create-order) los datos del pedido
-      const response = await fetch(`${apiURL}/create-order`, {
+      const response = await fetch(`${base_URL}/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +63,6 @@ export const useCartHandlers = (
           cartList,
           clientContact,
           contactMethod,
-          totalPrice,
           deliveryType,
           address,
           deliveryZone,
@@ -80,6 +76,18 @@ export const useCartHandlers = (
       //Los 400 traen un mensaje pensado para el usuario (ej: zona sin
       //cobertura, producto que ya no existe): se muestra ese en vez del
       //genérico.
+      //401: la sesión venció. El backend no cobra con un descuento que ya
+      //no corresponde: se cierra la sesión acá, el modal pasa a mostrar el
+      //total sin descuento, y el cliente decide si paga así o vuelve a
+      //iniciar sesión.
+      if (response.status === 401) {
+        dispatch(logout());
+        const error = new Error("HTTP 401");
+        error.userMessage =
+          "Tu sesión venció y el 10% OFF ya no aplica. Revisá el total y volvé a tocar Pagar, o iniciá sesión de nuevo.";
+        throw error;
+      }
+
       if (!response.ok) {
         const body = await response.json().catch(() => null);
         const error = new Error(`HTTP ${response.status}`);

@@ -125,7 +125,6 @@ const PaymentModal = ({ isOpen, onClose, cartList, totalPrice }) => {
         cartList,
         contactValue,
         contactMethod,
-        totalPrice,
         deliveryType,
         deliveryType === "delivery" ? address.trim() : "",
         deliveryType === "delivery" ? deliveryZone : ""

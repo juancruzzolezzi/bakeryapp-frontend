@@ -8,6 +8,7 @@ import { useGetProductsQuery } from "../../api/appApi";
 import { useProductHandlers } from "../../handlers/productHandlers";
 import { useIsFavorite } from "../../hooks/useFavorites";
 import { useToast } from "../../context/ToastContext";
+import { usePageMeta } from "../../hooks/usePageMeta";
 import { getVentaInfo } from "../../utils/ventaTag";
 import { CONTACTO } from "../../constants/contacto";
 import { FREE_SHIPPING_THRESHOLD } from "../../constants/deliveryZones";
@@ -97,6 +98,16 @@ const ProductDetail = () => {
       .sort((a, b) => (b.sold || 0) - (a.sold || 0));
     return [...misma, ...resto].slice(0, 4);
   }, [product, products]);
+
+  //Título de la pestaña y descripción con los datos del producto.
+  usePageMeta(
+    product
+      ? `${product.title} | Bakery`
+      : products
+        ? "Producto no encontrado | Bakery"
+        : null,
+    product ? descripcionLimpia || product.description : undefined
+  );
 
   const addToCart = () => {
     handleAddToCart(product, quantity);

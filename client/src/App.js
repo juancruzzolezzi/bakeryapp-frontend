@@ -10,6 +10,10 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Loading from "./components/Loading/Loading";
 import InstallAppBanner from "./components/InstallAppBanner/InstallAppBanner";
 import ErrorBoundary, { RELOAD_FLAG } from "./components/ErrorBoundary/ErrorBoundary";
+//Hooks globales
+import { useSessionCheck } from "./hooks/useSessionCheck";
+import { useCartSync } from "./hooks/useCartSync";
+import { usePageMeta, PAGE_META, NOT_FOUND_META } from "./hooks/usePageMeta";
 //Estilos
 import "./App.css";
 
@@ -29,6 +33,18 @@ const Arrepentimiento = lazy(() => import("./views/Legal/Arrepentimiento"));
 function App() {
   //useLocation: sirve para acceder al objeto "location" que contiene informacion sobre la URL actual del navegador
   const location = useLocation();
+
+  //Valida la sesión guardada y mantiene el carrito al día con el catálogo
+  //(ver cada hook).
+  useSessionCheck();
+  useCartSync();
+
+  //Título y descripción de cada página. El detalle de producto
+  //("/products/:id") los pone él mismo con el nombre del producto.
+  const path = location.pathname.replace(/\/+$/, "") || "/";
+  const esDetalleProducto = /^\/products\/[^/]+$/.test(path);
+  const meta = PAGE_META[path] || (esDetalleProducto ? {} : NOT_FOUND_META);
+  usePageMeta(meta.title, meta.description);
 
   //Al cambiar de página, arranca desde arriba (si no, al pasar de una
   //página larga a otra se quedaba scrolleado a la misma altura).

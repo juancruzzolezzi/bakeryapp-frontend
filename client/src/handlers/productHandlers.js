@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart, updateQuantity, removeFromCart } from "../redux/slice/homeSlice";
 
@@ -13,25 +12,10 @@ import { addToCart, updateQuantity, removeFromCart } from "../redux/slice/homeSl
 // al carrito entero sin necesitarlo.
 export const useProductHandlers = (setModalEmptyOpen) => {
   const dispatch = useDispatch();
-  const [setQuantity] = useState(1);
 
   const handleAddToCart = (product, quantity) => {
     dispatch(addToCart({ ...product, quantity }));
   };
-
-    const handleIncrementDetail = (product, quantity) => {
-      if (quantity < 100) {
-        const newQuantity = quantity + 1;
-        setQuantity(newQuantity); // Actualiza el estado local de cantidad
-      }
-    };
-
-    const handleDecrementDetail = (product, quantity) => {
-      if (quantity > 1) {
-        const newQuantity = quantity - 1;
-        setQuantity(newQuantity); // Actualiza el estado local de cantidad
-      }
-    };
 
   //El reducer "updateQuantity" (ver homeSlice.js) ya solo actualiza si
   //encuentra el producto en el carrito; no hace falta repetir ese chequeo
@@ -55,8 +39,6 @@ export const useProductHandlers = (setModalEmptyOpen) => {
 
     return {
         handleAddToCart,
-        handleIncrementDetail,
-        handleDecrementDetail,
         handleIncrementCart,
         handleDecrementCart,
         handleDelete,
