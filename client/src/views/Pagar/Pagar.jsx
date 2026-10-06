@@ -80,14 +80,14 @@ const Pagar = () => {
   const fueraDeZona = deliveryZone === OTRA_ZONA;
 
   // ---------- Cuándo ----------
-  //Si hay algo por encargo (tortas), "cuanto antes" no corre: se programa.
+  //Si hay algo por encargo (tortas enteras), "cuanto antes" no corre: se programa.
   const encargos = productosPorEncargo(cartList);
   const conEncargo = encargos.length > 0;
   const dias = useMemo(() => diasParaProgramar({ conEncargo }), [conEncargo]);
   const [cuandoElegido, setCuandoElegido] = useState("asap");
   const cuando = conEncargo ? "programado" : cuandoElegido;
   const [fechaElegida, setFechaElegida] = useState("");
-  //Si la fecha elegida dejó de estar disponible (ej: se sumó una torta),
+  //Si la fecha elegida dejó de estar disponible (ej: se sumó una torta entera),
   //se pasa sola al primer día posible.
   const diaElegido = dias.find((d) => d.fecha === fechaElegida) || dias[0];
 

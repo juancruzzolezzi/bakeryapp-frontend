@@ -8,14 +8,17 @@ import { detalleHorario, estaAbiertoAhora } from "./horarioLocal";
 // Lo que se hornea por encargo necesita esta anticipación, en días.
 export const DIAS_ENCARGO = 2;
 
-// Productos que se hornean por encargo (48 hs). Por nombre y no por
-// categoría: en "Tortas" también hay brownies por unidad, y hay tortas en
-// "Sin TACC" y "Vegano".
-export const requiereEncargo = (titulo) =>
-  /^(torta|cheesecake)\b/i.test(String(titulo || "").trim());
+// Productos que se hornean por encargo (48 hs): las tortas ENTERAS. Es una
+// torta por el nombre (no por categoría: en "Tortas" también hay brownies,
+// y hay tortas en "Sin TACC" y "Vegano"), y es entera si la descripción no
+// dice "(por porción)", la misma marca de la etiqueta "Por porción" del
+// catálogo (ver ventaTag.js).
+export const requiereEncargo = (titulo, descripcion) =>
+  /^(torta|cheesecake)\b/i.test(String(titulo || "").trim()) &&
+  !/\(por porci[oó]n\)/i.test(String(descripcion || ""));
 
 export const productosPorEncargo = (cartList) =>
-  cartList.filter((product) => requiereEncargo(product.title));
+  cartList.filter((product) => requiereEncargo(product.title, product.description));
 
 const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
