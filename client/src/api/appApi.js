@@ -6,7 +6,16 @@ export const appApi = createApi({
 
     baseQuery: fetchBaseQuery({
         baseUrl: base_URL,
+        //Si hay sesión, cada pedido lleva el token (lo necesita "Mis
+        //pedidos"; las rutas públicas lo ignoran).
+        prepareHeaders: (headers, { getState }) => {
+            const token = getState().authSlice.token;
+            if (token) headers.set("Authorization", `Bearer ${token}`);
+            return headers;
+        },
     }),
+
+    tagTypes: ["PedidosLocal"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -28,6 +37,35 @@ export const appApi = createApi({
         solicitarArrepentimiento: builder.mutation({
             query: (body) => ({ url: "arrepentimiento", method: "POST", body }),
         }),
+
+        //Seguimiento de un pedido por el token de su link (página pública).
+        getPedido: builder.query({
+            query: (token) => `orders/track/${token}`,
+            transformResponse: (response) => response.order,
+        }),
+
+        //"Mis pedidos" de la cuenta con sesión iniciada.
+        getMisPedidos: builder.query({
+            query: () => "orders/mine",
+            transformResponse: (response) => response.orders,
+        }),
+
+        //Panel del local: la clave de admin va en cada pedido.
+        getPedidosLocal: builder.query({
+            query: (adminKey) => ({ url: "admin/orders", headers: { "x-admin-key": adminKey } }),
+            transformResponse: (response) => response.orders,
+            providesTags: ["PedidosLocal"],
+        }),
+
+        cambiarEstadoPedido: builder.mutation({
+            query: ({ adminKey, id, status }) => ({
+                url: `admin/orders/${id}/status`,
+                method: "PATCH",
+                headers: { "x-admin-key": adminKey },
+                body: { status },
+            }),
+            invalidatesTags: ["PedidosLocal"],
+        }),
     }),
 });
 
@@ -37,4 +75,8 @@ export const {
     useLoginUserMutation,
     useGoogleLoginMutation,
     useSolicitarArrepentimientoMutation,
+    useGetPedidoQuery,
+    useGetMisPedidosQuery,
+    useGetPedidosLocalQuery,
+    useCambiarEstadoPedidoMutation,
 } = appApi;

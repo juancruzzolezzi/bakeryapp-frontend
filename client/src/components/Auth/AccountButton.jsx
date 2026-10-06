@@ -122,6 +122,17 @@ const AccountButton = () => {
 
                         <button
                             type="button"
+                            onClick={() => {
+                                setIsOpen(false);
+                                navigate("/mis-pedidos");
+                            }}
+                            className={style.panelSaveBtn}
+                        >
+                            Mis pedidos
+                        </button>
+
+                        <button
+                            type="button"
                             onClick={handleLogout}
                             className={style.panelLogoutBtn}
                         >

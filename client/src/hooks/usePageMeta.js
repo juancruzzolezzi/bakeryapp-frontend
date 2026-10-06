@@ -32,6 +32,11 @@ export const PAGE_META = {
     title: "Botón de arrepentimiento | Bakery",
     description: "Pedí la revocación de una compra online y recibí tu código de solicitud.",
   },
+  "/mis-pedidos": {
+    title: "Mis pedidos | Bakery",
+    description: "Seguí tus pedidos en curso y repetí los anteriores.",
+  },
+  "/panel": { title: "Panel del local | Bakery" },
 };
 
 export const NOT_FOUND_META = { title: "Página no encontrada | Bakery" };

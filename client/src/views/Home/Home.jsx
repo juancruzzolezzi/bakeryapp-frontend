@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams, Link } from "react-router-dom";
+import { esTokenDePedido } from "../../utils/pedidos";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
@@ -94,6 +95,9 @@ function Home() {
   //"success" | "failure" | "pending" | null: qué cartel mostrar al volver
   //de Mercado Pago.
   const [paymentStatus, setPaymentStatus] = useState(null);
+  //Token del pedido recién pagado (lo agrega el backend al volver de
+  //Mercado Pago), para el botón "Seguir mi pedido" del cartel.
+  const [pedidoToken, setPedidoToken] = useState(null);
 
   //Si volvemos de Mercado Pago: pago aprobado -> vaciamos el carrito y
   //mostramos el cartel de éxito. Si no se pagó (falló o quedó pendiente),
@@ -103,6 +107,8 @@ function Home() {
     const payment = searchParams.get("payment");
     if (payment === "success") {
       dispatch(emptyCart());
+      const token = searchParams.get("pedido");
+      if (esTokenDePedido(token)) setPedidoToken(token);
       setPaymentStatus("success");
       setSearchParams({}, { replace: true });
     } else if (payment === "failure" || payment === "pending") {
@@ -172,6 +178,15 @@ function Home() {
                 <p className={style.paymentBannerText}>
                   En breve nos vamos a comunicar con vos para coordinar la entrega.
                 </p>
+                {pedidoToken && (
+                  <Link
+                    to={"/pedido/" + pedidoToken}
+                    className={style.printBtn}
+                    data-print-hide
+                  >
+                    Seguir mi pedido
+                  </Link>
+                )}
 
                 {lastOrder?.items?.length > 0 && (
                   <div className={style.receipt}>

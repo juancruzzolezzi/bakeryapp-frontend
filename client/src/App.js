@@ -28,6 +28,9 @@ const Privacidad = lazy(() => import("./views/Legal/Privacidad"));
 const Terminos = lazy(() => import("./views/Legal/Terminos"));
 const CambiosDevoluciones = lazy(() => import("./views/Legal/CambiosDevoluciones"));
 const Arrepentimiento = lazy(() => import("./views/Legal/Arrepentimiento"));
+const Pedido = lazy(() => import("./views/Pedido/Pedido"));
+const MisPedidos = lazy(() => import("./views/MisPedidos/MisPedidos"));
+const Panel = lazy(() => import("./views/Panel/Panel"));
 
 
 function App() {
@@ -39,11 +42,12 @@ function App() {
   useSessionCheck();
   useCartSync();
 
-  //Título y descripción de cada página. El detalle de producto
-  //("/products/:id") los pone él mismo con el nombre del producto.
+  //Título y descripción de cada página. El detalle de producto y el
+  //seguimiento de un pedido los ponen ellos mismos (nombre del producto,
+  //número de pedido).
   const path = location.pathname.replace(/\/+$/, "") || "/";
-  const esDetalleProducto = /^\/products\/[^/]+$/.test(path);
-  const meta = PAGE_META[path] || (esDetalleProducto ? {} : NOT_FOUND_META);
+  const esRutaConTituloPropio = /^\/(products|pedido)\/[^/]+$/.test(path);
+  const meta = PAGE_META[path] || (esRutaConTituloPropio ? {} : NOT_FOUND_META);
   usePageMeta(meta.title, meta.description);
 
   //Al cambiar de página, arranca desde arriba (si no, al pasar de una
@@ -103,6 +107,9 @@ function App() {
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/cambios-y-devoluciones" element={<CambiosDevoluciones />} />
               <Route path="/arrepentimiento" element={<Arrepentimiento />} />
+              <Route path="/pedido/:token" element={<Pedido />} />
+              <Route path="/mis-pedidos" element={<MisPedidos />} />
+              <Route path="/panel" element={<Panel />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
