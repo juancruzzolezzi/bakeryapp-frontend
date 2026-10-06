@@ -106,6 +106,7 @@ const ProductCart = ({ product }) => {
         isOpen={isModalEmptyOpen}
         onCancel={handleModalCancel}
         onConfirm={confirmarEliminar}
+        productTitle={product.title}
       />
     </div>
   );

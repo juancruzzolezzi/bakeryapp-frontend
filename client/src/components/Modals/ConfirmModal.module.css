@@ -1,0 +1,177 @@
+/* Confirmaciones del carrito (ver ConfirmModal.jsx). Colores fijos, como
+   Cart.module.css: el carrito se abre también sobre páginas oscuras. */
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 2rem);
+    max-width: 380px;
+    box-sizing: border-box;
+    padding: 1.6rem 1.5rem 1.4rem;
+    background: #fffaf2;
+    color: #2b1d12;
+    border: 1px solid rgba(43, 29, 18, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 24px 48px -20px rgba(43, 29, 18, 0.5);
+    font-family: "Lexend", system-ui, sans-serif;
+    font-weight: 300;
+    text-align: center;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.94);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.modalAfterOpen {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modalBeforeClose {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.94);
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(23, 16, 9, 0.55);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.overlayAfterOpen {
+    opacity: 1;
+}
+
+.overlayBeforeClose {
+    opacity: 0;
+}
+
+.grabber {
+    display: none;
+}
+
+.icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #f6e0d6;
+    color: #a63a22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.3rem;
+}
+
+.title {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.45rem;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.text {
+    margin: 0;
+    max-width: 32ch;
+    color: #65513e;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.actions {
+    width: 100%;
+    margin-top: 0.9rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+
+.cancelBtn,
+.confirmBtn {
+    min-height: 50px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.cancelBtn {
+    border: 1px solid #2b1d12;
+    background: transparent;
+    color: #2b1d12;
+}
+
+.cancelBtn:hover {
+    background: #f4ede2;
+}
+
+.confirmBtn {
+    border: 0;
+    background: #a63a22;
+    color: #fffaf2;
+    font-weight: 600;
+}
+
+.confirmBtn:hover {
+    background: #8c2f1a;
+}
+
+.cancelBtn:focus-visible,
+.confirmBtn:focus-visible {
+    outline: 2px solid #2b1d12;
+    outline-offset: 2px;
+}
+
+/* Celular: hoja desde abajo, como el carrito. "Sacar"/"Vaciar" arriba,
+   más cerca del pulgar, y "Cancelar" abajo. */
+@media screen and (max-width: 600px) {
+    .modal {
+        top: auto;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: none;
+        border-radius: 24px 24px 0 0;
+        border-bottom: 0;
+        padding: 0.7rem 1.25rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
+        transform: translateY(100%);
+    }
+
+    .modalAfterOpen {
+        transform: translateY(0);
+    }
+
+    .modalBeforeClose {
+        transform: translateY(100%);
+    }
+
+    .grabber {
+        display: block;
+        width: 44px;
+        height: 5px;
+        border-radius: 999px;
+        background: #d8c9ae;
+        margin-bottom: 0.9rem;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal,
+    .overlay {
+        transition: none;
+    }
+}
