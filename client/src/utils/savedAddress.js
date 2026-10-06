@@ -1,5 +1,5 @@
 // Dirección de entrega guardada en la cuenta (no solo "la última usada",
-// ver PaymentModal.jsx/lastAddress): vive en localStorage bajo una clave
+// ver views/Pagar y lastAddress): vive en localStorage bajo una clave
 // propia por usuario, para que cada cuenta tenga la suya en este
 // dispositivo y no se pisen entre sí si se comparte el navegador.
 const KEY_PREFIX = "savedAddress_";

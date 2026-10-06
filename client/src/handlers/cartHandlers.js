@@ -7,7 +7,7 @@ import { base_URL } from "../api/base_URL";
 export const useCartHandlers = (
 
   //setModalEmptyOpen y setIsCartOpen solo los usa Cart.jsx (modal de vaciar carrito).
-  //PaymentModal usa este hook sin argumentos, ya que maneja su propio estado.
+  //La página de pago (views/Pagar) usa este hook sin argumentos.
   setModalEmptyOpen,
   setIsCartOpen
 
@@ -32,13 +32,14 @@ export const useCartHandlers = (
   //Submit Carrito
   const handleSubmitModal = async (
 
-    //Recibe 6 parametros (el total lo calcula el backend, no hace falta mandarlo):
+    //Recibe 7 parametros (el total lo calcula el backend, no hace falta mandarlo):
     cartList, //Productos en el carrito
     clientContact, //Instagram o WhatsApp del cliente, según contactMethod
     contactMethod, //"instagram" o "whatsapp"
     deliveryType, //"delivery" o "takeaway"
     address, // Dirección de entrega (solo si deliveryType es "delivery")
-    deliveryZone // Barrio de entrega (solo si deliveryType es "delivery")
+    deliveryZone, // Barrio de entrega (solo si deliveryType es "delivery")
+    extra = {} // { cuando, fechaEntrega, nota } (ver views/Pagar y utils/entrega.js)
 
   ) => {
     setIsSubmitting(true);
@@ -66,6 +67,9 @@ export const useCartHandlers = (
           deliveryType,
           address,
           deliveryZone,
+          cuando: extra.cuando,
+          fechaEntrega: extra.fechaEntrega,
+          nota: extra.nota,
         }),
         signal: controller.signal,
       });

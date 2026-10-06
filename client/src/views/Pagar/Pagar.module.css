@@ -1,0 +1,683 @@
+/* Página de pago. Mismo formato claro que Productos y el detalle: los
+   colores --cat-* vienen de .catalogoClaro (index.css). */
+.container {
+    min-height: 100vh;
+    width: 100%;
+    background: var(--cat-area);
+    color: var(--cat-text);
+    font-family: "Lexend", sans-serif;
+    font-weight: 300;
+    /* Lugar para la barra fija de "Pagar" en el celular. */
+    padding-bottom: 7rem;
+}
+
+/* ---------- Barra superior ---------- */
+.topbar {
+    background: var(--cat-band);
+    border-radius: 0 0 28px 28px;
+    padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+
+.topbarInner {
+    max-width: 1120px;
+    margin: 0 auto;
+    min-height: 76px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+}
+
+.back {
+    justify-self: start;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--cat-text);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.logo {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: var(--cat-text);
+    text-decoration: none;
+}
+
+.secure {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--cat-band-accent);
+    text-align: right;
+}
+
+/* ---------- Contenido ---------- */
+.page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1.6rem clamp(1rem, 4vw, 2.5rem) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.title {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4vw, 2.4rem);
+    line-height: 1.1;
+}
+
+.layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.formCol {
+    flex: 999 1 560px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.row2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.row2 > .card {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.card {
+    background: var(--cat-surface);
+    border: 1px solid var(--cat-card-border);
+    border-radius: 20px;
+    padding: 1.3rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+.cardTitle {
+    margin: 0;
+    padding: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--cat-text);
+}
+
+.fieldset .cardTitle {
+    margin-bottom: 0.8rem;
+}
+
+.optional {
+    font-family: "Lexend", sans-serif;
+    font-weight: 300;
+    font-size: 0.82rem;
+    color: var(--cat-muted);
+}
+
+/* ---------- Opciones (radios grandes) ---------- */
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.option {
+    min-height: 64px;
+    padding: 0.8rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid #e0d2b8;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.option input {
+    width: 20px;
+    height: 20px;
+    margin: 2px 0 0;
+    flex: none;
+    accent-color: var(--cat-btn-bg);
+}
+
+.option:focus-within {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 2px;
+}
+
+.optionOn {
+    border: 1.5px solid var(--cat-btn-bg);
+    background: #fbf5ea;
+}
+
+.optionOff {
+    border-style: dashed;
+    color: #9a8b74;
+    cursor: default;
+    background: transparent;
+}
+
+.optionText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+}
+
+.optionTitle {
+    font-weight: 500;
+}
+
+.optionSub {
+    font-size: 0.8rem;
+    color: var(--cat-muted);
+}
+
+.optionOff .optionSub {
+    color: #9a8b74;
+}
+
+.optionAside {
+    font-size: 0.82rem;
+    color: var(--cat-muted);
+    white-space: nowrap;
+}
+
+.gratis {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #2f6b3e;
+    white-space: nowrap;
+}
+
+/* ---------- Campos ---------- */
+.addressGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 0.75rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.label {
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.input {
+    min-height: 48px;
+    border-radius: 12px;
+    border: 1px solid #d8c9ae;
+    background: #ffffff;
+    color: var(--cat-text);
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0 0.8rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input:focus-visible {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 1px;
+}
+
+.input[aria-invalid="true"] {
+    border-color: #b2452c;
+}
+
+.textarea {
+    padding: 0.7rem 0.8rem;
+    resize: vertical;
+    min-height: 88px;
+    line-height: 1.45;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: var(--cat-muted);
+}
+
+.error {
+    font-size: 0.8rem;
+    color: #a63a22;
+}
+
+.linkBtn {
+    border: 0;
+    background: transparent;
+    padding: 0.25rem 0;
+    font: inherit;
+    font-weight: 500;
+    color: var(--cat-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.zoneWarning {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    background: #f6e0d6;
+    color: #7a3420;
+    font-size: 0.85rem;
+}
+
+/* ---------- Días ---------- */
+.daysBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.day {
+    min-height: 60px;
+    border-radius: 12px;
+    border: 1px solid #e0d2b8;
+    background: #ffffff;
+    color: var(--cat-text);
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.15;
+    cursor: pointer;
+}
+
+.day:focus-visible {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 2px;
+}
+
+.dayOn {
+    border-color: var(--cat-btn-bg);
+    background: var(--cat-btn-bg);
+    color: var(--cat-btn-text);
+}
+
+.dayName {
+    font-size: 0.75rem;
+}
+
+.dayNum {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* ---------- Resumen ---------- */
+.aside {
+    flex: 1 1 340px;
+    min-width: 0;
+    position: sticky;
+    top: 1rem;
+    box-shadow: var(--cat-card-shadow);
+}
+
+.asideHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.itemImg {
+    width: 52px;
+    height: 52px;
+    flex: none;
+    border-radius: 12px;
+    object-fit: cover;
+    background: var(--cat-skeleton-a);
+}
+
+.itemText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+}
+
+.itemTitle {
+    font-weight: 500;
+}
+
+.itemQty {
+    font-size: 0.82rem;
+    color: var(--cat-muted);
+}
+
+.itemPrice {
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.totals {
+    border-top: 1px dashed #d8c9ae;
+    padding-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.totalRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--cat-muted);
+}
+
+.totalRow span:last-child {
+    text-align: right;
+}
+
+.totalFinal {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.3rem;
+    font-weight: 500;
+}
+
+.totalFinal span:last-child {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+}
+
+.payBtn {
+    min-height: 54px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--cat-btn-bg);
+    color: var(--cat-btn-text);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.payBtn:hover:not(:disabled) {
+    background: var(--cat-btn-hover);
+}
+
+.payBtn:focus-visible {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 3px;
+}
+
+.payBtn:disabled {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+.submitError {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #a63a22;
+}
+
+.note {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--cat-muted);
+    text-align: center;
+}
+
+/* ---------- Resumen desplegable (celular) ---------- */
+.mobileSummary {
+    display: none;
+}
+
+.mobileSummaryBtn {
+    width: 100%;
+    min-height: 60px;
+    border-radius: 16px;
+    border: 0;
+    background: var(--cat-surface);
+    color: var(--cat-text);
+    font: inherit;
+    padding: 0.5rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mobileSummaryBtn:focus-visible {
+    outline: 2px solid var(--cat-focus);
+    outline-offset: 2px;
+}
+
+.thumbs {
+    display: flex;
+    flex: none;
+}
+
+.thumbs img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cat-surface);
+}
+
+.thumbs img + img {
+    margin-left: -10px;
+}
+
+.mobileSummaryText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.mobileSummaryCount {
+    font-weight: 500;
+}
+
+.mobileSummaryHint {
+    font-size: 0.8rem;
+    color: var(--cat-muted);
+}
+
+.mobileSummaryTotal {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.mobileSummaryBody {
+    margin-top: 0.5rem;
+    background: var(--cat-surface);
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* ---------- Barra fija de pago (celular) ---------- */
+.payBar {
+    display: none;
+}
+
+/* ---------- Pedido vacío ---------- */
+.empty {
+    max-width: 46ch;
+    margin: 0 auto;
+    padding: 4rem 1.25rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.empty p {
+    margin: 0 0 0.5rem;
+    color: var(--cat-muted);
+}
+
+@media (min-width: 901px) {
+    .container {
+        padding-bottom: 4rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .aside {
+        display: none;
+    }
+
+    .mobileSummary {
+        display: block;
+    }
+
+    .payBar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        background: #fffaf2;
+        border-top: 1px solid var(--cat-border-strong);
+        box-shadow: var(--cat-bar-shadow);
+        padding: 0.75rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .payBarRow {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .payBarRow .payBtn {
+        flex: 1;
+    }
+
+    .payBarTotal {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+
+    .payBarAmount {
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 600;
+        font-size: 1.4rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .payBarSub {
+        font-size: 0.75rem;
+        color: #2f6b3e;
+    }
+
+    .payBarError {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #a63a22;
+    }
+}
+
+@media (max-width: 600px) {
+    .topbarInner {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .secure {
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .options {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .addressGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .days {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .option,
+    .payBtn {
+        transition: none;
+    }
+}

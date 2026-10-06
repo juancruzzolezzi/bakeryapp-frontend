@@ -403,7 +403,7 @@ const Products = () => {
           <div className={style.cartBarInfo}>
             <div className={style.cartBarTop}>
               <strong>
-                {unidades} producto{unidades === 1 ? "" : "s"} en tu pedido
+                {unidades} {unidades === 1 ? "unidad" : "unidades"} en tu pedido
               </strong>
               <span>
                 {faltaEnvioGratis > 0

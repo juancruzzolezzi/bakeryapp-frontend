@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useCartHandlers } from "../../handlers/cartHandlers";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
-import { updateCart } from "../../redux/slice/homeSlice";
-import PaymentModal from "../../components/Modals/PaymentModal";
+import { updateCart, addToCart } from "../../redux/slice/homeSlice";
+import { useGetProductsQuery } from "../../api/appApi";
+import { useAuthModal } from "../../context/AuthModalContext";
+import { isStandalone } from "../../utils/pwa";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import { CONTACTO } from "../../constants/contacto";
@@ -16,11 +18,31 @@ import style from "./Cart.module.css";
 // no tiene mucho sentido (productos de temporada, precios desactualizados).
 const LAST_ORDER_MAX_AGE_DAYS = 30;
 
+const formatearPrecio = (monto) => `$${Math.round(monto).toLocaleString("es-AR")}`;
+
+// "Ideal con tu pedido": si todavía no lleva nada para tomar, un café; si
+// ya lleva, el más vendido de lo que no está en el carrito.
+const elegirSugerido = (productos, cartList) => {
+  if (!productos?.length) return null;
+  const enCarrito = new Set(cartList.map((p) => String(p.id)));
+  const candidatos = productos.filter((p) => !enCarrito.has(String(p.id)));
+  const llevaBebida = cartList.some((p) => p.category === "Infusiones");
+  if (!llevaBebida) {
+    const cafe =
+      candidatos.find((p) => p.title === "Café de Especialidad") ||
+      candidatos.find((p) => p.category === "Infusiones");
+    if (cafe) return cafe;
+  }
+  return [...candidatos].sort((a, b) => (b.sold || 0) - (a.sold || 0))[0] || null;
+};
+
 function Cart({ isCartOpen, setIsCartOpen }) {
 
   const cartList = useSelector((state) => state.homeSlice.cartList);
   const user = useSelector((state) => state.authSlice.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const openAuthModal = useAuthModal();
 
   //Último pedido confirmado (ver cartHandlers.js, se guarda justo antes de
   //ir a pagar a Mercado Pago), para ofrecer "repetir pedido" con el
@@ -48,14 +70,10 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   //coordinar por chat antes de pagar por Mercado Pago.
   const compartirPorWhatsApp = () => {
     const detalle = cartList
-      .map((product) => `${product.quantity}x ${product.title} - $${(
-        product.price * product.quantity
-      ).toLocaleString("es-AR")}`)
+      .map((product) => `${product.quantity}x ${product.title} - ${formatearPrecio(product.price * product.quantity)}`)
       .join("\n");
 
-    const mensaje = `Hola! Quiero hacer este pedido:\n${detalle}\n\nTotal: $${totalPrice.toLocaleString(
-      "es-AR"
-    )}`;
+    const mensaje = `Hola! Quiero hacer este pedido:\n${detalle}\n\nTotal: ${formatearPrecio(totalPrice)}`;
 
     window.open(
       `https://wa.me/${CONTACTO.whatsappNumero}?text=${encodeURIComponent(mensaje)}`,
@@ -63,30 +81,30 @@ function Cart({ isCartOpen, setIsCartOpen }) {
     );
   };
 
-  //Estados locales
-  const [totalPrice, setTotalPrice] = useState(0);
+  const totalPrice = cartList.reduce((sum, product) => sum + product.price * product.quantity, 0);
+  const unidades = cartList.reduce((sum, product) => sum + product.quantity, 0);
 
   //10% OFF para cuentas registradas (ver utils/discount.js): se muestra
   //acá para que se vea reflejado en el subtotal, pero el monto real que se
   //cobra lo calcula el backend en base al token de sesión, no a esto.
   const isLoggedIn = Boolean(user);
   const discountAmount = isLoggedIn ? totalPrice * ACCOUNT_DISCOUNT_RATE : 0;
-  const discountedTotal = totalPrice - discountAmount;
-  const discountedTotalAnimado = useAnimatedNumber(discountedTotal);
+  const discountedTotalAnimado = useAnimatedNumber(totalPrice - discountAmount);
   const totalPriceAnimado = useAnimatedNumber(totalPrice);
-  const [isModalPaymentOpen, setModalPaymentOpen] = useState(false);
   const [isModalEmptyOpen, setModalEmptyOpen] = useState(false);
+
+  //Sugerencia "Ideal con tu pedido" (el catálogo ya está en caché: lo
+  //pide useCartSync cuando hay algo en el carrito).
+  const { data: productos } = useGetProductsQuery(undefined, { skip: !isCartOpen });
+  const sugerido = useMemo(() => elegirSugerido(productos, cartList), [productos, cartList]);
 
   //Referencia al panel del carrito, para detectar clicks afuera de él
   const cartRef = useRef(null);
 
-  //Guarda la cantidad TOTAL de unidades (sumando quantity de cada
-  //producto, no solo cuántas líneas distintas hay) del render anterior.
-  //Así se detecta tanto "se agregó un producto nuevo" como "se sumó una
-  //unidad más de uno que ya estaba" (mismo largo de lista, pero más
-  //unidades), sin confundirlo con "ya había productos cuando se montó
-  //este componente" (ej: volviste a /products después de haber estado
-  //en otra página con cosas en el carrito; no debería abrirse solo).
+  //Guarda la cantidad TOTAL de unidades del render anterior. Así se
+  //detecta tanto "se agregó un producto nuevo" como "se sumó una unidad
+  //más de uno que ya estaba", sin confundirlo con "ya había productos
+  //cuando se montó este componente" (no debería abrirse solo).
   const totalQuantity = (list) =>
     list.reduce((sum, product) => sum + product.quantity, 0);
   const prevQuantityRef = useRef(totalQuantity(cartList));
@@ -99,12 +117,6 @@ function Cart({ isCartOpen, setIsCartOpen }) {
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartList));
-
-    const totalSum = cartList.reduce(
-      (sum, product) => sum + product.price * product.quantity, // Recalcula el total
-      0
-    );
-    setTotalPrice(totalSum);
   }, [cartList]);
 
   useEffect(() => {
@@ -115,10 +127,8 @@ function Cart({ isCartOpen, setIsCartOpen }) {
       // Si se queda sin productos (ej: se borró el último), se cierra solo.
       setIsCartOpen(false);
     } else if (currentQuantity > prevQuantity) {
-      // Se abre solo cuando suman más unidades (agregar un producto nuevo,
-      // o sumar una unidad más de uno que ya estaba), no simplemente
-      // porque ya tenía productos al montarse este componente (ej: volver
-      // a /products con cosas ya agregadas antes).
+      // Se abre solo cuando suman más unidades, no simplemente porque ya
+      // tenía productos al montarse este componente.
       setIsCartOpen(true);
     }
 
@@ -126,188 +136,205 @@ function Cart({ isCartOpen, setIsCartOpen }) {
   }, [cartList, setIsCartOpen]);
 
   //Cierra el carrito al hacer click en cualquier lugar de la pantalla que no
-  //sea el carrito en sí ni el botón "Agregar" de un producto (ese lo mantiene
-  //abierto vía el useEffect de arriba). Se ignora mientras haya CUALQUIER
-  //modal abierto (Pagar, Limpiar carrito, Eliminar producto, etc.): todos
-  //se renderizan en un portal fuera del div del carrito, y react-modal
-  //marca esto agregando la clase "ReactModal__Body--open" al <body>
-  //mientras haya al menos un modal abierto, sin importar cuál.
+  //sea el carrito en sí ni el botón "Agregar" de un producto. Se ignora
+  //mientras haya CUALQUIER modal abierto (react-modal agrega la clase
+  //"ReactModal__Body--open" al <body> mientras haya uno abierto).
   useEffect(() => {
     if (!isCartOpen) return;
 
     const handleClickOutside = (event) => {
       if (document.body.classList.contains("ReactModal__Body--open")) return;
       if (cartRef.current && cartRef.current.contains(event.target)) return;
-      // No cerrar si el click fue en una tarjeta de producto (agregar al
-      // carrito, sumar/restar cantidad, etc.) ni en el ícono que abre/cierra
-      // el carrito: ninguno de los dos cuenta como "afuera".
       if (event.target.closest("[data-product-card]")) return;
       if (event.target.closest("[data-cart-toggle]")) return;
-      // Ni el cartel de "algo salió mal" (ni su botón de cerrar): cerrar
-      // ese aviso no debería cerrar también el carrito que se abrió junto
-      // con él.
       if (event.target.closest("[data-payment-banner]")) return;
 
       setIsCartOpen(false);
     };
 
-    // Se escucha en fase de CAPTURA (el 3er argumento "true"), o sea antes
-    // de que React llegue a procesar el click. Si escucháramos en fase de
-    // bubbling normal, para cuando nos toca mirar el estado (ej: si hay un
-    // modal abierto) React ya pudo haber cerrado ese modal y actualizado el
-    // carrito como reacción al mismo click (ej: confirmar "Eliminar
-    // producto"), dando un resultado desactualizado.
+    // Fase de CAPTURA: se mira el estado antes de que React procese el
+    // mismo click (ver historial de este archivo).
     document.addEventListener("click", handleClickOutside, true);
     return () => document.removeEventListener("click", handleClickOutside, true);
   }, [isCartOpen, setIsCartOpen]);
 
+  const irAPagar = () => {
+    setIsCartOpen(false);
+    navigate("/pagar");
+  };
+
   if (!isCartOpen) return null;
   return (
-    <div className={style.mainContainer} ref={cartRef}>
-      <div className={style.header}>
-        <div>
-          <h3 className={style.title}>Tu pedido</h3>
-          <span className={style.count}>
-            {cartList.length} producto{cartList.length === 1 ? "" : "s"}
-          </span>
-        </div>
-        <button
-          onClick={() => setIsCartOpen(false)}
-          onTouchStart={() => setIsCartOpen(false)}
-          className={style.closeBtn}
-          aria-label="Cerrar carrito"
-        >
-          ✕
-        </button>
-      </div>
+    <>
+      {/* Fondo oscuro detrás de la hoja (solo en el celular, ver CSS).
+          Tocarlo cuenta como "click afuera" y cierra el carrito. */}
+      <div className={style.backdrop} aria-hidden="true" />
 
-      {cartList.length === 0 ? (
-        <div className={style.emptyState}>
-          <div className={style.emptyIcon}>🛒</div>
-          <h4>Tu carrito está vacío</h4>
-          <p>Todavía no agregaste nada. ¡Mirá lo que tenemos para vos!</p>
-          <Link
-            to="/products"
-            className={style.emptyCta}
-            onClick={() => setIsCartOpen(false)}
-          >
-            Ver productos →
-          </Link>
+      <div className={style.mainContainer} ref={cartRef} role="dialog" aria-label="Tu pedido">
+        <span className={style.grabber} aria-hidden="true" />
 
-          {lastOrder?.items?.length > 0 && (
-            <div className={style.lastOrder}>
-              <span className={style.lastOrderLabel}>
-                Tu último pedido
-                {lastOrder.date &&
-                  ` (${new Date(lastOrder.date).toLocaleDateString("es-AR")})`}
+        <div className={style.header}>
+          <div className={style.headerText}>
+            <h3 className={style.title}>Tu pedido</h3>
+            {cartList.length > 0 && (
+              <span className={style.count}>
+                {unidades} {unidades === 1 ? "unidad" : "unidades"}
+                <span aria-hidden="true"> · </span>
+                <button type="button" onClick={() => setModalEmptyOpen(true)} className={style.textBtn}>
+                  Vaciar
+                </button>
               </span>
-              {lastOrder.items.map((product) => (
-                <div key={product.id} className={style.lastOrderRow}>
-                  <span>
-                    {product.quantity}x {product.title}
-                  </span>
-                </div>
-              ))}
-              <button onClick={repetirPedido} className={style.lastOrderBtn}>
-                Repetir pedido
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <>
-          <div className={style.items}>
-            {/* "product.id" (no "index"): ProductCart tiene su propio
-                estado local para la animación de salida al eliminar
-                (removiendo, ver ProductCart.jsx). Con la key por índice,
-                al sacar un producto React reciclaba la instancia de esa
-                posición para el que quedaba en su lugar, y esa reutilizaba
-                el estado "se está eliminando" — por eso el OTRO producto
-                (el que no se tocó) desaparecía junto con el que sí se
-                borró. Con la key por id, cada producto tiene siempre su
-                propia instancia, sin importar en qué posición quede. */}
-            {cartList.map((product) => (
-              <ProductCart product={product} key={product.id} />
-            ))}
+            )}
           </div>
+          <button
+            type="button"
+            onClick={() => setIsCartOpen(false)}
+            className={style.closeBtn}
+            aria-label="Cerrar carrito"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
 
-          <div className={style.summary}>
-            <div className={style.shipping}>
-              {totalPrice >= FREE_SHIPPING_THRESHOLD ? (
-                <span className={style.shippingUnlocked}>
-                  🎉 ¡Envío gratis desbloqueado!
-                </span>
-              ) : (
-                <span className={style.shippingMsg}>
-                  Te faltan $
-                  {(FREE_SHIPPING_THRESHOLD - totalPriceAnimado).toLocaleString("es-AR")}{" "}
-                  para envío gratis
-                </span>
-              )}
-              <div className={style.shippingTrack}>
-                <div
-                  className={style.shippingFill}
-                  style={{
-                    width: `${Math.min(
-                      (totalPriceAnimado / FREE_SHIPPING_THRESHOLD) * 100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
+        {cartList.length === 0 ? (
+          <div className={style.emptyState}>
+            <h4>Tu pedido está vacío</h4>
+            <p>Todavía no agregaste nada. Mirá lo que horneamos hoy.</p>
+            <Link
+              to="/products"
+              className={style.emptyCta}
+              onClick={() => setIsCartOpen(false)}
+            >
+              Ver productos
+            </Link>
 
-            {isLoggedIn && (
-              <div className={style.discountRow}>
-                <span>🎉 Descuento por tu cuenta (10%)</span>
-                <span>-${discountAmount.toLocaleString("es-AR")}</span>
+            {lastOrder?.items?.length > 0 && (
+              <div className={style.lastOrder}>
+                <span className={style.lastOrderLabel}>
+                  Tu último pedido
+                  {lastOrder.date &&
+                    ` (${new Date(lastOrder.date).toLocaleDateString("es-AR")})`}
+                </span>
+                {lastOrder.items.map((product) => (
+                  <div key={product.id} className={style.lastOrderRow}>
+                    <span>
+                      {product.quantity}x {product.title}
+                    </span>
+                  </div>
+                ))}
+                <button type="button" onClick={repetirPedido} className={style.lastOrderBtn}>
+                  Repetir pedido
+                </button>
               </div>
             )}
-
-            <div className={style.totalRow}>
-              <span>Total</span>
-              <span className={style.totalAmount}>${discountedTotalAnimado.toLocaleString("es-AR")}</span>
-            </div>
-
-            <div className={style.actions}>
-              <button
-                onClick={() => setModalPaymentOpen(true)}
-                className={style.payBtn}
-              >
-                Pagar
-              </button>
-
-              <button
-                onClick={compartirPorWhatsApp}
-                className={style.whatsappBtn}
-              >
-                💬 Coordinar por WhatsApp
-              </button>
-
-              <button
-                onClick={() => setModalEmptyOpen(true)}
-                className={style.clearBtn}
-              >
-                Vaciar carrito
-              </button>
-            </div>
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            <div className={style.scroll}>
+              <div className={style.items}>
+                {/* "product.id" (no "index"): ver ProductCart.jsx, cada fila
+                    tiene su propio estado para la animación de salida. */}
+                {cartList.map((product) => (
+                  <ProductCart product={product} key={product.id} />
+                ))}
+              </div>
 
-      <EmptyCartModal
-        isOpen={isModalEmptyOpen}
-        onCancel={handleModalCancel}
-        onConfirm={handleModalYes}
-      />
+              {sugerido && (
+                <div className={style.suggestion}>
+                  <span className={style.suggestionLabel}>Ideal con tu pedido</span>
+                  <div className={style.suggestionCard}>
+                    {sugerido.images?.[0] && (
+                      <img src={sugerido.images[0]} alt="" className={style.suggestionImg} />
+                    )}
+                    <span className={style.suggestionText}>
+                      <span className={style.suggestionTitle}>{sugerido.title}</span>
+                      <span className={style.suggestionPrice}>{formatearPrecio(sugerido.price)}</span>
+                    </span>
+                    <button
+                      type="button"
+                      className={style.suggestionBtn}
+                      onClick={() => dispatch(addToCart({ ...sugerido, quantity: 1 }))}
+                      aria-label={`Sumar ${sugerido.title} al pedido`}
+                    >
+                      + Sumar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
-      <PaymentModal
-        isOpen={isModalPaymentOpen}
-        onClose={() => setModalPaymentOpen(false)}
-        cartList={cartList}
-        totalPrice={totalPrice}
-      />
-    </div>
+            <div className={style.summary}>
+              {totalPrice >= FREE_SHIPPING_THRESHOLD ? (
+                <div className={style.summaryTop}>
+                  <span className={style.freeChip}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                    Envío gratis
+                  </span>
+                  <span className={style.totalAmount}>{formatearPrecio(discountedTotalAnimado)}</span>
+                </div>
+              ) : (
+                <>
+                  <div className={style.shipping}>
+                    <span className={style.shippingMsg}>
+                      Te faltan {formatearPrecio(FREE_SHIPPING_THRESHOLD - totalPriceAnimado)} para envío gratis
+                    </span>
+                    <div className={style.shippingTrack}>
+                      <div
+                        className={style.shippingFill}
+                        style={{ width: `${Math.min((totalPriceAnimado / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className={style.summaryTop}>
+                    <span className={style.totalLabel}>Total</span>
+                    <span className={style.totalAmount}>{formatearPrecio(discountedTotalAnimado)}</span>
+                  </div>
+                </>
+              )}
+
+              {isLoggedIn && (
+                <div className={style.discountRow}>
+                  <span>Incluye 10% OFF por tu cuenta</span>
+                  <span>-{formatearPrecio(discountAmount)}</span>
+                </div>
+              )}
+
+              <button type="button" onClick={irAPagar} className={style.payBtn}>
+                Ir a pagar
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="M13 6l6 6-6 6" />
+                </svg>
+              </button>
+
+              <div className={style.footerLinks}>
+                {!isLoggedIn && isStandalone() && (
+                  <span>
+                    Con tu cuenta pagás {formatearPrecio(totalPrice * (1 - ACCOUNT_DISCOUNT_RATE))}.{" "}
+                    <button type="button" className={style.textBtn} onClick={() => openAuthModal("login")}>
+                      Ingresar
+                    </button>
+                  </span>
+                )}
+                <button type="button" onClick={compartirPorWhatsApp} className={style.textBtn}>
+                  Prefiero coordinar por WhatsApp
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        <EmptyCartModal
+          isOpen={isModalEmptyOpen}
+          onCancel={handleModalCancel}
+          onConfirm={handleModalYes}
+        />
+      </div>
+    </>
   );
 };
 

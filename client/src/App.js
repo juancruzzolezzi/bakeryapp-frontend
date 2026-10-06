@@ -28,6 +28,7 @@ const Privacidad = lazy(() => import("./views/Legal/Privacidad"));
 const Terminos = lazy(() => import("./views/Legal/Terminos"));
 const CambiosDevoluciones = lazy(() => import("./views/Legal/CambiosDevoluciones"));
 const Arrepentimiento = lazy(() => import("./views/Legal/Arrepentimiento"));
+const Pagar = lazy(() => import("./views/Pagar/Pagar"));
 
 
 function App() {
@@ -103,6 +104,7 @@ function App() {
               <Route path="/terminos" element={<Terminos />} />
               <Route path="/cambios-y-devoluciones" element={<CambiosDevoluciones />} />
               <Route path="/arrepentimiento" element={<Arrepentimiento />} />
+              <Route path="/pagar" element={<Pagar />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

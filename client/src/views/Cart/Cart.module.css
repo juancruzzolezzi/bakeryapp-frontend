@@ -1,352 +1,441 @@
+/* Carrito "Tu pedido": panel claro a la derecha en escritorio y hoja que
+   sube desde abajo en el celular. Colores fijos (no las variables --cat-*)
+   porque se muestra también sobre páginas oscuras. */
+
+.backdrop {
+    display: none;
+}
+
 .mainContainer {
     position: fixed;
     top: 1vh;
     right: 0.5vw;
     display: flex;
     flex-direction: column;
-    width: 340px;
-    max-height: 90vh;
-    padding: 0;
+    width: 400px;
+    max-height: 92vh;
     box-sizing: border-box;
     overflow: hidden;
-    background-color: #251b13;
-    /* "32px" (no "6px"): con el contador de precios animando (ver
-       useAnimatedNumber) este panel repinta seguido mientras está abierto,
-       y a 6px eso significaba redibujar miles de círculos en cada frame. */
-    background-image: radial-gradient(circle at 1px 1px, rgba(231, 201, 138, 0.05) 1px, transparent 0);
-    background-size: 32px 32px;
-    border: 1px solid rgba(230, 201, 138, 0.18);
+    background: #fffaf2;
+    color: #2b1d12;
+    font-family: "Lexend", sans-serif;
+    font-weight: 300;
+    border: 1px solid rgba(43, 29, 18, 0.1);
     border-radius: 24px;
-    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 24px 48px -20px rgba(43, 29, 18, 0.45);
     z-index: 10;
     /* Se renderiza dentro del <nav>, que tiene pointer-events: none para no
-       tapar contenido de la página debajo suyo. Se reactiva acá para que el
-       carrito en sí siga siendo clickeable con normalidad. */
+       tapar contenido de la página debajo suyo. Se reactiva acá. */
     pointer-events: auto;
 }
 
+.grabber {
+    display: none;
+}
+
+/* ---------- Encabezado ---------- */
 .header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1.2rem 1.3rem 1rem;
-    border-bottom: 1px solid rgba(230, 201, 138, 0.16);
+    padding: 1.1rem 1.25rem 0.8rem;
     flex-shrink: 0;
+}
+
+.headerText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
 }
 
 .title {
-    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 1.3rem;
     margin: 0;
-    color: #f6ecdb;
-    font-weight: 500;
+    font-family: "Fraunces", "Iowan Old Style", Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.1;
 }
 
 .count {
-    font-size: 0.76rem;
-    color: #c9bda9;
+    font-size: 0.82rem;
+    color: #65513e;
+}
+
+.textBtn {
+    border: 0;
+    background: transparent;
+    padding: 0.3rem 0;
+    font: inherit;
+    font-size: inherit;
+    color: #8a5e1a;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.textBtn:hover {
+    color: #5e3f0e;
 }
 
 .closeBtn {
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
     border-radius: 50%;
-    border: 1px solid rgba(230, 201, 138, 0.18);
-    background: transparent;
-    color: #c9bda9;
+    border: 0;
+    background: #f4ede2;
+    color: #2b1d12;
     cursor: pointer;
-    font-size: 0.9rem;
-    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .closeBtn:hover {
-    border-color: #c9a15f;
-    color: #e7c98a;
+    background: #ebe0cc;
 }
 
-.items {
+.closeBtn:focus-visible,
+.textBtn:focus-visible,
+.payBtn:focus-visible,
+.suggestionBtn:focus-visible,
+.emptyCta:focus-visible,
+.lastOrderBtn:focus-visible {
+    outline: 2px solid #2b1d12;
+    outline-offset: 2px;
+}
+
+/* ---------- Productos y sugerencia ---------- */
+.scroll {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0.2rem 1.3rem;
-}
-
-.emptyState {
-    flex: 1 1 auto;
+    padding: 0 1.25rem 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 2.2rem 1.5rem 2.4rem;
+    gap: 1rem;
 }
 
-.emptyIcon {
-    font-size: 2.6rem;
-    opacity: 0.55;
-    margin-bottom: 0.9rem;
+.items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.emptyState h4 {
-    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 1.1rem;
-    color: #f6ecdb;
-    margin: 0 0 0.5rem;
+.suggestion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.emptyState p {
-    font-size: 0.85rem;
-    color: #c9bda9;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.emptyCta {
-    margin-top: 1.2rem;
-    background: linear-gradient(135deg, #c9a15f, #e7c98a);
-    color: #241a10;
-    font-weight: 700;
-    font-size: 0.88rem;
-    padding: 0.65rem 1.3rem;
-    border-radius: 999px;
-    text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.emptyCta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.6);
-}
-
-.lastOrder {
-    margin-top: 1.8rem;
-    padding-top: 1.4rem;
-    border-top: 1px solid rgba(230, 201, 138, 0.14);
-    width: 100%;
-    text-align: left;
-}
-
-.lastOrderLabel {
-    display: block;
-    font-size: 0.75rem;
+.suggestionLabel {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #8a7f6d;
-    margin-bottom: 0.5rem;
+    color: #8a5e1a;
 }
 
-.lastOrderRow {
-    font-size: 0.85rem;
-    color: #c9bda9;
-    padding: 0.2rem 0;
+.suggestionCard {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem;
+    border-radius: 16px;
+    border: 1px dashed #d8c9ae;
 }
 
-.lastOrderBtn {
-    width: 100%;
-    margin-top: 0.9rem;
-    background: linear-gradient(135deg, #c9a15f, #e7c98a);
-    color: #241a10;
-    border: none;
-    border-radius: 10px;
-    padding: 0.7rem;
-    font-weight: 700;
-    font-size: 0.88rem;
+.suggestionImg {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.suggestionText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.suggestionTitle {
+    font-weight: 500;
+}
+
+.suggestionPrice {
+    font-size: 0.82rem;
+    color: #65513e;
+}
+
+.suggestionBtn {
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: 1px solid #2b1d12;
+    background: transparent;
+    color: #2b1d12;
+    font: inherit;
+    font-weight: 500;
     cursor: pointer;
+    white-space: nowrap;
+}
+
+.suggestionBtn:hover {
+    background: #f4ede2;
+}
+
+/* ---------- Total y pago ---------- */
+.summary {
+    flex-shrink: 0;
+    padding: 0.9rem 1.25rem 1.2rem;
+    border-top: 1px solid rgba(43, 29, 18, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.summaryTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.totalLabel {
+    color: #65513e;
+}
+
+.totalAmount {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.freeChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #2f6b3e;
+    background: #e3efdf;
+    border-radius: 999px;
+    padding: 4px 10px;
 }
 
 .shipping {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
 .shippingMsg {
-    display: block;
-    font-size: 0.8rem;
-    color: #8fd6a0;
-    margin-bottom: 0.5rem;
-}
-
-.shippingUnlocked {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #e7c98a;
-    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+    color: #65513e;
 }
 
 .shippingTrack {
-    height: 7px;
+    height: 6px;
     border-radius: 999px;
-    background: rgba(230, 201, 138, 0.12);
+    background: #ebe0cc;
     overflow: hidden;
 }
 
 .shippingFill {
     height: 100%;
     border-radius: 999px;
-    background: linear-gradient(90deg, #b69443, #e7c98a);
-    transition: width 0.4s ease;
-}
-
-.summary {
-    flex-shrink: 0;
-    padding: 1rem 1.3rem 1.3rem;
-    border-top: 1px solid rgba(230, 201, 138, 0.16);
-    background: #2f2318;
+    background: #8a5e1a;
 }
 
 .discountRow {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    color: #a8d5a2;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.totalRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    color: #f6ecdb;
-    font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.totalAmount {
-    font-family: inherit;
-    font-weight: 700;
+    font-size: 0.82rem;
+    color: #2f6b3e;
     font-variant-numeric: tabular-nums;
 }
 
-.actions {
+.payBtn {
+    min-height: 54px;
+    border-radius: 999px;
+    border: 0;
+    background: #2b1d12;
+    color: #f6ecdb;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.payBtn:hover {
+    background: #4a3322;
+}
+
+.footerLinks {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-}
-
-.actions button {
-    padding: 0.85rem 1rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 0.92rem;
-    font-weight: 700;
-    transition: transform 0.12s ease;
-}
-
-.actions button:active:not(:disabled) {
-    transform: scale(0.96);
-}
-
-.payBtn {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #c9a15f, #e7c98a);
-    color: #241a10;
-}
-
-/* Destello sutil que cruza el botón cada pocos segundos, para que no se
-   pierda de vista sin llegar a parpadear. Anima "transform" (no "left",
-   como antes): "left" fuerza un recálculo de layout en CADA frame,
-   mientras el carrito esté abierto, para siempre — "transform" lo
-   resuelve la GPU sin tocar layout ni pintura. Mismo recorrido exacto
-   (los porcentajes de translateX son relativos al ancho del propio
-   elemento, no al del botón, por eso no son los mismos números que antes). */
-.payBtn:not(:disabled)::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    animation: payBtnShimmer 3.5s ease-in-out infinite;
-    will-change: transform;
-}
-
-@keyframes payBtnShimmer {
-    0% {
-        transform: translateX(-150%);
-    }
-    35%, 100% {
-        transform: translateX(325%);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .payBtn:not(:disabled)::after {
-        animation: none;
-    }
-}
-
-.payBtn:disabled {
-    background: #4a3f30;
-    color: #8a7f6d;
-    cursor: not-allowed;
-}
-
-.whatsappBtn {
-    background: transparent;
-    border: 1px solid rgba(37, 211, 102, 0.4);
-    color: #6fdb8f;
-    font-weight: 600;
-    font-size: 0.85rem;
-}
-
-.whatsappBtn:hover {
-    border-color: #25d366;
-    color: #25d366;
-}
-
-.clearBtn {
-    background: transparent;
-    color: #c9bda9;
-    font-weight: 500;
+    align-items: center;
+    gap: 0.1rem;
     font-size: 0.82rem;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: #65513e;
+    text-align: center;
 }
 
-.clearBtn:hover {
-    color: #d97b64;
+/* ---------- Pedido vacío ---------- */
+.emptyState {
+    padding: 0.5rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
 }
 
-.clearBtn:disabled {
-    color: #6b5842;
-    cursor: not-allowed;
+.emptyState h4 {
+    margin: 0.5rem 0 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.emptyState p {
+    margin: 0 0 0.5rem;
+    color: #65513e;
+    font-size: 0.9rem;
+}
+
+.emptyCta {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 1.4rem;
+    border-radius: 999px;
+    background: #2b1d12;
+    color: #f6ecdb;
     text-decoration: none;
+    font-weight: 500;
 }
 
-@media screen and (max-width: 760px) {
+.lastOrder {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border-radius: 16px;
+    border: 1px dashed #d8c9ae;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    text-align: left;
+}
+
+.lastOrderLabel {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a5e1a;
+}
+
+.lastOrderRow {
+    font-size: 0.88rem;
+}
+
+.lastOrderBtn {
+    margin-top: 0.4rem;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1px solid #2b1d12;
+    background: transparent;
+    color: #2b1d12;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.lastOrderBtn:hover {
+    background: #f4ede2;
+}
+
+/* ---------- Celular: hoja que sube desde abajo ---------- */
+@media screen and (max-width: 600px) {
+    .backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(23, 16, 9, 0.55);
+        pointer-events: auto;
+        z-index: 9;
+    }
+
     .mainContainer {
-        top: 1vh;
-        right: 0.5rem;
-        width: 78vw;
-        max-width: 340px;
-        border-radius: 20px;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 88vh;
+        border-radius: 24px 24px 0 0;
+        border-bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .grabber {
+        display: block;
+        width: 44px;
+        height: 5px;
+        border-radius: 999px;
+        background: #d8c9ae;
+        margin: 10px auto 0;
+        flex-shrink: 0;
     }
 
     .header {
-        padding: 1rem 1.1rem 0.85rem;
+        padding-top: 0.6rem;
     }
+}
 
-    .title {
-        font-size: 1.15rem;
+@media (prefers-reduced-motion: no-preference) {
+    .mainContainer {
+        animation: cartIn 0.22s ease-out;
     }
+}
 
-    .items {
-        padding: 0.2rem 1.1rem;
+@media (prefers-reduced-motion: no-preference) and (max-width: 600px) {
+    .mainContainer {
+        animation-name: sheetIn;
     }
+}
 
-    .summary {
-        padding: 0.85rem 1.1rem 1.1rem;
+@keyframes cartIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sheetIn {
+    from {
+        transform: translateY(24px);
+        opacity: 0.6;
+    }
+    to {
+        transform: none;
+        opacity: 1;
     }
 }
