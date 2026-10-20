@@ -11,4 +11,4 @@ export const MODO_DEMO = true;
 export const GA_MEASUREMENT_ID = "G-Q73T2JQ4PD";
 
 // ID de la etiqueta de Google Ads ("AW-XXXXXXXXXX"). Vacío = no se carga.
-export const GOOGLE_ADS_ID = "";
+export const GOOGLE_ADS_ID = "AW-18498160238";
