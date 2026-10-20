@@ -8,7 +8,7 @@ export const MODO_DEMO = true;
 
 // ID de medición de Google Analytics 4 ("G-XXXXXXXXXX"). Vacío = no se
 // carga Analytics (ver utils/analytics.js).
-export const GA_MEASUREMENT_ID = "";
+export const GA_MEASUREMENT_ID = "G-Q73T2JQ4PD";
 
 // ID de la etiqueta de Google Ads ("AW-XXXXXXXXXX"). Vacío = no se carga.
 export const GOOGLE_ADS_ID = "";
