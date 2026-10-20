@@ -9,6 +9,7 @@ import BackToTop from "../../components/BackToTop/BackToTop";
 import Footer from "../../components/Footer/Footer";
 import { CONTACTO } from "../../constants/contacto";
 import { estaAbiertoAhora, detalleHorario, NOMBRES_DIAS } from "../../utils/horarioLocal";
+import { trackContacto } from "../../utils/analytics";
 
 //Lunes primero (getDay() arranca en domingo = 0).
 const ORDEN_SEMANA = [1, 2, 3, 4, 5, 6, 0];
@@ -56,6 +57,7 @@ const Contactanos = () => {
             `Necesito: ${evento.tipo}`,
             evento.mensaje.trim() && `Detalle: ${evento.mensaje.trim()}`,
         ].filter(Boolean);
+        trackContacto("whatsapp", "consulta_evento");
         window.open(
             `https://wa.me/${CONTACTO.whatsappNumero}?text=${encodeURIComponent(lineas.join("\n"))}`,
             "_blank",

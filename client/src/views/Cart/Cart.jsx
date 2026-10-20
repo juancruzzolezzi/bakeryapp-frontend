@@ -7,7 +7,7 @@ import { updateCart, addToCart } from "../../redux/slice/homeSlice";
 import { useGetProductsQuery } from "../../api/appApi";
 import { useAuthModal } from "../../context/AuthModalContext";
 import { isStandalone } from "../../utils/pwa";
-import { trackEvent, itemGA } from "../../utils/analytics";
+import { trackEvent, trackContacto, itemGA } from "../../utils/analytics";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import { CONTACTO } from "../../constants/contacto";
@@ -76,6 +76,7 @@ function Cart({ isCartOpen, setIsCartOpen }) {
 
     const mensaje = `Hola! Quiero hacer este pedido:\n${detalle}\n\nTotal: ${formatearPrecio(totalPrice)}`;
 
+    trackContacto("whatsapp", "pedido_carrito");
     window.open(
       `https://wa.me/${CONTACTO.whatsappNumero}?text=${encodeURIComponent(mensaje)}`,
       "_blank"
