@@ -7,6 +7,7 @@ import { updateCart, addToCart } from "../../redux/slice/homeSlice";
 import { useGetProductsQuery } from "../../api/appApi";
 import { useAuthModal } from "../../context/AuthModalContext";
 import { isStandalone } from "../../utils/pwa";
+import { trackEvent, itemGA } from "../../utils/analytics";
 import EmptyCartModal from "../../components/Modals/EmptyCartModal";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import { CONTACTO } from "../../constants/contacto";
@@ -255,7 +256,10 @@ function Cart({ isCartOpen, setIsCartOpen }) {
                     <button
                       type="button"
                       className={style.suggestionBtn}
-                      onClick={() => dispatch(addToCart({ ...sugerido, quantity: 1 }))}
+                      onClick={() => {
+                        dispatch(addToCart({ ...sugerido, quantity: 1 }));
+                        trackEvent("add_to_cart", { currency: "ARS", value: sugerido.price, items: [itemGA(sugerido)] });
+                      }}
                       aria-label={`Sumar ${sugerido.title} al pedido`}
                     >
                       + Sumar

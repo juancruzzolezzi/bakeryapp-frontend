@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import LegalLayout from "./LegalLayout";
 import { LEGAL } from "../../constants/legal";
+import { MODO_DEMO, GA_MEASUREMENT_ID } from "../../constants/demo";
 import { CONTACTO } from "../../constants/contacto";
 import styles from "./Legal.module.css";
 
@@ -20,11 +21,21 @@ const Privacidad = () => {
             ]}
         >
             <h2>1. Responsable de los datos</h2>
-            <p>
-                El responsable de la base de datos es {LEGAL.razonSocial}, CUIT {LEGAL.cuit},
-                con domicilio en {LEGAL.domicilio}. Podés contactarnos en{" "}
-                <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>.
-            </p>
+            {MODO_DEMO ? (
+                <p>
+                    <strong>Este sitio es un proyecto académico</strong> y Bakery es una
+                    marca ficticia: no hay una empresa detrás y no se venden productos.
+                    Los datos que cargues al probar la tienda solo se usan para el
+                    funcionamiento de la demo. Por cualquier consulta, escribinos a{" "}
+                    <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>.
+                </p>
+            ) : (
+                <p>
+                    El responsable de la base de datos es {LEGAL.razonSocial}, CUIT {LEGAL.cuit},
+                    con domicilio en {LEGAL.domicilio}. Podés contactarnos en{" "}
+                    <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>.
+                </p>
+            )}
 
             <h2>2. Qué datos recolectamos</h2>
             <ul>
@@ -54,6 +65,15 @@ const Privacidad = () => {
                     entrega y tu sesión, para que no tengas que cargarlos de nuevo. No
                     usamos cookies publicitarias.
                 </li>
+                {GA_MEASUREMENT_ID && (
+                    <li>
+                        <strong>Al navegar el sitio:</strong> usamos Google Analytics, que
+                        con sus propias cookies registra de forma estadística qué páginas
+                        visitás, desde qué anuncio o sitio llegaste y qué productos sumás
+                        al pedido. Lo usamos solo para medir cómo funciona el sitio y
+                        nuestra publicidad.
+                    </li>
+                )}
             </ul>
 
             <h2>3. Para qué los usamos</h2>
@@ -72,7 +92,7 @@ const Privacidad = () => {
             <p>
                 Solo con los proveedores que necesitamos para que el sitio funcione, y
                 únicamente con los datos indispensables: Mercado Pago (pagos), Google
-                (inicio de sesión con Google), nuestro proveedor de envío de emails y los
+                (inicio de sesión con Google{GA_MEASUREMENT_ID ? " y Google Analytics" : ""}), nuestro proveedor de envío de emails y los
                 servicios de alojamiento del sitio. Algunos de estos proveedores pueden
                 procesar datos fuera de la Argentina, con niveles de protección
                 adecuados. También podemos compartirlos si una autoridad competente lo

@@ -1,0 +1,26 @@
+.banner {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1rem;
+    background: #e7c98a;
+    color: #241b12;
+    font-family: "Lexend", sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.text {
+    margin: 0;
+}
+
+.link {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}

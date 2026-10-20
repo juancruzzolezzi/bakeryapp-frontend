@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { addToCart, updateQuantity, removeFromCart } from "../redux/slice/homeSlice";
+import { trackEvent, itemGA } from "../utils/analytics";
 
 // Este hook lo usa CADA tarjeta de producto de la grilla (Product.jsx),
 // más ProductDetail.jsx y ProductCart.jsx. Antes traía el cartList entero
@@ -15,6 +16,11 @@ export const useProductHandlers = (setModalEmptyOpen) => {
 
   const handleAddToCart = (product, quantity) => {
     dispatch(addToCart({ ...product, quantity }));
+    trackEvent("add_to_cart", {
+      currency: "ARS",
+      value: product.price * quantity,
+      items: [itemGA(product, quantity)],
+    });
   };
 
   //El reducer "updateQuantity" (ver homeSlice.js) ya solo actualiza si

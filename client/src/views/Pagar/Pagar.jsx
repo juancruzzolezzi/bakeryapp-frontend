@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCartHandlers } from "../../handlers/cartHandlers";
@@ -14,6 +14,9 @@ import {
   FREE_SHIPPING_THRESHOLD,
 } from "../../constants/deliveryZones";
 import { diasParaProgramar, productosPorEncargo, textoCuantoAntes } from "../../utils/entrega";
+import { MODO_DEMO } from "../../constants/demo";
+import { trackEvent, itemGA } from "../../utils/analytics";
+import DemoPagoModal from "../../components/Modals/DemoPagoModal";
 import styles from "./Pagar.module.css";
 
 // Página de pago (reemplaza al modal que se abría encima del carrito).
@@ -99,6 +102,7 @@ const Pagar = () => {
 
   const [intentoPagar, setIntentoPagar] = useState(false);
   const [resumenAbierto, setResumenAbierto] = useState(false);
+  const [avisoDemoAbierto, setAvisoDemoAbierto] = useState(false);
 
   // ---------- Montos ----------
   const unidades = cartList.reduce((sum, p) => sum + p.quantity, 0);
@@ -109,6 +113,17 @@ const Pagar = () => {
   const envioGratis = subtotal >= FREE_SHIPPING_THRESHOLD;
   const envio = esDelivery && !envioGratis ? DELIVERY_FEE : 0;
   const total = subtotal - descuento + envio;
+
+  //Analytics: llegó a la página de pago con productos (una vez por visita).
+  useEffect(() => {
+    if (cartList.length === 0) return;
+    trackEvent("begin_checkout", {
+      currency: "ARS",
+      value: subtotal,
+      items: cartList.map((p) => itemGA(p, p.quantity)),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ---------- Validación ----------
   const contactoValido =
@@ -142,6 +157,14 @@ const Pagar = () => {
       localStorage.setItem("lastContact", JSON.stringify({ method: contactMethod, value: contactValue.trim() }));
     } catch {
       /* sin localStorage: no se recuerda, nada más */
+    }
+
+    //Tienda ficticia (ver constants/demo.js): se registra el intento en
+    //Analytics y se avisa, sin pasar por Mercado Pago.
+    if (MODO_DEMO) {
+      trackEvent("intento_de_pago", { currency: "ARS", value: total });
+      setAvisoDemoAbierto(true);
+      return;
     }
 
     handleSubmitModal(
@@ -511,6 +534,8 @@ const Pagar = () => {
           </button>
         </div>
       </div>
+
+      <DemoPagoModal isOpen={avisoDemoAbierto} onClose={() => setAvisoDemoAbierto(false)} />
     </div>
   );
 };

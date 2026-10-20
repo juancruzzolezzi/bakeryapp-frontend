@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import LegalLayout from "./LegalLayout";
 import { LEGAL, DEFENSA_CONSUMIDOR_URL } from "../../constants/legal";
+import { MODO_DEMO } from "../../constants/demo";
 import { CONTACTO } from "../../constants/contacto";
 import {
     DELIVERY_ZONES,
@@ -25,12 +26,23 @@ const Terminos = () => {
             ]}
         >
             <h2>1. Quiénes somos</h2>
-            <p>
-                El sitio es operado por {LEGAL.razonSocial}, CUIT {LEGAL.cuit}, con
-                domicilio en {LEGAL.domicilio} (en adelante, "Bakery"). Contacto:{" "}
-                <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a> y WhatsApp{" "}
-                {CONTACTO.whatsappTexto}.
-            </p>
+            {MODO_DEMO ? (
+                <p>
+                    <strong>Este sitio es un proyecto académico.</strong> Bakery es una
+                    marca ficticia, creada para un trabajo de la facultad: no hay una
+                    empresa ni un local detrás, la dirección y los horarios son de
+                    ejemplo, y no se venden productos ni se cobra nada. Los pedidos
+                    pueden armarse para probar la tienda, pero no se procesan. El resto
+                    de estos términos muestra cómo funcionaría la tienda si fuera real.
+                </p>
+            ) : (
+                <p>
+                    El sitio es operado por {LEGAL.razonSocial}, CUIT {LEGAL.cuit}, con
+                    domicilio en {LEGAL.domicilio} (en adelante, "Bakery"). Contacto:{" "}
+                    <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a> y WhatsApp{" "}
+                    {CONTACTO.whatsappTexto}.
+                </p>
+            )}
 
             <h2>2. Productos y precios</h2>
             <ul>

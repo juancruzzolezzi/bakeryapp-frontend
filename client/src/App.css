@@ -27,6 +27,9 @@
    .cartFixed en NavBar.module.css). */
 .fadeRoutes {
   width: 100%;
+  /* Los navbars son "absolute, top: 0": con esto se ubican arriba de la
+     página y no arriba de todo, donde taparían el aviso de DemoBanner. */
+  position: relative;
   animation: fadeRouteIn 0.25s ease both;
 }
 

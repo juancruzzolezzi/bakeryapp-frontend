@@ -6,7 +6,7 @@ export const LEGAL = {
     razonSocial: "[Razón social del titular]",
     cuit: "[CUIT]",
     domicilio: "Zavalía 2026, Belgrano, Ciudad Autónoma de Buenos Aires",
-    ultimaActualizacion: "30 de septiembre de 2026",
+    ultimaActualizacion: "20 de octubre de 2026",
 };
 
 // Link obligatorio a la Ventanilla Única Federal de reclamos de consumo

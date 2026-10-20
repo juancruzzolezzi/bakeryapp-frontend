@@ -9,11 +9,13 @@ import { Routes, Route, useLocation } from "react-router-dom";
 //como fallback de "Suspense" más abajo.
 import Loading from "./components/Loading/Loading";
 import InstallAppBanner from "./components/InstallAppBanner/InstallAppBanner";
+import DemoBanner from "./components/DemoBanner/DemoBanner";
 import ErrorBoundary, { RELOAD_FLAG } from "./components/ErrorBoundary/ErrorBoundary";
 //Hooks globales
 import { useSessionCheck } from "./hooks/useSessionCheck";
 import { useCartSync } from "./hooks/useCartSync";
 import { usePageMeta, PAGE_META, NOT_FOUND_META } from "./hooks/usePageMeta";
+import { initAnalytics } from "./utils/analytics";
 //Estilos
 import "./App.css";
 
@@ -62,6 +64,11 @@ function App() {
     sessionStorage.removeItem(RELOAD_FLAG);
   }, []);
 
+  //Google Analytics, para medir la campaña de Google Ads (ver utils/analytics.js).
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
 
 
   return (
@@ -76,6 +83,8 @@ function App() {
         fetchpriority="high"
         decoding="async"
       ></img>
+
+      <DemoBanner />
 
       {/* "key": cada cambio de ruta vuelve a montar este div, y con eso
           se repite el fade de entrada (ver .fadeRoutes en App.css). Antes
